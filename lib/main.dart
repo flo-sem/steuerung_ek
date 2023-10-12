@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:math' as math;
+import 'steering_wheel.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,9 +8,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white
+      ),
       title: 'My App',
-      home: StartPage(title:'Start Menu'),
+      home: const StartPage(title:'Start Menu'),
     );
   }
 }
@@ -100,68 +101,68 @@ class ControlPage extends StatelessWidget {
                         child: const Text('back')
                     )
                   ),
-                  const SteeringWheel()
+                  const SteeringWheel(),
+                  const GasPedal(),
+                  const SpeedDisplay(),
                 ]
         ),
     );
   }
 }
 
-class SteeringWheel extends StatefulWidget {
-  const SteeringWheel({Key? key}) : super(key: key);
+class SpeedDisplay extends StatefulWidget {
+  const SpeedDisplay({Key? key}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _SteeringAngle();
+  State<StatefulWidget> createState() => _SpeedState();
 }
 
-class _SteeringAngle extends State<SteeringWheel> {
-  double value = 0;
+class _SpeedState extends State<SpeedDisplay> {
+  double speed = 0;
+
   @override
   Widget build(BuildContext context) {
-      return Stack(
-        children: <Widget> [
-          Center(
-              child: Transform.rotate(
-                  angle: (value * (math.pi/180)),
-                  child: Image.asset('assets/images/steeringWheel.png', scale: 0.5)
-              )
-          ),
-          Center(
-              child: SleekCircularSlider(
-                  min: -60,
-                  max: 60,
-                  initialValue: 0,
-                  innerWidget: (double value) {
-                    return Center(
-                        child: Transform.rotate(
-                            angle: (value * (math.pi/180)),
-                            child: const FaIcon(FontAwesomeIcons.circle, size:50)
-                        )
-                    );
-                  },
-                  appearance: CircularSliderAppearance(
-                      size: 235,
-                      startAngle: 210,
-                      angleRange: 120,
-                      customColors: CustomSliderColors(
-                        trackColor: Colors.black,
-                        progressBarColors: null,
-                        progressBarColor: Colors.black,
-                        dotColor: Colors.red
-                      ),
-                      customWidths: CustomSliderWidths(
-                        progressBarWidth: 5,
-                        trackWidth: 5,
-                        handlerSize: 10
-                      )
-                  ),
-                  onChange: (double value) {
-                    setState(() {
-                      this.value = value;
-                    });
-                  }
-              )
-          )
-        ]
-      );
+    return Center(
+      child: Text('$speed km/h', style: Theme.of(context).textTheme.displayMedium)
+    );
   }
 }
+
+
+class GasPedal extends StatefulWidget {
+  const GasPedal({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _GasPedalState();
+}
+
+class _GasPedalState extends State<GasPedal> {
+  double status = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget> [
+        Align(
+        alignment: Alignment.bottomRight,
+            child: SizedBox(
+                height: 240,
+                width: 130,
+                child: Center(
+                    child: GestureDetector(
+                      onTapDown: (_) => setState(() {status = 1;}),
+                      onTapUp: (_) => setState(() {status = 0;}),
+                      child: Transform(
+                        transform: Matrix4.rotationX(0.3*status),
+                        child: Image.asset('assets/images/gasPedal.png', height: 170)
+                      )
+                    )
+                )
+            )
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Text('$status', style: Theme.of(context).textTheme.headlineLarge,),
+        )
+      ],
+    );
+  }
+}
+
