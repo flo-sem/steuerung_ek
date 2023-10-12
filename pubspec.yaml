@@ -35,6 +35,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  sleek_circular_slider: ^2.0.1
+  font_awesome_flutter: ^10.5.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +54,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/images/steeringWheel.png
+    - assets/images/gasPedal.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
