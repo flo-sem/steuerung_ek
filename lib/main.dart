@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white
       ),
-      title: 'My App',
+      title: 'shopping cart control',
       home: const StartPage(title:'Start Menu'),
     );
   }

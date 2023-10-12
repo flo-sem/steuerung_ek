@@ -11,8 +11,19 @@ class _SpeedState extends State<SpeedDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text('$speed km/h', style: Theme.of(context).textTheme.displayMedium)
+    return Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget> [
+            Text('$speed',
+                style: Theme.of(context).textTheme.displayLarge
+            ),
+            Text('km/h',
+                style: Theme.of(context).textTheme.headlineSmall
+            )
+          ],
+        )
     );
   }
 }
