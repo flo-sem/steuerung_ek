@@ -3,6 +3,8 @@ import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
 
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -17,13 +19,38 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
       ),
-      home: const StartPage(title: 'Start Menu'),
+      home: StartPage(title: 'Start Menu'),
     );
   }
 }
 
 class StartPage extends StatelessWidget {
-  const StartPage({Key? key, required this.title}) : super(key: key);
+  StartPage({Key? key, required this.title}) : super(key: key);
+
+  void ConnectThisFucker() async {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
+      print(state);
+      if (state == BluetoothAdapterState.on) {
+        Set<DeviceIdentifier> seen = {};
+        var subscription = FlutterBluePlus.scanResults.listen(
+          (results) {
+            for (ScanResult r in results) {
+              if (seen.contains(r.device.remoteId) == false) {
+                print(
+                    '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
+                seen.add(r.device.remoteId);
+              }
+            }
+          },
+        );
+
+        // Start scanning
+        //await FlutterBluePlus.startScan();
+      } else {
+        // show an error to the user, etc
+      }
+    });
+  }
 
   final String title;
 
@@ -52,13 +79,35 @@ class StartPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return const ControlPage(title: 'ControlPage');
-                        }),
-                      );
+                    onPressed: () async {
+                      Set<DeviceIdentifier> seen = {};
+                      await FlutterBluePlus.startScan(
+                          timeout: Duration(seconds: 10));
+                      print("START");
+                      FlutterBluePlus.scanResults.listen((results) {
+                        for (ScanResult r in results) {
+                          /*if (!(r.advertisementData.serviceUuids.isEmpty)) {
+                            print("Service UUID available");
+                            print(r);
+                          }*/
+                          if (seen.contains(r.device.remoteId) == false &&
+                              r.advertisementData.localName != "") {
+                            print(
+                                '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
+                            seen.add(r.device.remoteId);
+                          }
+
+                          if (r.advertisementData.localName == "BLE Device") {
+                            print("###############");
+                            print(r.advertisementData.serviceUuids);
+                            print(r.device);
+                            print(r.advertisementData.toString());
+                            print("###############");
+
+                            FlutterBluePlus.stopScan();
+                          }
+                        }
+                      });
                     },
                     child: const Text('Connect')),
                 SizedBox(height: 50),
