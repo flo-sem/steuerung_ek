@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
+import 'ble_info.dart';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -79,35 +80,7 @@ class StartPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () async {
-                      Set<DeviceIdentifier> seen = {};
-                      await FlutterBluePlus.startScan(
-                          timeout: Duration(seconds: 10));
-                      print("START");
-                      FlutterBluePlus.scanResults.listen((results) {
-                        for (ScanResult r in results) {
-                          /*if (!(r.advertisementData.serviceUuids.isEmpty)) {
-                            print("Service UUID available");
-                            print(r);
-                          }*/
-                          if (seen.contains(r.device.remoteId) == false &&
-                              r.advertisementData.localName != "") {
-                            print(
-                                '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-                            seen.add(r.device.remoteId);
-                          }
-
-                          if (r.advertisementData.localName == "BLE Device") {
-                            print("###############");
-                            print(r.advertisementData.serviceUuids);
-                            print(r.device);
-                            print(r.advertisementData.toString());
-                            print("###############");
-
-                            FlutterBluePlus.stopScan();
-                          }
-                        }
-                      });
+                    onPressed: () => ,)
                     },
                     child: const Text('Connect')),
                 SizedBox(height: 50),
