@@ -28,32 +28,7 @@ class MyApp extends StatelessWidget {
 class StartPage extends StatelessWidget {
   StartPage({Key? key, required this.title}) : super(key: key);
 
-  void ConnectThisFucker() async {
-    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
-      print(state);
-      if (state == BluetoothAdapterState.on) {
-        Set<DeviceIdentifier> seen = {};
-        var subscription = FlutterBluePlus.scanResults.listen(
-          (results) {
-            for (ScanResult r in results) {
-              if (seen.contains(r.device.remoteId) == false) {
-                print(
-                    '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-                seen.add(r.device.remoteId);
-              }
-            }
-          },
-        );
-
-        // Start scanning
-        //await FlutterBluePlus.startScan();
-      } else {
-        // show an error to the user, etc
-      }
-    });
-  }
-
-  final String title; 
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +55,9 @@ class StartPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () => ,)
+                    onPressed: () {
+                      print("[LOG] Button pressed");
+                      ble_info().BLE_Search();
                     },
                     child: const Text('Connect')),
                 SizedBox(height: 50),
