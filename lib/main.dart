@@ -52,7 +52,7 @@ class StartPage extends StatelessWidget {
     });
   }
 
-  final String title;
+  final String title; 
 
   @override
   Widget build(BuildContext context) {
