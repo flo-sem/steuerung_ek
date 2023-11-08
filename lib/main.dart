@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/variables.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
 import 'ble_info.dart';
 import 'package:provider/provider.dart';
-
+import 'variables.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'second.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => StateManager()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -75,7 +85,7 @@ class StartPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return const SettingsPage(title: 'SettingPage');
+                      return const ControlPage(title: 'SettingPage');
                     }));
                   },
                   child: const Text('Settings'))),
@@ -146,7 +156,7 @@ class ControlPage extends StatelessWidget {
                 child: const Text('back'))),
         const SteeringWheel(),
         const GasPedal(),
-        const SpeedDisplay(),
+        const Display(),
       ]),
     );
   }
