@@ -3,6 +3,7 @@ import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
 import 'ble_info.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  /*Widget build(BuildContext context) {
     return MaterialApp(
       title: 'shopping cart control',
       theme: ThemeData(
@@ -22,6 +23,30 @@ class MyApp extends StatelessWidget {
       ),
       home: StartPage(title: 'Start Menu'),
     );
+  }*/
+
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        ),
+        home: StartPage(title: "Start Menu"),
+      ),
+    );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var MainButtonText = "Suche";
+  var characteristics;
+
+  void ChangeText() {
+    MainButtonText = "Verbinden";
+    notifyListeners();
   }
 }
 
@@ -32,6 +57,8 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
     return Scaffold(
         appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
         body: Stack(children: <Widget>[
@@ -56,6 +83,7 @@ class StartPage extends StatelessWidget {
                 SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
+                      appState.ChangeText();
                       print("[LOG] Button pressed");
                       ble_info().BLE_Search();
                     },
