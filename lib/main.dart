@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
+import 'ble_info.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
+import 'second.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,7 +15,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  /*Widget build(BuildContext context) {
     return MaterialApp(
       title: 'shopping cart control',
       theme: ThemeData(
@@ -21,41 +25,47 @@ class MyApp extends StatelessWidget {
       ),
       home: StartPage(title: 'Start Menu'),
     );
+  }*/
+
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        ),
+        home: StartPage(title: "Start Menu"),
+      ),
+    );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var MainButtonText = "Suche";
+  var characteristics;
+
+  void ChangeText() {
+    MainButtonText = "Verbinden";
+    notifyListeners();
+
+    Future.delayed(Duration(seconds: 5), () {
+      MainButtonText = "Suche";
+      notifyListeners();
+    });
   }
 }
 
 class StartPage extends StatelessWidget {
   StartPage({Key? key, required this.title}) : super(key: key);
 
-  void ConnectThisFucker() async {
-    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
-      print(state);
-      if (state == BluetoothAdapterState.on) {
-        Set<DeviceIdentifier> seen = {};
-        var subscription = FlutterBluePlus.scanResults.listen(
-          (results) {
-            for (ScanResult r in results) {
-              if (seen.contains(r.device.remoteId) == false) {
-                print(
-                    '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-                seen.add(r.device.remoteId);
-              }
-            }
-          },
-        );
-
-        // Start scanning
-        //await FlutterBluePlus.startScan();
-      } else {
-        // show an error to the user, etc
-      }
-    });
-  }
-
   final String title;
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
     return Scaffold(
         appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
         body: Stack(children: <Widget>[
@@ -79,37 +89,19 @@ class StartPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                    onPressed: () async {
-                      Set<DeviceIdentifier> seen = {};
-                      await FlutterBluePlus.startScan(
-                          timeout: Duration(seconds: 10));
-                      print("START");
-                      FlutterBluePlus.scanResults.listen((results) {
-                        for (ScanResult r in results) {
-                          /*if (!(r.advertisementData.serviceUuids.isEmpty)) {
-                            print("Service UUID available");
-                            print(r);
-                          }*/
-                          if (seen.contains(r.device.remoteId) == false &&
-                              r.advertisementData.localName != "") {
-                            print(
-                                '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-                            seen.add(r.device.remoteId);
-                          }
-
-                          if (r.advertisementData.localName == "BLE Device") {
-                            print("###############");
-                            print(r.advertisementData.serviceUuids);
-                            print(r.device);
-                            print(r.advertisementData.toString());
-                            print("###############");
-
-                            FlutterBluePlus.stopScan();
-                          }
-                        }
-                      });
+                    onPressed: () {
+                      if (appState.MainButtonText == "Suche") {
+                        appState.ChangeText();
+                        print("[LOG] Button pressed");
+                        ble_info().BLE_Search();
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SecondScreen();
+                        }));
+                      }
                     },
-                    child: const Text('Connect')),
+                    child: Text(appState.MainButtonText)),
                 SizedBox(height: 50),
               ]))
         ]));
