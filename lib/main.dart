@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+import 'second.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -92,6 +94,11 @@ class StartPage extends StatelessWidget {
                         appState.ChangeText();
                         print("[LOG] Button pressed");
                         ble_info().BLE_Search();
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SecondScreen();
+                        }));
                       }
                     },
                     child: Text(appState.MainButtonText)),
