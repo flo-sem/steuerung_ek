@@ -5,9 +5,17 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  final String DEVICE_NAME = "Time";
-  final String SERVICE_UUID = "00001805-0000-1000-8000-00805f9b34fb";
-  final String CHARACTERISTIC_UUID = "00002a2b-0000-1000-8000-00805f9b34fb";
+  final String DEVICE_NAME = "ESP32 BLE";
+  final String SERVICE_UUID = "000000ff-0000-1000-8000-00805f9b34fb";
+  final String READ_CHARACTERISTIC_UUID =
+      "0000ff01-0000-1000-8000-00805f9b34fb";
+  final String WRITE_CHARACTERISTIC_UUID =
+      "00002a2b-0000-1000-8000-00805f9b34fb";
+
+  BluetoothCharacteristic? readCharacteristic;
+  BluetoothCharacteristic? writeCharacteristic;
+
+  List<int> inputBuffer = [];
 
   //TODO: Maybe introduce list with Characteristics, and select dem with ID
   // OR : Name the Characteristic UUID after their purpouse
@@ -28,20 +36,19 @@ class ble_info {
 
   // Call this method after connecting to a device to listen for disconnections
   void listenToConnectionChanges() {
-    bluetoothDevice.device?.connectionState.listen((state) {
+    bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
         // Handle disconnection
         _handleDisconnection();
       }
-      // You can handle other states like connecting, connected, and disconnecting similarly
+      // Maybe other states?
     });
   }
 
   void _handleDisconnection() {
-    // Implement your reconnection strategy here
-    // For example, you can try reconnecting or update the UI to show the device is disconnected
+    Future.delayed(Duration(seconds: 2)); //Wait 2 seconds
+    bluetoothDevice.device.connect();
     print('Device disconnected');
-    // You can call `connectToDevice` again with some delay if you want to reconnect
   }
 
   void BLE_Search() async {
@@ -87,7 +94,7 @@ class ble_info {
         await bluetoothDevice.device.discoverServices();
     int index = 1;
     for (BluetoothService service in services) {
-      //print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
+      print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
       index++;
       if (service.uuid.toString() == SERVICE_UUID) {
         // Reads all characteristics
@@ -102,21 +109,27 @@ class ble_info {
               } catch (e) {
                 print("[ERROR]: $e");
               }
-              //print("[LOG] FOUND CHARACTERISTIC ${c.uuid}");
+              print("[LOG] FOUND CHARACTERISTIC ${c.uuid}");
               //print("[LOG] with value: $value");
 
               //CHECK For correct characteristic
-              if (c.uuid.toString() == CHARACTERISTIC_UUID) {
-                print("[LOG]    FOUND Characteristic $CHARACTERISTIC_UUID");
+              if (c.uuid.toString() == READ_CHARACTERISTIC_UUID) {
+                readCharacteristic = c;
+                print(
+                    "[LOG]    FOUND readCharacteristic $READ_CHARACTERISTIC_UUID");
                 print("[LOG]    ---> $value");
                 c.read().then((value) {
                   _charValueController.add(value);
                 });
                 // Listen to characteristic changes
-                c.setNotifyValue(true);
+                /*c.setNotifyValue(true);
                 c.lastValueStream.listen((value) {
                   _charValueController.add(value);
-                });
+                });*/
+              } else if (c.uuid.toString() == WRITE_CHARACTERISTIC_UUID) {
+                writeCharacteristic = c;
+                print(
+                    "[LOG]    FOUND writeCharacteristic $READ_CHARACTERISTIC_UUID");
               }
             } /* else {
               print("[LOG] CHARACTERISTIC NOT READABLE");
@@ -129,7 +142,18 @@ class ble_info {
     }
   }
 
+  void BLE_WriteCharateristics(List<int> writeData) async {
+    if (writeCharacteristic != null) {
+      await writeCharacteristic?.write(writeData);
+    }
+  }
+
+  // Backup function in case the "notifier" doesnt work
   void BLE_ReadCharacteristics() async {
-    BluetoothCharacteristic characteristic;
+    if (readCharacteristic != null) {
+      readCharacteristic?.read().then((value) {
+        inputBuffer = value;
+      });
+    }
   }
 }
