@@ -44,7 +44,7 @@ class SecondScreen extends StatelessWidget {
             ),
             SizedBox(height: 20), // Add some spacing
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 List<int> input = [
                   0x48,
                   0x65,
@@ -60,8 +60,16 @@ class SecondScreen extends StatelessWidget {
                 ];
                 ble_info().BLE_WriteCharateristics(input);
               },
-              child: Text('Press Me'),
+              child: Text('Send HelloWorld'),
             ),
+            SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () {
+                  ble_info().BLE_ReadCharacteristics();
+                },
+                child: Text("Request Data")),
+            SizedBox(height: 10),
+            Text("recieved: ${ble_info().inputBuffer.toString()}")
           ],
         ),
       ),
