@@ -50,6 +50,7 @@ class MyAppState extends ChangeNotifier {
 
     Future.delayed(Duration(seconds: 5), () {
       MainButtonText = "Suche";
+      notifyListeners();
     });
   }
 }
@@ -87,9 +88,11 @@ class StartPage extends StatelessWidget {
                 SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
-                      appState.ChangeText();
-                      print("[LOG] Button pressed");
-                      ble_info().BLE_Search();
+                      if (appState.MainButtonText == "Suche") {
+                        appState.ChangeText();
+                        print("[LOG] Button pressed");
+                        ble_info().BLE_Search();
+                      }
                     },
                     child: Text(appState.MainButtonText)),
                 SizedBox(height: 50),
