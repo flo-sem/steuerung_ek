@@ -47,6 +47,10 @@ class MyAppState extends ChangeNotifier {
   void ChangeText() {
     MainButtonText = "Verbinden";
     notifyListeners();
+
+    Future.delayed(Duration(seconds: 5), () {
+      MainButtonText = "Suche";
+    });
   }
 }
 
@@ -87,7 +91,7 @@ class StartPage extends StatelessWidget {
                       print("[LOG] Button pressed");
                       ble_info().BLE_Search();
                     },
-                    child: const Text('Connect')),
+                    child: Text(appState.MainButtonText)),
                 SizedBox(height: 50),
               ]))
         ]));
