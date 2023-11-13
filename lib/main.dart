@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:steuerung_ek/variables.dart';
+import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'info_display.dart';
 import 'ble_info.dart';
 import 'package:provider/provider.dart';
-import 'variables.dart';
+import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'second.dart';
@@ -147,13 +147,6 @@ class ControlPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('CONTROL')),
       body: Stack(children: <Widget>[
-        Align(
-            alignment: Alignment.topLeft,
-            child: OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('back'))),
         const SteeringWheel(),
         const GasPedal(),
         const Display(),
