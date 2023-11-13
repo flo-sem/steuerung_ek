@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-import 'package:steuerung_ek/variables.dart';
+import 'package:steuerung_ek/state_manager.dart';
 
 class SteeringWheel extends StatefulWidget {
   const SteeringWheel({Key? key}) : super(key: key);
@@ -61,10 +61,8 @@ class _SteeringAngle extends State<SteeringWheel> {
                                   )
                               ),
                               onChange: (double value) {
-                                setState(() {
                                   stateManager.setSteeringAngle(value);
-                                });
-                              }
+                                }
                           )
                       )
                     ]

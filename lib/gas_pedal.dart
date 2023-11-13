@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steuerung_ek/variables.dart';
+import 'package:steuerung_ek/state_manager.dart';
 import 'package:provider/provider.dart';
 
 class GasPedal extends StatefulWidget {

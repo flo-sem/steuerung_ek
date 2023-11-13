@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'variables.dart';
+import 'state_manager.dart';
 
 class Display extends StatefulWidget {
   const Display({Key? key}) : super(key: key);
@@ -32,10 +32,15 @@ class _DisplayState extends State<Display> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: Text(stateManager.pedalState.toString(), style: Theme.of(context).textTheme.headlineLarge,),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Image.asset(stateManager.batteryImage, width: 80),
+                    SizedBox(width: 10)
+                  ],
+                )
               )
             ],
           );
     });
   }
-}
