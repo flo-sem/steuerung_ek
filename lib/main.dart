@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
@@ -150,6 +151,7 @@ class ControlPage extends StatelessWidget {
         const SteeringWheel(),
         const GasPedal(),
         const Display(),
+        const Display_battery(),
       ]),
     );
   }

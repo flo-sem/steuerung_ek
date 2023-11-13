@@ -36,16 +36,6 @@ class _DisplayState extends State<Display> {
                     ],
                   )
               ),
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(stateManager.batteryImage, width: 80),
-                      SizedBox(width: 10)
-                    ],
-                  )
-              )
             ],
           );
         });
