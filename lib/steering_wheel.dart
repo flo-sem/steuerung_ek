@@ -19,7 +19,7 @@ class _SteeringAngle extends State<SteeringWheel> {
     return Consumer<StateManager>(
       builder: (context, stateManager, child) {
         return Align(
-            alignment: Alignment.bottomLeft,
+            //alignment: Alignment.bottomLeft,
             child: SizedBox(
                 width: 300,
                 height: 350,
