@@ -18,6 +18,10 @@ class StateManager with ChangeNotifier {
   String _batteryImage = 'assets/images/battery4.png';
   String get batteryImage => _batteryImage;
 
+  Color _backgroundColor = Colors.blueGrey ;
+  Color get backgroundColor => _backgroundColor;
+
+
   void setSteeringAngle(double value) {
     _steeringAngle = value;
     notifyListeners();
@@ -45,6 +49,11 @@ class StateManager with ChangeNotifier {
     else {
       _batteryImage = 'assets/images/battery4.png';
   }
+    notifyListeners();
+  }
+
+  void setBackgroundColor(Color value) {
+    _backgroundColor = value;
     notifyListeners();
   }
 }

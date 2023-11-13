@@ -17,7 +17,6 @@ class _GasPedalState extends State<GasPedal> {
         return Stack(
           children: <Widget> [
             Align(
-                //alignment: Alignment.,
                 child: SizedBox(
                     height: 240,
                     width: 130,

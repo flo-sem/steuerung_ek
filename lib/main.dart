@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         ),
-        home: StartPage(title: "Start Menu"),
+        home: StartPage(),
       ),
     );
   }
@@ -69,16 +69,21 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class StartPage extends StatelessWidget {
-  StartPage({Key? key, required this.title}) : super(key: key);
+class StartPage extends StatefulWidget {
+  StartPage({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _StartPage();
+}
 
-  final String title;
-
+class _StartPage extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-
+    return Consumer<StateManager>(
+        builder: (context, stateManager, child)
+        {
     return Scaffold(
+      backgroundColor: stateManager.backgroundColor,
         appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
         body: Stack(children: <Widget>[
           Align(
@@ -87,60 +92,119 @@ class StartPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return const ControlPage(title: 'SettingPage');
-                    }));
+                          return const ControlPage(title: 'SettingPage');
+                          //return const SettingsPage();
+                        }));
                   },
                   child: const Text('Settings'))),
           Center(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center, // ← Add this.
                   children: [
-                Image.asset(
-                  'assets/images/Wifi.png',
-                  height: 200,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: () {
-                      if (appState.MainButtonText == "Suche") {
-                        appState.ChangeText();
-                        print("[LOG] Button pressed");
-                        ble_info().BLE_Search();
-                      } else {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return SecondScreen();
-                        }));
-                      }
-                    },
-                    child: Text(appState.MainButtonText)),
-                SizedBox(height: 50),
-              ]))
+                    Image.asset(
+                      'assets/images/Wifi.png',
+                      height: 200,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (appState.MainButtonText == "Suche") {
+                            appState.ChangeText();
+                            print("[LOG] Button pressed");
+                            ble_info().BLE_Search();
+                          } else {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                                  return SecondScreen();
+                                }));
+                          }
+                        },
+                        child: Text(appState.MainButtonText)),
+                    SizedBox(height: 50),
+                  ]))
         ]));
+  }
+  );
   }
 }
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _SettingsPage();
+}
+
+class _SettingsPage  extends State<SettingsPage> {
+
+  //final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('SETTINGS')),
-        body: Align(
-            alignment: Alignment.topLeft,
-            child: OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('back'))));
+    return Consumer<StateManager>(
+        builder: (context, stateManager, child)
+    {
+      return Scaffold(
+          backgroundColor: stateManager.backgroundColor,
+          appBar: AppBar(title: const Text('SETTINGS')),
+    body: SingleChildScrollView(
+    child: Column(
+    children: <Widget>[
+
+    Column(
+    children: [
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Background Color',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          Spacer()
+        ],
+      ),
+
+      //Buttons for Background color customization
+      Row (
+        children: [
+          SizedBox(width: 16),
+
+          ElevatedButton(
+            onPressed: () {
+              stateManager.setBackgroundColor(Colors.blueGrey);
+            },
+            child: Text('Gray'),
+          ),
+
+          SizedBox(width: 16),
+
+          ElevatedButton(
+            onPressed: () {
+              stateManager.setBackgroundColor(Colors.indigo);
+            },
+            child: Text('Blue'),
+          ),
+        ],
+      )
+    ],
+    )
+    ],
+    ),
+    ),
+    );
+  }
+    );
   }
 }
 
 
-
+//Adding landscape support
 class ControlPage extends StatelessWidget {
   const ControlPage({Key? key, required this.title}) : super(key: key);
 
@@ -151,23 +215,30 @@ class ControlPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
         body: OrientationWidget(
-            portrait: _PortraitControl(),
-            landscape: _LandscapeControl()
+            portrait: PortraitControl(),
+            landscape: LandscapeControl()
         )
     );
   }
 }
 
-//Adding landscape support
-class _PortraitControl extends StatelessWidget {
-  const _PortraitControl();
+class PortraitControl extends StatefulWidget {
+  const PortraitControl({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _PortraitControl();
+}
+
+class _PortraitControl extends State<PortraitControl> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<StateManager>(
+        builder: (context, stateManager, child)
+        {
     return Scaffold(
-      //appBar: AppBar(title: const Text('CONTROL')),
-      body: //Stack(children: <Widget>[
-      Column(
+      backgroundColor: stateManager.backgroundColor,
+
+      body: Column(
 
           children: [
 //Top Row moving battery info to the right side of the view
@@ -189,7 +260,8 @@ class _PortraitControl extends StatelessWidget {
 
             //wheel and pedal
             Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Adjust alignment as needed
+              mainAxisAlignment: MainAxisAlignment.center,
+              // Adjust alignment as needed
               children: [
                 //spacer of width 20 to align steering wheel
                 Container(
@@ -209,17 +281,26 @@ class _PortraitControl extends StatelessWidget {
           ]),
     );
   }
+  );
+  }
 }
 
-class _LandscapeControl extends StatelessWidget {
-  const _LandscapeControl();
+class LandscapeControl extends StatefulWidget {
+  const LandscapeControl({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _LandscapeControl();
+}
+
+class _LandscapeControl extends State<LandscapeControl> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<StateManager>(
+        builder: (context, stateManager, child)
+        {
     return Scaffold(
-      //appBar: AppBar(title: const Text('CONTROL')),
-      body: //Stack(children: <Widget>[
-      Row(
+      backgroundColor: stateManager.backgroundColor,
+      body: Row(
 
         //steering wheel on the left hand side
           children: [
@@ -252,5 +333,7 @@ class _LandscapeControl extends StatelessWidget {
             ),
           ]),
     );
+  }
+  );
   }
 }

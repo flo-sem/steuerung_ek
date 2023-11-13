@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
 import 'ble_info.dart';
+import 'state_manager.dart';
+import 'package:provider/provider.dart';
 
-class SecondScreen extends StatelessWidget {
-  SecondScreen({Key? key}) : super(key: key);
 
+class SecondScreen extends StatefulWidget {
+  const SecondScreen({Key? key}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => _SecondScreen();
+}
+
+class _SecondScreen extends State<SecondScreen> {
   final ble_info bluetoothProvider = ble_info();
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<StateManager>(
+        builder: (context, stateManager, child)
+        {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bluetooth Characteristic Value'),
       ),
+      backgroundColor: stateManager.backgroundColor,
       body: Center(
         // Center the content
         child: Column(
           mainAxisAlignment:
-              MainAxisAlignment.center, // Center the column itself
+          MainAxisAlignment.center, // Center the column itself
           children: <Widget>[
             StreamBuilder<List<int>>(
               stream: bluetoothProvider.charValueStream,
@@ -33,8 +44,8 @@ class SecondScreen extends StatelessWidget {
                   case ConnectionState.active:
                   case ConnectionState.done:
                     String valueAsString = snapshot.data
-                            ?.map((e) => e.toRadixString(16).padLeft(2, '0'))
-                            .join(':') ??
+                        ?.map((e) => e.toRadixString(16).padLeft(2, '0'))
+                        .join(':') ??
                         'No Data';
                     return Text('Value: $valueAsString');
                   default:
@@ -74,5 +85,7 @@ class SecondScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  );
   }
 }

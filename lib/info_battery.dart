@@ -18,14 +18,6 @@ class _DisplayState extends State<Display_battery> {
             child:   Image.asset(stateManager.batteryImage, width: 80)
           ,
           );
-          /*
-          return Stack(
-            children: [
-              Image.asset(stateManager.batteryImage, width: 80),
-            ],
-          );
-
-           */
         });
   }
 }
