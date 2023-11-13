@@ -6,6 +6,7 @@ import 'gas_pedal.dart';
 import 'info_display.dart';
 import 'ble_info.dart';
 import 'package:provider/provider.dart';
+import 'orientation_widget.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -138,6 +139,8 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+
+
 class ControlPage extends StatelessWidget {
   const ControlPage({Key? key, required this.title}) : super(key: key);
 
@@ -146,47 +149,108 @@ class ControlPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('CONTROL')),
+        appBar: AppBar(title: const Text('CONTROL')),
+        body: OrientationWidget(
+            portrait: _PortraitControl(),
+            landscape: _LandscapeControl()
+        )
+    );
+  }
+}
+
+//Adding landscape support
+class _PortraitControl extends StatelessWidget {
+  const _PortraitControl();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //appBar: AppBar(title: const Text('CONTROL')),
       body: //Stack(children: <Widget>[
-        Column(
+      Column(
 
-        children: [
+          children: [
 //Top Row moving battery info to the right side of the view
-Row(
-  children: [
-    Spacer(),
-    const Display_battery(),
-    Container(
-        width: 50,
-        height: 10
-    ),
-  ],
-),
+            Row(
+              children: [
+                Spacer(),
+                const Display_battery(),
+                Container(
+                    width: 50,
+                    height: 10
+                ),
+              ],
+            ),
 
-        //placing the speed view in the center of the view
-        Spacer(),
-        const Display(),
-        Spacer(),
+            //placing the speed view in the center of the view
+            Spacer(),
+            const Display(),
+            Spacer(),
 
-          //wheel and pedal
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center, // Adjust alignment as needed
-            children: [
-              //spacer of width 20 to align steering wheel
-              Container(
+            //wheel and pedal
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center, // Adjust alignment as needed
+              children: [
+                //spacer of width 20 to align steering wheel
+                Container(
+                    width: 20,
+                    height: 10
+                ),
+
+                //dynamic sizing
+                Expanded(
+                  child: const SteeringWheel(),
+                ),
+                Expanded(
+                  child: const GasPedal(),
+                ),
+              ],
+            ),
+          ]),
+    );
+  }
+}
+
+class _LandscapeControl extends StatelessWidget {
+  const _LandscapeControl();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //appBar: AppBar(title: const Text('CONTROL')),
+      body: //Stack(children: <Widget>[
+      Row(
+
+        //steering wheel on the left hand side
+          children: [
+            Container(
                 width: 20,
                 height: 10
-              ),
+            ),
 
-              Expanded(
-                  child: const SteeringWheel(),
-              ),
-              Expanded(
-                  child: const GasPedal(),
-              ),
-            ],
-          ),
-      ]),
+            //dynamic sizing
+            Expanded(
+              child: const SteeringWheel(),
+            ),
+
+            //vertical combination of battery info and speed in the row center
+            Expanded(
+              child:
+              Column(
+                children: [
+                  const Display_battery(),
+                  Spacer(),
+                  const Display(),
+                  Spacer(),
+                ],
+              )
+            ),
+
+            //gas pedal on the right hand side
+            Expanded(
+              child: const GasPedal(),
+            ),
+          ]),
     );
   }
 }
