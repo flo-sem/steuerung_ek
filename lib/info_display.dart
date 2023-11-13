@@ -20,27 +20,34 @@ class _DisplayState extends State<Display> {
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget> [
+                    children: <Widget>[
                       Text(stateManager.speed.toString(),
-                          style: Theme.of(context).textTheme.displayLarge
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .displayLarge
                       ),
                       Text('km/h',
-                          style: Theme.of(context).textTheme.headlineSmall
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .headlineSmall
                       )
                     ],
                   )
               ),
               Align(
-                alignment: Alignment.topRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Image.asset(stateManager.batteryImage, width: 80),
-                    SizedBox(width: 10)
-                  ],
-                )
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset(stateManager.batteryImage, width: 80),
+                      SizedBox(width: 10)
+                    ],
+                  )
               )
             ],
           );
-    });
+        });
   }
+}
