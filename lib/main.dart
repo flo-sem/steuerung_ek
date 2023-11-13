@@ -147,11 +147,45 @@ class ControlPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('CONTROL')),
-      body: Stack(children: <Widget>[
-        const SteeringWheel(),
-        const GasPedal(),
+      body: //Stack(children: <Widget>[
+        Column(
+
+        children: [
+//Top Row moving battery info to the right side of the view
+Row(
+  children: [
+    Spacer(),
+    const Display_battery(),
+    Container(
+        width: 50,
+        height: 10
+    ),
+  ],
+),
+
+        //placing the speed view in the center of the view
+        Spacer(),
         const Display(),
-        const Display_battery(),
+        Spacer(),
+
+          //wheel and pedal
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center, // Adjust alignment as needed
+            children: [
+              //spacer of width 20 to align steering wheel
+              Container(
+                width: 20,
+                height: 10
+              ),
+
+              Expanded(
+                  child: const SteeringWheel(),
+              ),
+              Expanded(
+                  child: const GasPedal(),
+              ),
+            ],
+          ),
       ]),
     );
   }
