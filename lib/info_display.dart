@@ -17,7 +17,7 @@ class _DisplayState extends State<Display> {
           return Stack(
             children: [
               Align(
-                  alignment: Alignment.center,
+                  //alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

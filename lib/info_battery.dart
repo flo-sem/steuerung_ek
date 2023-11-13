@@ -14,21 +14,18 @@ class _DisplayState extends State<Display_battery> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(
         builder: (context, stateManager, child) {
+          return Align(
+            child:   Image.asset(stateManager.batteryImage, width: 80)
+          ,
+          );
+          /*
           return Stack(
             children: [
-
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(stateManager.batteryImage, width: 80),
-                      SizedBox(width: 10)
-                    ],
-                  )
-              )
+              Image.asset(stateManager.batteryImage, width: 80),
             ],
           );
+
+           */
         });
   }
 }
