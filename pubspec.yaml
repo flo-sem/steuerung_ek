@@ -32,7 +32,7 @@ flutter:
     - assets/images/battery1.png
     - assets/images/battery2.png
     - assets/images/battery3.png
-    - assets/images/battery3.png
+    - assets/images/battery4.png
 
   uses-material-design: true
 
