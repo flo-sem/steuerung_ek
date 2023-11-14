@@ -317,6 +317,12 @@ class ControlPageState extends State<ControlPage> {
     pedal = stateManager.pedalState;
   }
 
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   /*@override
   Widget build(BuildContext context) {
     return Scaffold(
