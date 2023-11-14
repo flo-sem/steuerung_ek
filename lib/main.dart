@@ -69,15 +69,15 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  var MainButtonText = "Suche";
+  var MainButtonText = "Suche starten";
   var characteristics;
 
   void ChangeText() {
-    MainButtonText = "Verbinden";
+    MainButtonText = "Suche läuft";
     notifyListeners();
 
     Future.delayed(Duration(seconds: 5), () {
-      MainButtonText = "Suche";
+      MainButtonText = "Suche starten";
       notifyListeners();
     });
   }
@@ -123,7 +123,7 @@ class _StartPage extends State<StartPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
-                        if (appState.MainButtonText == "Suche") {
+                        if (appState.MainButtonText == "Suche starten") {
                           appState.ChangeText();
                           print("[LOG] Button pressed");
                           ble_info().BLE_Search();
