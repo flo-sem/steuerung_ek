@@ -51,15 +51,15 @@ class ble_info {
     print('Device disconnected');
   }
 
+  var subscription;
   void BLE_Search() async {
     print("[LOG] STARTED SEARCHING");
-    var subscription = FlutterBluePlus.scanResults.listen((results) async {
+    subscription = FlutterBluePlus.scanResults.listen((results) async {
       for (ScanResult r in results) {
         // DEBUG STATEMENTS
         /* print(
               '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
           seen.add(r.device.remoteId); */
-
         // Search for specific device
         if (r.advertisementData.localName == DEVICE_NAME) {
           // Assign device
@@ -70,6 +70,8 @@ class ble_info {
             }*/
           // Stop scanning
           FlutterBluePlus.stopScan();
+          // Cancel subscription
+          subscription.cancel();
           // Connect to device
           await r.device.connect();
           // Discover services
@@ -79,6 +81,7 @@ class ble_info {
     });
     // Start scanning
     await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
+    subscription.cancel();
   }
 
   //Should ONLY be called, when a device is connected!!!
