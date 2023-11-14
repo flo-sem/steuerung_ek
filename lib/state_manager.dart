@@ -43,7 +43,7 @@ class StateManager with ChangeNotifier {
   bool lastGasWasSent = false;
 
   //allowed minimal interval between sending to ble device
-  int minimumSendDelay = 20;
+  int minimumSendDelay = 2000;
 
   bool minimumSendDelayReached(DateTime lastTimestamp) {
     DateTime time = DateTime.now();

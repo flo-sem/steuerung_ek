@@ -106,7 +106,7 @@ class _StartPage extends State<StartPage> {
                       stateManager.setSteeringAngle(0.0);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        //return const ControlPage(title: 'SettingPage');
+                        return const ControlPage(title: 'SettingPage');
                         return const SettingsPage();
                       }));
                     },

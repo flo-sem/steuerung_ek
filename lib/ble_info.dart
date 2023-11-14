@@ -155,6 +155,7 @@ class ble_info {
 
   void BLE_WriteCharateristics(List<int> writeData) async {
     print("[LOG] WRITING CHARACTERISTICS");
+    print("[LOG] ----> ${writeData.toString()}");
     if (writeCharacteristic != null) {
       await writeCharacteristic?.write(writeData);
     }
