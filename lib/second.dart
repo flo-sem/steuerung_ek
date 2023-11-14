@@ -3,16 +3,14 @@ import 'ble_info.dart';
 import 'state_manager.dart';
 import 'package:provider/provider.dart';
 
-
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _SecondScreen();
 }
 
 class _SecondScreen extends State<SecondScreen> {
-  final ble_info bluetoothProvider = ble_info();
-
   @override
   Widget build(BuildContext context) {
     return Consumer<StateManager>(
@@ -76,16 +74,35 @@ class _SecondScreen extends State<SecondScreen> {
             SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () {
-                  ble_info().BLE_ReadCharacteristics();
+                  List<int> input = [
+                    0x48,
+                    0x65,
+                    0x6c,
+                    0x6c,
+                    0x6f,
+                    0x20,
+                    0x77,
+                    0x6f,
+                    0x72,
+                    0x6c,
+                    0x64
+                  ];
+                  ble_info().BLE_WriteCharateristics(input);
                 },
-                child: Text("Request Data")),
-            SizedBox(height: 10),
-            Text("recieved: ${ble_info().inputBuffer.toString()}")
-          ],
+                child: Text('Send HelloWorld'),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                  onPressed: () {
+                    ble_info().BLE_ReadCharacteristics();
+                  },
+                  child: Text("Request Data")),
+              SizedBox(height: 10),
+              Text("recieved: ${ble_info().inputBuffer.toString()}")
+            ],
+          ),
         ),
-      ),
-    );
-  }
-  );
+      );
+    });
   }
 }

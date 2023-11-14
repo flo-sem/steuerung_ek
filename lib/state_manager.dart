@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'ble_info.dart';
 
-
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
 
   int _speed = 0;
+
   int get speed => _speed;
 
   double _steeringAngle = 0.0;
+
   double get steeringAngle => _steeringAngle;
 
   int _pedalState = 0;
+
   int get pedalState => _pedalState;
 
   int _batteryChargingState = 100;
+
   int get batteryChargingState => _batteryChargingState;
 
   String _batteryImage = 'assets/images/battery4.png';
+
   String get batteryImage => _batteryImage;
 
-  Color _backgroundColor = Colors.blueGrey ;
+  Color _backgroundColor = Colors.blueGrey;
+
   Color get backgroundColor => _backgroundColor;
 
 
@@ -43,7 +48,7 @@ class StateManager with ChangeNotifier {
     DateTime time = DateTime.now();
     int interval = time.difference(lastTimestamp).inMilliseconds;
 
-    return interval >= minimumSendDelay;
+   return interval >= minimumSendDelay;
   }
 
   void setMinimumSendDelay(int value) {
@@ -62,6 +67,7 @@ class StateManager with ChangeNotifier {
       //Send here
 
      //print("sending allowed");
+
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastSteerWasSent = true;
       lastSteerMs = DateTime.now();
@@ -90,7 +96,7 @@ class StateManager with ChangeNotifier {
 
     bool canSend = minimumSendDelayReached(lastGasMs);
     if (canSend) {
-
+      
       //Send here
 
       //print("sending allowed");
@@ -117,21 +123,17 @@ class StateManager with ChangeNotifier {
 
   void setBatteryChargingState(int value) {
     _batteryChargingState = value;
-    if(value < 20) {
+    if (value < 20) {
       _batteryImage = 'assets/images/battery0.png';
-    }
-    else if((value >= 20) && (value < 40)) {
+    } else if ((value >= 20) && (value < 40)) {
       _batteryImage = 'assets/images/battery1.png';
-    }
-    else if((value >= 40) && (value < 60)) {
+    } else if ((value >= 40) && (value < 60)) {
       _batteryImage = 'assets/images/battery2.png';
-    }
-    else if((value >= 60) && (value < 80)) {
+    } else if ((value >= 60) && (value < 80)) {
       _batteryImage = 'assets/images/battery3.png';
-    }
-    else {
+    } else {
       _batteryImage = 'assets/images/battery4.png';
-  }
+    }
     notifyListeners();
   }
 
