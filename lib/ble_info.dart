@@ -5,11 +5,14 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  final String DEVICE_NAME = "Time"; //"ESP32 BLE";
-  final String SERVICE_UUID = "Time"; //"000000ff-0000-1000-8000-00805f9b34fb";
-  final String READ_CHARACTERISTIC_UUID = "Time";
+  final String DEVICE_NAME = "Blank"; //"ESP32 BLE";
+  final String SERVICE_UUID =
+      "00001111-0000-1000-8000-00805f9b34fb"; //"000000ff-0000-1000-8000-00805f9b34fb";
+  final String READ_CHARACTERISTIC_UUID =
+      "00002222-0000-1000-8000-00805f9b34fb";
   //"0000ff01-0000-1000-8000-00805f9b34fb";
-  final String WRITE_CHARACTERISTIC_UUID = "Time";
+  final String WRITE_CHARACTERISTIC_UUID =
+      "00002222-0000-1000-8000-00805f9b34fb";
   //"00002a2b-0000-1000-8000-00805f9b34fb";
 
   BluetoothCharacteristic? readCharacteristic;
@@ -80,6 +83,8 @@ class ble_info {
           subscription.cancel();
           // Connect to device
           await r.device.connect();
+          //Listen to connection changes
+          listenToConnectionChanges();
           // Discover services
           BLE_discoverServices();
         }
