@@ -252,9 +252,7 @@ class ControlPage extends StatefulWidget {
   final String title;
   @override
   ControlPageState createState() => ControlPageState();
-  }
-
-
+}
 
 //Adding landscape support
 class ControlPageState extends State<ControlPage> {
@@ -267,11 +265,12 @@ class ControlPageState extends State<ControlPage> {
     super.initState();
     timer = Timer.periodic(
       Duration(seconds: 1),
-          (timer) {
+      (timer) {
         //ble_info().BLE_WriteCharateristics(writeData)
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
         ble_info().BLE_WriteCharateristics(valueList);
+        ble_info().BLE_ReadCharacteristics();
       },
     );
   }
@@ -296,7 +295,7 @@ class ControlPageState extends State<ControlPage> {
   }
 }*/
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
