@@ -167,6 +167,7 @@ class ble_info {
     if (readCharacteristic != null) {
       readCharacteristic?.read().then((value) {
         MyAppState().UpdateInputBuffer(value);
+        print("[LOG] ----> ${value.toString()}");
       });
     }
   }
