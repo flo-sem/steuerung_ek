@@ -14,7 +14,6 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'second.dart';
 
-
 enum ConnectionStateImage {
   disconnected,
   searching,
@@ -81,12 +80,21 @@ class MyAppState extends ChangeNotifier {
   var MainButtonText = "Suche starten";
   var characteristics;
 
+  void fastUpdate() {
+    MainButtonText = "Verbinden";
+    notifyListeners();
+  }
+
   void ChangeText() {
     MainButtonText = "Suche läuft";
     notifyListeners();
 
     Future.delayed(Duration(seconds: 5), () {
-      MainButtonText = "Suche starten";
+      if (statusImageURL == 'assets/images/label_BT.png') {
+        MainButtonText = "Verbinden";
+      } else {
+        MainButtonText = "Suche starten";
+      }
       notifyListeners();
     });
   }
@@ -105,8 +113,8 @@ class MyAppState extends ChangeNotifier {
         statusImageURL = 'assets/images/label_BT.png';
         break;
     }
+    notifyListeners();
   }
-
 }
 
 class StartPage extends StatefulWidget {
@@ -149,16 +157,18 @@ class _StartPage extends State<StartPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
-                        if (appState.MainButtonText == "Suche starten") {
+                        if (appState.statusImageURL ==
+                            "assets/images/label_noBT.png") {
                           appState.ChangeText();
                           print("[LOG] Button pressed");
                           ble_info().BLE_Search();
-                        } else {
+                        } else if (appState.statusImageURL ==
+                            "assets/images/label_BT.png") {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return SecondScreen();
+                            return ControlPage(title: 'yeet');
                           }));
-                        }
+                        } else {}
                       },
                       child: Text(appState.MainButtonText)),
                   SizedBox(height: 50),
