@@ -55,6 +55,20 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
+  // Singleton setup (sünde)
+  static final MyAppState _instance = MyAppState._internal();
+
+  factory MyAppState() => _instance;
+
+  MyAppState._internal();
+
+  // ble input buffer
+  List<int> testBuffer = [];
+  void UpdateInputBuffer(List<int> input) {
+    testBuffer = input;
+    notifyListeners();
+  }
+
   var MainButtonText = "Suche";
   var characteristics;
 

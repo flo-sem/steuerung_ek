@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'main.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
@@ -66,9 +67,6 @@ class ble_info {
     subscription = FlutterBluePlus.scanResults.listen((results) async {
       for (ScanResult r in results) {
         // DEBUG STATEMENTS
-        /* print(
-              '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-          seen.add(r.device.remoteId); */
         // Search for specific device
         if (r.advertisementData.localName == DEVICE_NAME) {
           // Assign device
@@ -159,6 +157,7 @@ class ble_info {
   }
 
   void BLE_WriteCharateristics(List<int> writeData) async {
+    print("[LOG] WRITING CHARACTERISTICS");
     if (writeCharacteristic != null) {
       await writeCharacteristic?.write(writeData);
     }
@@ -166,9 +165,10 @@ class ble_info {
 
   // Backup function in case the "notifier" doesnt work
   void BLE_ReadCharacteristics() async {
+    print("[LOG] READING CHARACTERISTICS");
     if (readCharacteristic != null) {
       readCharacteristic?.read().then((value) {
-        inputBuffer = value;
+        MyAppState().UpdateInputBuffer(value);
       });
     }
   }

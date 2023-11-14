@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'ble_info.dart';
 import 'state_manager.dart';
 import 'package:provider/provider.dart';
+import 'main.dart';
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class SecondScreen extends StatefulWidget {
 class _SecondScreen extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
         appBar: AppBar(
@@ -76,7 +79,7 @@ class _SecondScreen extends State<SecondScreen> {
                   },
                   child: Text("Request Data")),
               SizedBox(height: 10),
-              Text("recieved: ${ble_info().inputBuffer.toString()}")
+              Text("recieved: ${appState.testBuffer.toString()}")
             ],
           ),
         ),
