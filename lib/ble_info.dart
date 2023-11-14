@@ -132,9 +132,6 @@ class ble_info {
                 print(
                     "[LOG]    FOUND readCharacteristic $READ_CHARACTERISTIC_UUID");
                 print("[LOG]    ---> $value");
-                c.read().then((value) {
-                  _charValueController.add(value);
-                });
                 // Listen to characteristic changes
                 /*c.setNotifyValue(true);
                 c.lastValueStream.listen((value) {

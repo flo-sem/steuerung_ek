@@ -56,8 +56,8 @@ class _SecondScreen extends State<SecondScreen> {
               ElevatedButton(
                 onPressed: () {
                   List<int> input = [
-                    0x48,
-                    0x65,
+                    0x48
+                    /*0x65,
                     0x6c,
                     0x6c,
                     0x6f,
@@ -66,7 +66,7 @@ class _SecondScreen extends State<SecondScreen> {
                     0x6f,
                     0x72,
                     0x6c,
-                    0x64
+                    0x64**/
                   ];
                   ble_info().BLE_WriteCharateristics(input);
                 },
