@@ -17,6 +17,10 @@ class _DisplayState extends State<Display> {
           return Stack(
             children: [
               Align(
+                alignment: Alignment.center,
+                child: Text(stateManager.steeringAngle.round().toString()),
+              ),
+              Align(
                   //alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

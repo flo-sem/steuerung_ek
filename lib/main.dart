@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
@@ -9,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'orientation_widget.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'dart:async';
+import 'package:convert/convert.dart';
 
 import 'second.dart';
 
@@ -17,6 +21,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => StateManager()),
+        ChangeNotifierProvider(create: (_) => StateBluetooth())
       ],
       child: const MyApp(),
     ),
@@ -27,7 +32,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  /*Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'shopping cart control',
       theme: ThemeData(
@@ -37,9 +42,10 @@ class MyApp extends StatelessWidget {
       ),
       home: StartPage(title: 'Start Menu'),
     );
-  }*/
+  }
+}
 
-  Widget build(BuildContext context) {
+  /*Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
@@ -52,22 +58,7 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-class MyAppState extends ChangeNotifier {
-  var MainButtonText = "Suche";
-  var characteristics;
-
-  void ChangeText() {
-    MainButtonText = "Verbinden";
-    notifyListeners();
-
-    Future.delayed(Duration(seconds: 5), () {
-      MainButtonText = "Suche";
-      notifyListeners();
-    });
-  }
-}
+}*/
 
 class StartPage extends StatelessWidget {
   StartPage({Key? key, required this.title}) : super(key: key);
@@ -76,7 +67,7 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = Provider.of<StateBluetooth>(context);
 
     return Scaffold(
         appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
@@ -87,7 +78,7 @@ class StartPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return const ControlPage(title: 'SettingPage');
+                      return const SettingsPage(title: 'SettingPage');
                     }));
                   },
                   child: const Text('Settings'))),
@@ -114,7 +105,15 @@ class StartPage extends StatelessWidget {
                       }
                     },
                     child: Text(appState.MainButtonText)),
-                SizedBox(height: 50),
+                SizedBox(height: 50), 
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return ControlPage(title: 'Control Page');
+                              }));
+                        },
+                    child: Text('Control Page'))
               ]))
         ]));
   }
@@ -139,13 +138,40 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-
-
-class ControlPage extends StatelessWidget {
-  const ControlPage({Key? key, required this.title}) : super(key: key);
-
+class ControlPage extends StatefulWidget {
+  ControlPage({Key? key, required this.title}) : super(key: key);
   final String title;
+  @override
+  ControlPageState createState() => ControlPageState();
+}
+class ControlPageState extends State<ControlPage> {
+  double angle = 0;
+  Timer? timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+      Duration(seconds: 1),
+          (timer) {
+        //ble_info().BLE_WriteCharateristics(writeData)
+            var asci = AsciiEncoder().convert(angle.round().toString());
+            List<int> data = [];
+            for(var i in asci) {
+              int x = i.toInt();
+              data.add(x);
+            }
+            print('[DATA_LOG]' + data.toString());
+            ble_info().BLE_WriteCharateristics(data);
 
+      },
+    );
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var stateManager = Provider.of<StateManager>(context);
+    angle = stateManager.steeringAngle;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

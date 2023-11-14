@@ -18,6 +18,7 @@ class StateManager with ChangeNotifier {
   String _batteryImage = 'assets/images/battery4.png';
   String get batteryImage => _batteryImage;
 
+
   void setSteeringAngle(double value) {
     _steeringAngle = value;
     notifyListeners();
@@ -46,5 +47,22 @@ class StateManager with ChangeNotifier {
       _batteryImage = 'assets/images/battery4.png';
   }
     notifyListeners();
+  }
+}
+
+class StateBluetooth with ChangeNotifier {
+  String _MainButtonText = "Suche";
+  String get MainButtonText => _MainButtonText;
+
+  var characteristics;
+
+  void ChangeText() {
+    _MainButtonText = "Verbinden";
+    notifyListeners();
+
+    Future.delayed(Duration(seconds: 5), () {
+      _MainButtonText = "Suche";
+      notifyListeners();
+    });
   }
 }
