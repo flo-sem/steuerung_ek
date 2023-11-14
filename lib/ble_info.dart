@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'main.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  final String DEVICE_NAME = "ESP32 BLE";
-  final String SERVICE_UUID = "000000ff-0000-1000-8000-00805f9b34fb";
+  final String DEVICE_NAME = "Blank"; //"ESP32 BLE";
+  final String SERVICE_UUID =
+      "00001111-0000-1000-8000-00805f9b34fb"; //"000000ff-0000-1000-8000-00805f9b34fb";
   final String READ_CHARACTERISTIC_UUID =
-      "0000ff01-0000-1000-8000-00805f9b34fb";
+      "00002222-0000-1000-8000-00805f9b34fb";
+  //"0000ff01-0000-1000-8000-00805f9b34fb";
   final String WRITE_CHARACTERISTIC_UUID =
-      "00002a2b-0000-1000-8000-00805f9b34fb";
+      "00002222-0000-1000-8000-00805f9b34fb";
+  //"00002a2b-0000-1000-8000-00805f9b34fb";
 
   BluetoothCharacteristic? readCharacteristic;
   BluetoothCharacteristic? writeCharacteristic;
@@ -51,38 +55,48 @@ class ble_info {
     print('Device disconnected');
   }
 
+  var subscription;
   void BLE_Search() async {
-    print("[LOG] STARTED SEARCHING");
-    var subscription = FlutterBluePlus.scanResults.listen((results) async {
-      for (ScanResult r in results) {
-        if (seen.contains(r.device.remoteId) == false) {
-          // DEBUG STATEMENTS
-          /* print(
-              '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
-          seen.add(r.device.remoteId); */
+    // Maybe this is causing issues?
+    await FlutterBluePlus.stopScan();
+    subscription?.cancel();
+    // Start scanning
+    await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
 
-          // Search for specific device
-          if (r.advertisementData.localName == DEVICE_NAME) {
-            // Assign device
-            bluetoothDevice = r;
-            print("[LOG] FOUND DEVICE $DEVICE_NAME");
-            /*for (String uuid in r.advertisementData.serviceUuids) {
+    print("[LOG] STARTED SEARCHING");
+    subscription = FlutterBluePlus.scanResults.listen((results) async {
+      for (ScanResult r in results) {
+        // DEBUG STATEMENTS
+        // Search for specific device
+        if (r.advertisementData.localName == DEVICE_NAME) {
+          // Assign device
+          bluetoothDevice = r;
+          print("[LOG] FOUND DEVICE $DEVICE_NAME");
+          /*for (String uuid in r.advertisementData.serviceUuids) {
               print("[LOG] FOUND SERVICE $uuid");
             }*/
-            // Stop scanning
-            FlutterBluePlus.stopScan();
-
-            // Connect to device
-            await r.device.connect();
-
-            // Discover services
-            BLE_discoverServices();
-          }
+          // Stop scanning
+          FlutterBluePlus.stopScan();
+          // Cancel subscription
+          subscription.cancel();
+          // Connect to device
+          await r.device.connect();
+          //Listen to connection changes
+          listenToConnectionChanges();
+          // Discover services
+          BLE_discoverServices();
         }
       }
     });
     // Start scanning
-    await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
+    // Set up a timer to stop scanning after 5 seconds
+    Timer(Duration(seconds: 5), () {
+      if (!subscription.isPaused) {
+        print("[LOG] SCAN TIMEOUT");
+        FlutterBluePlus.stopScan();
+        subscription.cancel();
+      }
+    });
   }
 
   //Should ONLY be called, when a device is connected!!!
@@ -118,9 +132,6 @@ class ble_info {
                 print(
                     "[LOG]    FOUND readCharacteristic $READ_CHARACTERISTIC_UUID");
                 print("[LOG]    ---> $value");
-                c.read().then((value) {
-                  _charValueController.add(value);
-                });
                 // Listen to characteristic changes
                 /*c.setNotifyValue(true);
                 c.lastValueStream.listen((value) {
@@ -143,6 +154,7 @@ class ble_info {
   }
 
   void BLE_WriteCharateristics(List<int> writeData) async {
+    print("[LOG] WRITING CHARACTERISTICS");
     if (writeCharacteristic != null) {
       await writeCharacteristic?.write(writeData);
     }
@@ -150,9 +162,10 @@ class ble_info {
 
   // Backup function in case the "notifier" doesnt work
   void BLE_ReadCharacteristics() async {
+    print("[LOG] READING CHARACTERISTICS");
     if (readCharacteristic != null) {
       readCharacteristic?.read().then((value) {
-        inputBuffer = value;
+        MyAppState().UpdateInputBuffer(value);
       });
     }
   }
