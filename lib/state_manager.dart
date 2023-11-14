@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'ble_info.dart';
+import 'package:convert/convert.dart';
 
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
@@ -28,7 +31,6 @@ class StateManager with ChangeNotifier {
 
   Color get backgroundColor => _backgroundColor;
 
-
   /* properties for ble send interval control */
 
 //last time the steering angle was sent to ble device
@@ -41,14 +43,13 @@ class StateManager with ChangeNotifier {
   bool lastGasWasSent = false;
 
   //allowed minimal interval between sending to ble device
-  int minimumSendDelay = 20;
-
+  int minimumSendDelay = 2000;
 
   bool minimumSendDelayReached(DateTime lastTimestamp) {
     DateTime time = DateTime.now();
     int interval = time.difference(lastTimestamp).inMilliseconds;
 
-   return interval >= minimumSendDelay;
+    return interval >= minimumSendDelay;
   }
 
   void setMinimumSendDelay(int value) {
@@ -63,17 +64,15 @@ class StateManager with ChangeNotifier {
     //is interval reached?
     bool canSend = minimumSendDelayReached(lastSteerMs);
     if (canSend) {
-
       //Send here
-
-     //print("sending allowed");
-
+      //print("sending allowed");
+      ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastSteerWasSent = true;
       lastSteerMs = DateTime.now();
     } else {
       lastSteerWasSent = false;
-     //print("no send");
+      //print("no send");
 
       //send the last value of a change in steering angle
       Future.delayed(Duration(milliseconds: minimumSendDelay), () {
@@ -81,8 +80,10 @@ class StateManager with ChangeNotifier {
           lastSteerWasSent = true;
           lastSteerMs = DateTime.now();
 
+          //List<int> send = [value.toInt(), _pedalState];
+          //List<String> hexList = send.map((int item) => item.toRadixString(16)).toList();
           //send here
-
+          ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
         }
@@ -96,9 +97,8 @@ class StateManager with ChangeNotifier {
 
     bool canSend = minimumSendDelayReached(lastGasMs);
     if (canSend) {
-      
       //Send here
-
+      ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
       //print("sending allowed");
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastGasWasSent = true;
@@ -113,7 +113,7 @@ class StateManager with ChangeNotifier {
           lastGasMs = DateTime.now();
 
           //send here
-
+          ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
         }
