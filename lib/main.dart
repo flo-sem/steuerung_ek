@@ -191,7 +191,42 @@ class _SettingsPage  extends State<SettingsPage> {
             child: Text('Blue'),
           ),
         ],
-      )
+      ),
+
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(children: [
+          Row(
+            children: [
+              Text(
+                'Min. send Interval',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Spacer()
+            ],
+          ),
+          //Text input for minimum ble sending interval
+          TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (newValue) {
+              setState(() {
+                //Update the numberValue when the text field changes
+                int num = int.tryParse(newValue) ?? 20;
+                //print(num);
+                stateManager.setMinimumSendDelay(num);
+              });
+            },
+            decoration: InputDecoration(
+              labelText: '${stateManager.minimumSendDelay} ms',
+              border: OutlineInputBorder(),
+              suffixText: 'ms', // Suffix added here
+            ),
+          ),
+        ]),
+      ),
     ],
     )
     ],

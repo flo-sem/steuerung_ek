@@ -30,7 +30,7 @@ class _SecondScreen extends State<SecondScreen> {
           MainAxisAlignment.center, // Center the column itself
           children: <Widget>[
             StreamBuilder<List<int>>(
-              stream: bluetoothProvider.charValueStream,
+              stream: stateManager.bluetoothProvider.charValueStream,
               builder:
                   (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
                 if (snapshot.hasError) {
