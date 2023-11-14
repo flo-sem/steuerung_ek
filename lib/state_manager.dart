@@ -43,11 +43,17 @@ class StateManager with ChangeNotifier {
   //allowed minimal interval between sending to ble device
   int minimumSendDelay = 20;
 
+
   bool minimumSendDelayReached(DateTime lastTimestamp) {
     DateTime time = DateTime.now();
     int interval = time.difference(lastTimestamp).inMilliseconds;
 
-    return interval >= 20;
+   return interval >= minimumSendDelay;
+  }
+
+  void setMinimumSendDelay(int value) {
+    minimumSendDelay = value;
+    //print("Send delay set to $minimumSendDelay");
   }
 
   void setSteeringAngle(double value) {
@@ -57,26 +63,28 @@ class StateManager with ChangeNotifier {
     //is interval reached?
     bool canSend = minimumSendDelayReached(lastSteerMs);
     if (canSend) {
+
       //Send here
 
-      //print("sending allowed");
+     //print("sending allowed");
+
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastSteerWasSent = true;
       lastSteerMs = DateTime.now();
     } else {
       lastSteerWasSent = false;
-      //print("no send");
+     //print("no send");
 
       //send the last value of a change in steering angle
       Future.delayed(Duration(milliseconds: minimumSendDelay), () {
         if (!lastSteerWasSent) {
+          lastSteerWasSent = true;
+          lastSteerMs = DateTime.now();
+
           //send here
 
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-
-          lastSteerWasSent = true;
-          lastSteerMs = DateTime.now();
         }
       });
     }
@@ -88,6 +96,7 @@ class StateManager with ChangeNotifier {
 
     bool canSend = minimumSendDelayReached(lastGasMs);
     if (canSend) {
+      
       //Send here
 
       //print("sending allowed");
@@ -100,13 +109,13 @@ class StateManager with ChangeNotifier {
 
       Future.delayed(Duration(milliseconds: minimumSendDelay), () {
         if (!lastGasWasSent) {
+          lastGasWasSent = true;
+          lastGasMs = DateTime.now();
+
           //send here
 
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-
-          lastGasWasSent = true;
-          lastGasMs = DateTime.now();
         }
       });
     }
