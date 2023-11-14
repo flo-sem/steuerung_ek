@@ -7,6 +7,8 @@ import 'info_display.dart';
 import 'ble_info.dart';
 import 'package:provider/provider.dart';
 import 'orientation_widget.dart';
+import 'dart:async';
+import 'package:convert/convert.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -106,7 +108,7 @@ class _StartPage extends State<StartPage> {
                       stateManager.setSteeringAngle(0.0);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const ControlPage(title: 'SettingPage');
+                        return ControlPage(title: 'SettingPage');
                         return const SettingsPage();
                       }));
                     },
@@ -244,13 +246,57 @@ class _SettingsPage extends State<SettingsPage> {
   }
 }
 
-//Adding landscape support
-class ControlPage extends StatelessWidget {
+class ControlPage extends StatefulWidget {
   const ControlPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+  @override
+  ControlPageState createState() => ControlPageState();
+  }
+
+
+
+//Adding landscape support
+class ControlPageState extends State<ControlPage> {
+  double angle = 0;
+  int pedal = 0;
+  Timer? timer;
 
   @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+      Duration(seconds: 1),
+          (timer) {
+        //ble_info().BLE_WriteCharateristics(writeData)
+        List<int> valueList = [angle.toInt(), pedal];
+        print('[DATA_LOG]' + valueList.toString());
+        ble_info().BLE_WriteCharateristics(valueList);
+      },
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var stateManager = Provider.of<StateManager>(context);
+    angle = stateManager.steeringAngle;
+    pedal = stateManager.pedalState;
+  }
+
+  /*@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('CONTROL')),
+        body: OrientationWidget(
+            portrait: _PortraitControl(),
+            landscape: _LandscapeControl()
+        )
+    );
+  }
+}*/
+
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
