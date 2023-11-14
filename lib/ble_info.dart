@@ -53,6 +53,12 @@ class ble_info {
 
   var subscription;
   void BLE_Search() async {
+    // Maybe this is causing issues?
+    await FlutterBluePlus.stopScan();
+    subscription?.cancel();
+    // Start scanning
+    await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
+
     print("[LOG] STARTED SEARCHING");
     subscription = FlutterBluePlus.scanResults.listen((results) async {
       for (ScanResult r in results) {
@@ -80,8 +86,14 @@ class ble_info {
       }
     });
     // Start scanning
-    await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
-    subscription.cancel();
+    // Set up a timer to stop scanning after 5 seconds
+    Timer(Duration(seconds: 5), () {
+      if (!subscription.isPaused) {
+        print("[LOG] SCAN TIMEOUT");
+        FlutterBluePlus.stopScan();
+        subscription.cancel();
+      }
+    });
   }
 
   //Should ONLY be called, when a device is connected!!!
