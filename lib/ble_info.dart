@@ -42,11 +42,11 @@ class ble_info {
   void listenToConnectionChanges() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
-MyAppState().setImage(ConnectionStateImage.disconnected);
+        MyAppState().setImage(ConnectionStateImage.disconnected);
         _handleDisconnection();
       }
       if (state == BluetoothConnectionState.connected) {
-        MyAppState().setImage(ConnectionStateImage.connected);
+        _connectImage();
       }
       // Maybe other states?
     });
@@ -56,6 +56,10 @@ MyAppState().setImage(ConnectionStateImage.disconnected);
     Future.delayed(Duration(seconds: 2)); //Wait 2 seconds
     bluetoothDevice.device.connect();
     print('Device disconnected');
+  }
+
+  void _connectImage() {
+    MyAppState().setImage(ConnectionStateImage.connected);
   }
 
   var subscription;
@@ -82,6 +86,9 @@ MyAppState().setImage(ConnectionStateImage.disconnected);
           FlutterBluePlus.stopScan();
           // Cancel subscription
           subscription.cancel();
+          //change Image faster
+          _connectImage();
+          MyAppState().fastUpdate();
           // Connect to device
           await r.device.connect();
           //Listen to connection changes
