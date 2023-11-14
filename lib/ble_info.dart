@@ -42,8 +42,11 @@ class ble_info {
   void listenToConnectionChanges() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
-        // Handle disconnection
+MyAppState().setImage(ConnectionStateImage.disconnected);
         _handleDisconnection();
+      }
+      if (state == BluetoothConnectionState.connected) {
+        MyAppState().setImage(ConnectionStateImage.connected);
       }
       // Maybe other states?
     });

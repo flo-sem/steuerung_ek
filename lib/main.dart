@@ -12,6 +12,13 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'second.dart';
 
+
+enum ConnectionStateImage {
+  disconnected,
+  searching,
+  connected,
+}
+
 void main() {
   runApp(
     MultiProvider(
@@ -81,6 +88,23 @@ class MyAppState extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  var statusImageURL = 'assets/images/label_noBT.png';
+
+  void setImage(ConnectionStateImage state) {
+    switch (state) {
+      case ConnectionStateImage.disconnected:
+        statusImageURL = 'assets/images/label_noBT.png';
+        break;
+      case ConnectionStateImage.searching:
+        statusImageURL = 'assets/images/loading.png';
+        break;
+      case ConnectionStateImage.connected:
+        statusImageURL = 'assets/images/label_BT.png';
+        break;
+    }
+  }
+
 }
 
 class StartPage extends StatefulWidget {
@@ -117,7 +141,7 @@ class _StartPage extends State<StartPage> {
                     // ← Add this.
                     children: [
                   Image.asset(
-                    'assets/images/Wifi.png',
+                    MyAppState().statusImageURL,
                     height: 200,
                   ),
                   SizedBox(height: 20),
