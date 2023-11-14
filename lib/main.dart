@@ -14,6 +14,13 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'second.dart';
 
+
+enum ConnectionStateImage {
+  disconnected,
+  searching,
+  connected,
+}
+
 void main() {
   runApp(
     MultiProvider(
@@ -83,6 +90,23 @@ class MyAppState extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  var statusImageURL = 'assets/images/label_noBT.png';
+
+  void setImage(ConnectionStateImage state) {
+    switch (state) {
+      case ConnectionStateImage.disconnected:
+        statusImageURL = 'assets/images/label_noBT.png';
+        break;
+      case ConnectionStateImage.searching:
+        statusImageURL = 'assets/images/loading.png';
+        break;
+      case ConnectionStateImage.connected:
+        statusImageURL = 'assets/images/label_BT.png';
+        break;
+    }
+  }
+
 }
 
 class StartPage extends StatefulWidget {
@@ -119,7 +143,7 @@ class _StartPage extends State<StartPage> {
                     // ← Add this.
                     children: [
                   Image.asset(
-                    'assets/images/Wifi.png',
+                    MyAppState().statusImageURL,
                     height: 200,
                   ),
                   SizedBox(height: 20),
@@ -252,9 +276,7 @@ class ControlPage extends StatefulWidget {
   final String title;
   @override
   ControlPageState createState() => ControlPageState();
-  }
-
-
+}
 
 //Adding landscape support
 class ControlPageState extends State<ControlPage> {
@@ -267,11 +289,12 @@ class ControlPageState extends State<ControlPage> {
     super.initState();
     timer = Timer.periodic(
       Duration(seconds: 1),
-          (timer) {
+      (timer) {
         //ble_info().BLE_WriteCharateristics(writeData)
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
         ble_info().BLE_WriteCharateristics(valueList);
+        ble_info().BLE_ReadCharacteristics();
       },
     );
   }
@@ -296,7 +319,7 @@ class ControlPageState extends State<ControlPage> {
   }
 }*/
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
