@@ -5,12 +5,12 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  final String DEVICE_NAME = "ESP32 BLE";
-  final String SERVICE_UUID = "000000ff-0000-1000-8000-00805f9b34fb";
-  final String READ_CHARACTERISTIC_UUID =
-      "0000ff01-0000-1000-8000-00805f9b34fb";
-  final String WRITE_CHARACTERISTIC_UUID =
-      "00002a2b-0000-1000-8000-00805f9b34fb";
+  final String DEVICE_NAME = "Time"; //"ESP32 BLE";
+  final String SERVICE_UUID = "Time"; //"000000ff-0000-1000-8000-00805f9b34fb";
+  final String READ_CHARACTERISTIC_UUID = "Time";
+  //"0000ff01-0000-1000-8000-00805f9b34fb";
+  final String WRITE_CHARACTERISTIC_UUID = "Time";
+  //"00002a2b-0000-1000-8000-00805f9b34fb";
 
   BluetoothCharacteristic? readCharacteristic;
   BluetoothCharacteristic? writeCharacteristic;
@@ -55,29 +55,25 @@ class ble_info {
     print("[LOG] STARTED SEARCHING");
     var subscription = FlutterBluePlus.scanResults.listen((results) async {
       for (ScanResult r in results) {
-        if (seen.contains(r.device.remoteId) == false) {
-          // DEBUG STATEMENTS
-          /* print(
+        // DEBUG STATEMENTS
+        /* print(
               '${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
           seen.add(r.device.remoteId); */
 
-          // Search for specific device
-          if (r.advertisementData.localName == DEVICE_NAME) {
-            // Assign device
-            bluetoothDevice = r;
-            print("[LOG] FOUND DEVICE $DEVICE_NAME");
-            /*for (String uuid in r.advertisementData.serviceUuids) {
+        // Search for specific device
+        if (r.advertisementData.localName == DEVICE_NAME) {
+          // Assign device
+          bluetoothDevice = r;
+          print("[LOG] FOUND DEVICE $DEVICE_NAME");
+          /*for (String uuid in r.advertisementData.serviceUuids) {
               print("[LOG] FOUND SERVICE $uuid");
             }*/
-            // Stop scanning
-            FlutterBluePlus.stopScan();
-
-            // Connect to device
-            await r.device.connect();
-
-            // Discover services
-            BLE_discoverServices();
-          }
+          // Stop scanning
+          FlutterBluePlus.stopScan();
+          // Connect to device
+          await r.device.connect();
+          // Discover services
+          BLE_discoverServices();
         }
       }
     });
