@@ -66,7 +66,7 @@ class StateManager with ChangeNotifier {
     if (canSend) {
       //Send here
       //print("sending allowed");
-      ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
+      //ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastSteerWasSent = true;
       lastSteerMs = DateTime.now();
@@ -83,7 +83,7 @@ class StateManager with ChangeNotifier {
           //List<int> send = [value.toInt(), _pedalState];
           //List<String> hexList = send.map((int item) => item.toRadixString(16)).toList();
           //send here
-          ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
+          //ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
         }
@@ -98,7 +98,7 @@ class StateManager with ChangeNotifier {
     bool canSend = minimumSendDelayReached(lastGasMs);
     if (canSend) {
       //Send here
-      ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
+      //ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
       //print("sending allowed");
       //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
       lastGasWasSent = true;
@@ -113,7 +113,7 @@ class StateManager with ChangeNotifier {
           lastGasMs = DateTime.now();
 
           //send here
-          ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
+          //ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
           //print("sent last");
           //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
         }
