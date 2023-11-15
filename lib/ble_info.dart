@@ -43,6 +43,7 @@ class ble_info {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
         MyAppState().setImage(ConnectionStateImage.disconnected);
+        MyAppState().ChangeTextBack();
         _handleDisconnection();
       }
       if (state == BluetoothConnectionState.connected) {
@@ -53,8 +54,8 @@ class ble_info {
   }
 
   void _handleDisconnection() {
-    Future.delayed(Duration(seconds: 2)); //Wait 2 seconds
-    bluetoothDevice.device.connect();
+    //Future.delayed(Duration(seconds: 2)); //Wait 2 seconds
+    //bluetoothDevice.device.connect();
     print('Device disconnected');
   }
 

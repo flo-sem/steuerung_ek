@@ -85,6 +85,11 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void ChangeTextBack() {
+    MainButtonText = "Suche starten";
+    notifyListeners();
+  }
+
   void ChangeText() {
     MainButtonText = "Suche läuft";
     notifyListeners();
@@ -173,28 +178,24 @@ class _StartPage extends State<StartPage> {
                       child: Text(appState.MainButtonText)),
                   SizedBox(height: 50),
                 ])),
-
-            Column(
-              children: [
-                Spacer(),
-            Row(
-              children: [
+            Column(children: [
+              Spacer(),
+              Row(children: [
                 Container(width: 20, height: 10),
                 Align(
-                alignment: Alignment.bottomLeft,
-                child: ElevatedButton(
-                    onPressed: () {
-                      stateManager.setSteeringAngle(0.0);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+                    alignment: Alignment.bottomLeft,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          stateManager.setSteeringAngle(0.0);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return ControlPage(title: '');
                           }));
-                    },
-                    child: const Text('C'))),
-      ]),
-            Container(width: 10, height: 20),
-]),
-
+                        },
+                        child: const Text('C'))),
+              ]),
+              Container(width: 10, height: 20),
+            ]),
           ]));
     });
   }
@@ -243,16 +244,17 @@ class _SettingsPage extends State<SettingsPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.blueGrey);
+                          stateManager.setBackgroundColor(Colors.white);
                         },
-                        child: Text('Gray'),
+                        child: Text('Weiß'),
                       ),
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.indigo);
+                          stateManager.setBackgroundColor(
+                              const Color.fromARGB(255, 255, 55, 122));
                         },
-                        child: Text('Blue'),
+                        child: Text('Pink'),
                       ),
                     ],
                   ),
@@ -281,11 +283,10 @@ class _SettingsPage extends State<SettingsPage> {
                             //Update the numberValue when the text field changes
                             int num = int.tryParse(newValue) ?? 20;
                             //print(num);
-                            stateManager.minimumSendDelay = num;
                           });
                         },
                         decoration: InputDecoration(
-                          labelText: '${stateManager.minimumSendDelay} ms',
+                          labelText: '1000 ms',
                           border: OutlineInputBorder(),
                           suffixText: 'ms', // Suffix added here
                         ),
@@ -340,9 +341,12 @@ class ControlPageState extends State<ControlPage> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
+    //var appState = context.watch<MyAppState>();
     timer?.cancel();
     super.dispose();
+    await ble_info().bluetoothDevice.device.disconnect();
+    //appState.ChangeText();
   }
 
   /*@override
