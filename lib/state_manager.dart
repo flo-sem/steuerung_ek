@@ -27,98 +27,20 @@ class StateManager with ChangeNotifier {
 
   String get batteryImage => _batteryImage;
 
-  Color _backgroundColor = Colors.blueGrey;
+  Color _backgroundColor = Colors.white;
 
   Color get backgroundColor => _backgroundColor;
 
   /* properties for ble send interval control */
 
-//last time the steering angle was sent to ble device
-  DateTime lastSteerMs = DateTime.now();
-
-  //false if minimum sending interval was not reached
-  bool lastSteerWasSent = false;
-
-  DateTime lastGasMs = DateTime.now();
-  bool lastGasWasSent = false;
-
-  //allowed minimal interval between sending to ble device
-  int minimumSendDelay = 2000;
-
-  bool minimumSendDelayReached(DateTime lastTimestamp) {
-    DateTime time = DateTime.now();
-    int interval = time.difference(lastTimestamp).inMilliseconds;
-
-    return interval >= minimumSendDelay;
-  }
-
-  void setMinimumSendDelay(int value) {
-    minimumSendDelay = value;
-    //print("Send delay set to $minimumSendDelay");
-  }
-
   void setSteeringAngle(double value) {
     _steeringAngle = value;
     notifyListeners();
-
-    //is interval reached?
-    bool canSend = minimumSendDelayReached(lastSteerMs);
-    if (canSend) {
-      //Send here
-      //print("sending allowed");
-      //ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
-      //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-      lastSteerWasSent = true;
-      lastSteerMs = DateTime.now();
-    } else {
-      lastSteerWasSent = false;
-      //print("no send");
-
-      //send the last value of a change in steering angle
-      Future.delayed(Duration(milliseconds: minimumSendDelay), () {
-        if (!lastSteerWasSent) {
-          lastSteerWasSent = true;
-          lastSteerMs = DateTime.now();
-
-          //List<int> send = [value.toInt(), _pedalState];
-          //List<String> hexList = send.map((int item) => item.toRadixString(16)).toList();
-          //send here
-          //ble_info().BLE_WriteCharateristics([value.toInt(), _pedalState]);
-          //print("sent last");
-          //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-        }
-      });
-    }
   }
 
   void setPedalState(int value) {
     _pedalState = value;
     notifyListeners();
-
-    bool canSend = minimumSendDelayReached(lastGasMs);
-    if (canSend) {
-      //Send here
-      //ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
-      //print("sending allowed");
-      //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-      lastGasWasSent = true;
-      lastGasMs = DateTime.now();
-    } else {
-      lastGasWasSent = false;
-      //print("no send");
-
-      Future.delayed(Duration(milliseconds: minimumSendDelay), () {
-        if (!lastGasWasSent) {
-          lastGasWasSent = true;
-          lastGasMs = DateTime.now();
-
-          //send here
-          //ble_info().BLE_WriteCharateristics([_steeringAngle.toInt(), value]);
-          //print("sent last");
-          //print(DateTime.now().difference(lastSteerMs).inMilliseconds);
-        }
-      });
-    }
   }
 
   void setBatteryChargingState(int value) {
