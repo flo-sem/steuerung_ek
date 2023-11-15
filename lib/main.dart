@@ -140,7 +140,7 @@ class _StartPage extends State<StartPage> {
                       stateManager.setSteeringAngle(0.0);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ControlPage(title: 'SettingPage');
+                        //return ControlPage(title: 'SettingPage');
                         return const SettingsPage();
                       }));
                     },
@@ -172,7 +172,29 @@ class _StartPage extends State<StartPage> {
                       },
                       child: Text(appState.MainButtonText)),
                   SizedBox(height: 50),
-                ]))
+                ])),
+
+            Column(
+              children: [
+                Spacer(),
+            Row(
+              children: [
+                Container(width: 20, height: 10),
+                Align(
+                alignment: Alignment.bottomLeft,
+                child: ElevatedButton(
+                    onPressed: () {
+                      stateManager.setSteeringAngle(0.0);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return ControlPage(title: '');
+                          }));
+                    },
+                    child: const Text('C'))),
+      ]),
+            Container(width: 10, height: 20),
+]),
+
           ]));
     });
   }
