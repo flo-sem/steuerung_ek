@@ -53,6 +53,7 @@ class _StartPage extends State<StartPage> {
     var stateBluetooth = Provider.of<StateBluetooth>(context);
     if (ble_info().isConnected){
         stateBluetooth.setImageConnected();
+        stateBluetooth.ChangeTextBack();
       }
     else {
         stateBluetooth.setImageDisconnected();
