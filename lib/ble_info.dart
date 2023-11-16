@@ -22,6 +22,8 @@ class ble_info {
 
   List<int> inputBuffer = [];
 
+  bool isConnected = false;
+
   //TODO: Maybe introduce list with Characteristics, and select dem with ID
   // OR : Name the Characteristic UUID after their purpouse
 
@@ -43,6 +45,7 @@ class ble_info {
   void listenToConnectionChanges() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
+        isConnected = false;
         //StateBluetooth().setImage(ConnectionStateImage.disconnected);
         StateBluetooth().setImageDisconnected();
         StateBluetooth().ChangeTextBack();
@@ -50,6 +53,7 @@ class ble_info {
       }
       if (state == BluetoothConnectionState.connected) {
         //_connectImage();
+        isConnected = true;
         StateBluetooth().setImageConnected();
       }
       // Maybe other states?

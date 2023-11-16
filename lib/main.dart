@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -46,6 +47,17 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var stateBluetooth = Provider.of<StateBluetooth>(context);
+    if (ble_info().isConnected){
+        stateBluetooth.setImageConnected();
+      }
+    else {
+        stateBluetooth.setImageDisconnected();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var stateBluetooth = Provider.of<StateBluetooth>(context);
