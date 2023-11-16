@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:steuerung_ek/bluetooth_manager.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -15,7 +16,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => StateManager()),
-        ChangeNotifierProvider(create: (_) => StateBluetooth())
+        ChangeNotifierProvider(create: (_) => StateBluetooth()),
+        ChangeNotifierProvider(create: (_) => BluetoothManager())
       ],
       child: const MyApp(),
     ),
@@ -51,7 +53,8 @@ class _StartPage extends State<StartPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     var stateBluetooth = Provider.of<StateBluetooth>(context);
-    if (ble_info().isConnected){
+    var bluetoothManager = Provider.of<BluetoothManager>(context);
+    if (bluetoothManager.isConnected){
         stateBluetooth.setImageConnected();
         stateBluetooth.ChangeTextBack();
       }
@@ -63,6 +66,7 @@ class _StartPage extends State<StartPage> {
   Widget build(BuildContext context) {
     var stateBluetooth = Provider.of<StateBluetooth>(context);
     var stateManager = Provider.of<StateManager>(context);
+    var bluetoothManager = Provider.of<BluetoothManager>(context);
     return Scaffold(
         backgroundColor: stateManager.backgroundColor,
         appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
@@ -94,7 +98,7 @@ class _StartPage extends State<StartPage> {
                               "assets/images/bluetoothDisconnect.png") {
                             stateBluetooth.ChangeText();
                             print("[LOG] Button pressed");
-                            ble_info().BLE_Search();
+                            bluetoothManager.BLE_Search();
                           } else if (stateBluetooth.statusImageURL ==
                               "assets/images/bluetoothConnect.png") {
                             Navigator.push(context,
@@ -248,10 +252,11 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
+        var bluetoothManager = Provider.of<BluetoothManager>(context);
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
-        ble_info().BLE_WriteCharateristics(valueList);
-        ble_info().BLE_ReadCharacteristics();
+        bluetoothManager.BLE_WriteCharateristics(valueList);
+        bluetoothManager.BLE_ReadCharacteristics();
       },
     );
   }
@@ -266,9 +271,10 @@ class ControlPageState extends State<ControlPage> {
 
   @override
   void dispose() async {
+    var bluetoothManager = Provider.of<BluetoothManager>(context);
     super.dispose();
     timer?.cancel();
-    await ble_info().bluetoothDevice.device.disconnect();
+    await bluetoothManager.bluetoothDevice.device.disconnect();
   }
 
   @override

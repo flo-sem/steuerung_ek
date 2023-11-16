@@ -1,12 +1,8 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:steuerung_ek/state_manager.dart';
-import 'enum.dart';
 
-// Singleton class (jesus help me)
-class ble_info {
-  static final ble_info _instance = ble_info._internal();
+class BluetoothManager with ChangeNotifier {
   final String DEVICE_NAME = "Blank"; //"ESP32 BLE";
   final String SERVICE_UUID =
       "00001111-0000-1000-8000-00805f9b34fb"; //"000000ff-0000-1000-8000-00805f9b34fb";
@@ -22,52 +18,43 @@ class ble_info {
 
   List<int> inputBuffer = [];
 
-  bool isConnected = false;
-
-  //TODO: Maybe introduce list with Characteristics, and select dem with ID
-  // OR : Name the Characteristic UUID after their purpouse
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
 
   late ScanResult bluetoothDevice;
   Set<DeviceIdentifier> seen = {};
 
-  factory ble_info() {
-    return _instance;
-  }
+  List<int> _buffer = [];
+  List<int> get buffer => _buffer;
 
-  ble_info._internal();
-  //Streams for keeping up with changes in the "Read Characteristics"
   final StreamController<List<int>> _charValueController =
-      StreamController<List<int>>.broadcast();
+  StreamController<List<int>>.broadcast();
 
   Stream<List<int>> get charValueStream => _charValueController.stream;
 
   // Call this method after connecting to a device to listen for disconnections
-  void listenToConnectionChanges() {
+  void setConnectionState() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
-        isConnected = false;
-        //StateBluetooth().setImage(ConnectionStateImage.disconnected);
-        StateBluetooth().setImageDisconnected();
-        StateBluetooth().ChangeTextBack();
-        _handleDisconnection();
+        _isConnected = false;
       }
       if (state == BluetoothConnectionState.connected) {
         //_connectImage();
-        isConnected = true;
-        StateBluetooth().setImageConnected();
+        _isConnected = true;
       }
-      // Maybe other states?
     });
+    notifyListeners();
+  }
+
+  void UpdateInputBuffer(List<int> input) {
+    _buffer = input;
+    notifyListeners();
   }
 
   void _handleDisconnection() {
     //Future.delayed(Duration(seconds: 2)); //Wait 2 seconds
     //bluetoothDevice.device.connect();
     print('Device disconnected');
-  }
-
-  void _connectImage() {
-    StateBluetooth().setImageConnected();
   }
 
   var subscription;
@@ -95,12 +82,11 @@ class ble_info {
           // Cancel subscription
           subscription.cancel();
           //change Image faster
-          _connectImage();
-          StateBluetooth().fastUpdate();
+          //StateBluetooth().fastUpdate();
           // Connect to device
           await r.device.connect();
           //Listen to connection changes
-          listenToConnectionChanges();
+          setConnectionState();
           // Discover services
           BLE_discoverServices();
         }
@@ -123,7 +109,7 @@ class ble_info {
     //TODO: Check if device is connected
     //Only start searching if device is connected
     List<BluetoothService> services =
-        await bluetoothDevice.device.discoverServices();
+    await bluetoothDevice.device.discoverServices();
     int index = 1;
     for (BluetoothService service in services) {
       print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
@@ -184,9 +170,9 @@ class ble_info {
     print("[LOG] READING CHARACTERISTICS");
     if (readCharacteristic != null) {
       readCharacteristic?.read().then((value) {
-        StateBluetooth().UpdateInputBuffer(value);
+        UpdateInputBuffer(value);
         print("[LOG] ----> ${value.toString()}");
       });
     }
   }
-}*/
+}
