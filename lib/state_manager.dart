@@ -54,7 +54,6 @@ class StateManager with ChangeNotifier {
 
 enum ConnectionStateImage {
   disconnected,
-  searching,
   connected,
 }
 
@@ -66,7 +65,7 @@ class StateBluetooth with ChangeNotifier {
   String _MainButtonText = "Suche starten";
   String get MainButtonText => _MainButtonText;
 
-  String _statusImageURL = 'assets/images/label_noBT.png';
+  String _statusImageURL = 'assets/images/bluetoothDisconnect.png';
   String get statusImageURL => _statusImageURL;
 
   var characteristics;
@@ -91,7 +90,7 @@ class StateBluetooth with ChangeNotifier {
     notifyListeners();
 
     Future.delayed(Duration(seconds: 5), () {
-      if (statusImageURL == 'assets/images/label_BT.png') {
+      if (statusImageURL == 'assets/images/bluetoothConnect.png') {
         _MainButtonText = "Verbinden";
       } else {
         _MainButtonText = "Suche starten";
@@ -103,13 +102,10 @@ class StateBluetooth with ChangeNotifier {
   void setImage(ConnectionStateImage state) {
     switch (state) {
       case ConnectionStateImage.disconnected:
-        _statusImageURL = 'assets/images/label_noBT.png';
-        break;
-      case ConnectionStateImage.searching:
-        _statusImageURL = 'assets/images/loading.png';
+        _statusImageURL = 'assets/images/bluetoothDisconnect.png';
         break;
       case ConnectionStateImage.connected:
-        _statusImageURL = 'assets/images/label_BT.png';
+        _statusImageURL = 'assets/images/bluetoothConnect.png';
         break;
     }
     notifyListeners();

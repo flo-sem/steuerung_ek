@@ -28,18 +28,13 @@ flutter:
   assets:
     - assets/images/steeringWheel.png
     - assets/images/gasPedal.png
-    - assets/images/Wifi.png
     - assets/images/battery0.png
     - assets/images/battery1.png
     - assets/images/battery2.png
     - assets/images/battery3.png
     - assets/images/battery4.png
-    - assets/images/label_BT.png
-    - assets/images/label_noBT.png
-    - assets/images/label_loading.png
-
-
-
+    - assets/images/bluetoothConnect.png
+    - assets/images/bluetoothDisconnect.png
 
   uses-material-design: true
 

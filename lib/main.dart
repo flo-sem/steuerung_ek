@@ -36,20 +36,6 @@ class MyApp extends StatelessWidget {
       home: StartPage(),
     );
   }
-
-  /*Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        ),
-        home: StartPage(),
-      ),
-    );
-  }*/
 }
 
 class StartPage extends StatefulWidget {
@@ -83,7 +69,6 @@ class _StartPage extends State<StartPage> {
           Center(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  // ← Add this.
                   children: [
                     Image.asset(
                       stateBluetooth.statusImageURL,
@@ -93,12 +78,12 @@ class _StartPage extends State<StartPage> {
                     ElevatedButton(
                         onPressed: () {
                           if (stateBluetooth.statusImageURL ==
-                              "assets/images/label_noBT.png") {
+                              "assets/images/bluetoothDisconnect.png") {
                             stateBluetooth.ChangeText();
                             print("[LOG] Button pressed");
                             ble_info().BLE_Search();
                           } else if (stateBluetooth.statusImageURL ==
-                              "assets/images/label_BT.png") {
+                              "assets/images/bluetoothConnect.png") {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                                   return ControlPage(title: 'yeet');
@@ -138,7 +123,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPage extends State<SettingsPage> {
-  //final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +235,6 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        //ble_info().BLE_WriteCharateristics(writeData)
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
         ble_info().BLE_WriteCharateristics(valueList);
@@ -270,11 +253,9 @@ class ControlPageState extends State<ControlPage> {
 
   @override
   void dispose() async {
-    //var appState = context.watch<MyAppState>();
-    timer?.cancel();
     super.dispose();
+    timer?.cancel();
     await ble_info().bluetoothDevice.device.disconnect();
-    //appState.ChangeText();
   }
 
   @override
