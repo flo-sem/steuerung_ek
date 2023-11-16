@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'main.dart';
+import 'package:steuerung_ek/state_manager.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
@@ -42,8 +42,8 @@ class ble_info {
   void listenToConnectionChanges() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
-        MyAppState().setImage(ConnectionStateImage.disconnected);
-        MyAppState().ChangeTextBack();
+        StateBluetooth().setImage(ConnectionStateImage.disconnected);
+        StateBluetooth().ChangeTextBack();
         _handleDisconnection();
       }
       if (state == BluetoothConnectionState.connected) {
@@ -60,7 +60,7 @@ class ble_info {
   }
 
   void _connectImage() {
-    MyAppState().setImage(ConnectionStateImage.connected);
+    StateBluetooth().setImage(ConnectionStateImage.connected);
   }
 
   var subscription;
@@ -89,7 +89,7 @@ class ble_info {
           subscription.cancel();
           //change Image faster
           _connectImage();
-          MyAppState().fastUpdate();
+          StateBluetooth().fastUpdate();
           // Connect to device
           await r.device.connect();
           //Listen to connection changes
@@ -177,7 +177,7 @@ class ble_info {
     print("[LOG] READING CHARACTERISTICS");
     if (readCharacteristic != null) {
       readCharacteristic?.read().then((value) {
-        MyAppState().UpdateInputBuffer(value);
+        StateBluetooth().UpdateInputBuffer(value);
         print("[LOG] ----> ${value.toString()}");
       });
     }

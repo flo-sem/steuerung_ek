@@ -12,12 +12,10 @@ class _DisplayState extends State<Display_battery> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StateManager>(
-        builder: (context, stateManager, child) {
-          return Align(
-            child:   Image.asset(stateManager.batteryImage, width: 80)
-          ,
-          );
-        });
+    var stateManager = Provider.of<StateManager>(context);
+    return Align(
+      child:   Image.asset(stateManager.batteryImage, width: 80)
+      ,
+    );
   }
 }

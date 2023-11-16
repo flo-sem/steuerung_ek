@@ -12,29 +12,26 @@ class _GasPedalState extends State<GasPedal> {
   double status = 0;
   @override
   Widget build(BuildContext context) {
-    return Consumer<StateManager>(
-      builder: (context, stateManager, child) {
-        return Stack(
-          children: <Widget> [
-            Align(
-                child: SizedBox(
-                    height: 240,
-                    width: 130,
-                    child: Center(
-                        child: GestureDetector(
-                            onTapDown: (_) => stateManager.setPedalState(1),
-                            onTapUp: (_) => stateManager.setPedalState(0),
-                            child: Transform(
-                                transform: Matrix4.rotationX(0.3*stateManager.pedalState),
-                                child: Image.asset('assets/images/gasPedal.png', height: 170)
-                            )
+    var stateManager = Provider.of<StateManager>(context);
+    return Stack(
+      children: <Widget> [
+        Align(
+            child: SizedBox(
+                height: 240,
+                width: 130,
+                child: Center(
+                    child: GestureDetector(
+                        onTapDown: (_) => stateManager.setPedalState(1),
+                        onTapUp: (_) => stateManager.setPedalState(0),
+                        child: Transform(
+                            transform: Matrix4.rotationX(0.3*stateManager.pedalState),
+                            child: Image.asset('assets/images/gasPedal.png', height: 170)
                         )
                     )
                 )
-            ),
-          ],
-        );
-      }
+            )
+        ),
+      ],
     );
   }
 }

@@ -1,37 +1,24 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'ble_info.dart';
-import 'package:convert/convert.dart';
 
 class StateManager with ChangeNotifier {
-  ble_info bluetoothProvider = ble_info();
-
   int _speed = 0;
-
   int get speed => _speed;
 
   double _steeringAngle = 0.0;
-
   double get steeringAngle => _steeringAngle;
 
   int _pedalState = 0;
-
   int get pedalState => _pedalState;
 
   int _batteryChargingState = 100;
-
   int get batteryChargingState => _batteryChargingState;
 
   String _batteryImage = 'assets/images/battery4.png';
-
   String get batteryImage => _batteryImage;
 
   Color _backgroundColor = Colors.white;
-
   Color get backgroundColor => _backgroundColor;
 
-  /* properties for ble send interval control */
 
   void setSteeringAngle(double value) {
     _steeringAngle = value;
@@ -61,6 +48,70 @@ class StateManager with ChangeNotifier {
 
   void setBackgroundColor(Color value) {
     _backgroundColor = value;
+    notifyListeners();
+  }
+}
+
+enum ConnectionStateImage {
+  disconnected,
+  searching,
+  connected,
+}
+
+class StateBluetooth with ChangeNotifier {
+
+  List<int> _testBuffer = [];
+  List<int> get testBuffer => _testBuffer;
+
+  String _MainButtonText = "Suche starten";
+  String get MainButtonText => _MainButtonText;
+
+  String _statusImageURL = 'assets/images/label_noBT.png';
+  String get statusImageURL => _statusImageURL;
+
+  var characteristics;
+
+  void UpdateInputBuffer(List<int> input) {
+    _testBuffer = input;
+    notifyListeners();
+  }
+
+  void fastUpdate() {
+    _MainButtonText = "Verbinden";
+    notifyListeners();
+  }
+
+  void ChangeTextBack() {
+    _MainButtonText = "Suche starten";
+    notifyListeners();
+  }
+
+  void ChangeText() {
+    _MainButtonText = "Suche läuft";
+    notifyListeners();
+
+    Future.delayed(Duration(seconds: 5), () {
+      if (statusImageURL == 'assets/images/label_BT.png') {
+        _MainButtonText = "Verbinden";
+      } else {
+        _MainButtonText = "Suche starten";
+      }
+      notifyListeners();
+    });
+  }
+
+  void setImage(ConnectionStateImage state) {
+    switch (state) {
+      case ConnectionStateImage.disconnected:
+        _statusImageURL = 'assets/images/label_noBT.png';
+        break;
+      case ConnectionStateImage.searching:
+        _statusImageURL = 'assets/images/loading.png';
+        break;
+      case ConnectionStateImage.connected:
+        _statusImageURL = 'assets/images/label_BT.png';
+        break;
+    }
     notifyListeners();
   }
 }
