@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:steuerung_ek/state_manager.dart';
+import 'enum.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
@@ -42,12 +43,14 @@ class ble_info {
   void listenToConnectionChanges() {
     bluetoothDevice.device.connectionState.listen((state) {
       if (state == BluetoothConnectionState.disconnected) {
-        StateBluetooth().setImage(ConnectionStateImage.disconnected);
+        //StateBluetooth().setImage(ConnectionStateImage.disconnected);
+        StateBluetooth().setImageDisconnected();
         StateBluetooth().ChangeTextBack();
         _handleDisconnection();
       }
       if (state == BluetoothConnectionState.connected) {
-        _connectImage();
+        //_connectImage();
+        StateBluetooth().setImageConnected();
       }
       // Maybe other states?
     });
@@ -60,7 +63,7 @@ class ble_info {
   }
 
   void _connectImage() {
-    StateBluetooth().setImage(ConnectionStateImage.connected);
+    StateBluetooth().setImageConnected();
   }
 
   var subscription;

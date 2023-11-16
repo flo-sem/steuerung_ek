@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'enum.dart';
 
 class StateManager with ChangeNotifier {
   int _speed = 0;
@@ -52,11 +53,6 @@ class StateManager with ChangeNotifier {
   }
 }
 
-enum ConnectionStateImage {
-  disconnected,
-  connected,
-}
-
 class StateBluetooth with ChangeNotifier {
 
   List<int> _testBuffer = [];
@@ -99,7 +95,7 @@ class StateBluetooth with ChangeNotifier {
     });
   }
 
-  void setImage(ConnectionStateImage state) {
+  /*void setImage(ConnectionStateImage state) {
     switch (state) {
       case ConnectionStateImage.disconnected:
         _statusImageURL = 'assets/images/bluetoothDisconnect.png';
@@ -108,6 +104,16 @@ class StateBluetooth with ChangeNotifier {
         _statusImageURL = 'assets/images/bluetoothConnect.png';
         break;
     }
+    notifyListeners();
+  }*/
+
+  void setImageConnected() {
+    _statusImageURL = 'assets/images/bluetoothConnect.png';
+    notifyListeners();
+  }
+
+  void setImageDisconnected() {
+    _statusImageURL = 'assets/images/bluetoothDisconnect.png';
     notifyListeners();
   }
 }
