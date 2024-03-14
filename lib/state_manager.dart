@@ -31,6 +31,10 @@ class StateManager with ChangeNotifier {
 
   Color get backgroundColor => _backgroundColor;
 
+  Color _appbarColor = Colors.lightBlueAccent;
+
+  Color get appbarColor => _appbarColor;
+
   /* properties for ble send interval control */
 
   void setSteeringAngle(double value) {
@@ -61,6 +65,11 @@ class StateManager with ChangeNotifier {
 
   void setBackgroundColor(Color value) {
     _backgroundColor = value;
+    notifyListeners();
+  }
+
+  void setAppbarColor(Color value) {
+    _appbarColor = value;
     notifyListeners();
   }
 }

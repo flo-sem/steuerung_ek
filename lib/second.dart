@@ -15,7 +15,6 @@ class _SecondScreen extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
         appBar: AppBar(

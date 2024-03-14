@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steuerung_ek/haptic_feedback.dart';
+import 'package:steuerung_ek/custom_haptics.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -12,7 +12,9 @@ import 'dart:async';
 import 'package:convert/convert.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'haptic_feedback.dart';
+import 'custom_haptics.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'second.dart';
 
@@ -50,10 +52,13 @@ class MyApp extends StatelessWidget {
   }*/
 
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.blue,
+    ));
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Name App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -63,6 +68,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
 
 class MyAppState extends ChangeNotifier {
   // Singleton setup (sünde)
@@ -137,8 +144,11 @@ class _StartPage extends State<StartPage> {
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
+
           backgroundColor: stateManager.backgroundColor,
-          appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
+          appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
+            backgroundColor: stateManager.appbarColor,
+          ),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
@@ -218,7 +228,9 @@ class _SettingsPage extends State<SettingsPage> {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
         backgroundColor: stateManager.backgroundColor,
-        appBar: AppBar(title: const Text('SETTINGS')),
+        appBar: AppBar(title: const Text('SETTINGS'),
+        backgroundColor: stateManager.appbarColor,
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -351,22 +363,11 @@ class ControlPageState extends State<ControlPage> {
     //appState.ChangeText();
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
-        body: OrientationWidget(
-            portrait: _PortraitControl(),
-            landscape: _LandscapeControl()
-        )
-    );
-  }
-}*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
+
         body: OrientationWidget(
             portrait: PortraitControl(), landscape: LandscapeControl()));
   }
@@ -384,6 +385,9 @@ class _PortraitControl extends State<PortraitControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
+        appBar: AppBar(title: const Text('CONTROL'),
+          backgroundColor: stateManager.appbarColor,
+        ),
         backgroundColor: stateManager.backgroundColor,
         body: Column(children: [
 //Top Row moving battery info to the right side of the view
@@ -435,6 +439,9 @@ class _LandscapeControl extends State<LandscapeControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
+        appBar: AppBar(title: const Text('CONTROL'),
+          backgroundColor: stateManager.appbarColor,
+        ),
         backgroundColor: stateManager.backgroundColor,
         body: Row(
 
