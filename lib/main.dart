@@ -11,6 +11,8 @@ import 'dart:async';
 import 'package:convert/convert.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:n_gamepad/n_gamepad.dart';
+import 'package:n_gamepad/src/models/control.dart';
 
 import 'second.dart';
 
@@ -316,6 +318,9 @@ class ControlPageState extends State<ControlPage> {
   double angle = 0;
   int pedal = 0;
   Timer? timer;
+  final leftJoystick = JoystickHandler.left;
+  final rightJoystick = JoystickHandler.right;
+  String _text = '';
 
   @override
   void initState() {
@@ -330,6 +335,130 @@ class ControlPageState extends State<ControlPage> {
         ble_info().BLE_ReadCharacteristics();
       },
     );
+
+    leftJoystick.assignMotionEvent(
+        handleLeftJoystickEvent); // Listen for left joystick events
+    rightJoystick.assignMotionEvent(
+        handleRightJoystickEvent); // Listen for right joystick events
+
+    // Listen for left trigger events
+    TriggerHandler.left.assignMotionEvent(handleLeftTriggerEvent);
+
+    // Listen for right trigger events
+    TriggerHandler.right.assignMotionEvent(handleRightTriggerEvent);
+
+    /*******************
+     *  Button Events  *
+     *******************/
+
+    // Assign button listeners with event handlers
+    Gamepad.instance.assignButtonListener(
+      Button.a,
+      onPress: handleButtonAPress,
+      onRelease: handleButtonARelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.b,
+      onPress: handleButtonBPress,
+      onRelease: handleButtonBRelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.x,
+      onPress: handleButtonXPress,
+      onRelease: handleButtonXRelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.y,
+      onPress: handleButtonYPress,
+      onRelease: handleButtonYRelease,
+    );
+
+    // Assign D-pad listener
+    Gamepad.instance.assignDpadListener(
+        onEvent: (event) => setState(() => _text = '$event'));
+  }
+
+  void handleLeftJoystickEvent(JoystickEvent event) {
+    setState(() {
+      print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
+      _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+    });
+  }
+
+  void handleRightJoystickEvent(JoystickEvent event) {
+    setState(() {
+      print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
+    });
+  }
+
+  // Handle left trigger event
+  void handleLeftTriggerEvent(TriggerEvent event) {
+    setState(() {
+      print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+      //_leftTrigger = event.z;
+    });
+  }
+
+  // Handle right trigger event
+  void handleRightTriggerEvent(TriggerEvent event) {
+    setState(() {
+      print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonAPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (A) Pressed');
+    });
+  }
+
+  void handleButtonARelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (A) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonBPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (B) Pressed');
+    });
+  }
+
+  void handleButtonBRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (B) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonXPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (X) Pressed');
+    });
+  }
+
+  void handleButtonXRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (X) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonYPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (Y) Pressed');
+    });
+  }
+
+  void handleButtonYRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (Y) Released');
+    });
   }
 
   @override
@@ -366,12 +495,14 @@ class ControlPageState extends State<ControlPage> {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
         body: OrientationWidget(
-            portrait: PortraitControl(), landscape: LandscapeControl()));
+            portrait: PortraitControl(text: _text),
+            landscape: LandscapeControl()));
   }
 }
 
 class PortraitControl extends StatefulWidget {
-  const PortraitControl({Key? key}) : super(key: key);
+  PortraitControl({Key? key, required this.text}) : super(key: key);
+  String text;
 
   @override
   State<StatefulWidget> createState() => _PortraitControl();
@@ -384,7 +515,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         backgroundColor: stateManager.backgroundColor,
         body: Column(children: [
-//Top Row moving battery info to the right side of the view
+          //Top Row moving battery info to the right side of the view
           Row(
             children: [
               Spacer(),
@@ -396,6 +527,7 @@ class _PortraitControl extends State<PortraitControl> {
           //placing the speed view in the center of the view
           Spacer(),
           const Display(),
+          Text(widget.text),
           Spacer(),
 
           //wheel and pedal
@@ -423,7 +555,6 @@ class _PortraitControl extends State<PortraitControl> {
 
 class LandscapeControl extends StatefulWidget {
   const LandscapeControl({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _LandscapeControl();
 }
