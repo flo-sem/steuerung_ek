@@ -74,8 +74,27 @@ class MyAppState extends ChangeNotifier {
 
   // ble input buffer
   List<int> testBuffer = [];
+  List<int> SpeedBuffer = [];
+  List<int> Test1Buffer = [];
+  List<int> Test2Buffer = [];
+
   void UpdateInputBuffer(List<int> input) {
     testBuffer = input;
+    notifyListeners();
+  }
+
+  void SpeedInputBuffer(List<int> input) {
+    SpeedBuffer = input;
+    notifyListeners();
+  }
+
+  void Test1InputBuffer(List<int> input) {
+    Test1Buffer = input;
+    notifyListeners();
+  }
+
+  void Test2InputBuffer(List<int> input) {
+    Test2Buffer = input;
     notifyListeners();
   }
 
@@ -331,8 +350,9 @@ class ControlPageState extends State<ControlPage> {
         //ble_info().BLE_WriteCharateristics(writeData)
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
-        ble_info().BLE_WriteCharateristics(valueList);
-        ble_info().BLE_ReadCharacteristics();
+        ble_info().BLE_WriteCharateristics(
+            ble_info().wControlsCharacteristic, valueList);
+        ble_info().BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
       },
     );
 
