@@ -131,6 +131,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  n_gamepad:
+    dependency: "direct main"
+    description:
+      name: n_gamepad
+      sha256: "14248f38bbda685ba22b94da284445b65d4edfbd8629b484583de1b1a0525b48"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   nested:
     dependency: transitive
     description:
