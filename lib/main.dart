@@ -515,7 +515,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         backgroundColor: stateManager.backgroundColor,
         body: Column(children: [
-//Top Row moving battery info to the right side of the view
+          //Top Row moving battery info to the right side of the view
           Row(
             children: [
               Spacer(),
