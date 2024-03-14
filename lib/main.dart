@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/haptic_feedback.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -11,6 +12,7 @@ import 'dart:async';
 import 'package:convert/convert.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'haptic_feedback.dart';
 
 import 'second.dart';
 
