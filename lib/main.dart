@@ -347,7 +347,6 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        //ble_info().BLE_WriteCharateristics(writeData)
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
         ble_info().BLE_WriteCharateristics(
