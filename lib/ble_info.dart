@@ -177,7 +177,7 @@ class ble_info {
     }
   }
 
-  void BLE_WriteCharateristics(
+  Future<void> BLE_WriteCharateristics(
       BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
     print("[LOG] WRITING CHARACTERISTICS");
     print("[LOG] ----> ${writeData.toString()}");
@@ -186,28 +186,35 @@ class ble_info {
     }
   }
 
-  // Backup function in case the "notifier" doesnt work
-  void BLE_ReadCharacteristics(
+  Future<void> BLE_ReadCharacteristics(
       BluetoothCharacteristic? readCharacteristic) async {
+    if (readCharacteristic == null) {
+      print("[ERROR] readCharacteristic is null");
+      return;
+    }
+
     print("[LOG] READING CHARACTERISTICS");
-    switch (readCharacteristic!.uuid.toString()) {
-      case (r_SPEED_CHARACTERISTIC_UUID):
-        readCharacteristic.read().then((value) {
-          MyAppState().SpeedInputBuffer(value);
-          print("[LOG] Speed: ${value.toString()}");
-        });
-      case (r_TEST1_CHARACTERISTIC_UUID):
-        readCharacteristic.read().then((value) {
-          MyAppState().Test1InputBuffer(value);
-          print("[LOG] Test1: ${value.toString()}");
-        });
-      case (r_TEST2_CHARACTERISTIC_UUID):
-        readCharacteristic.read().then((value) {
-          MyAppState().Test2InputBuffer(value);
-          print("[LOG] Test2: ${value.toString()}");
-        });
-      default:
-        print("[ERROR] NO VALID Characteristic selected");
+    try {
+      await readCharacteristic.read().then((value) {
+        switch (readCharacteristic.uuid.toString()) {
+          case (r_SPEED_CHARACTERISTIC_UUID):
+            MyAppState().SpeedInputBuffer(value);
+            print("[LOG] Speed: ${value.toString()}");
+            break;
+          case (r_TEST1_CHARACTERISTIC_UUID):
+            MyAppState().Test1InputBuffer(value);
+            print("[LOG] Test1: ${value.toString()}");
+            break;
+          case (r_TEST2_CHARACTERISTIC_UUID):
+            MyAppState().Test2InputBuffer(value);
+            print("[LOG] Test2: ${value.toString()}");
+            break;
+          default:
+            print("[ERROR] NO VALID Characteristic selected");
+        }
+      });
+    } catch (e) {
+      print("[ERROR] Exception while reading characteristics: $e");
     }
   }
 }
