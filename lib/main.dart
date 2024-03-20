@@ -346,12 +346,17 @@ class ControlPageState extends State<ControlPage> {
     super.initState();
     timer = Timer.periodic(
       Duration(seconds: 1),
-      (timer) {
+      (timer) async {
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
         ble_info().BLE_WriteCharateristics(
             ble_info().wControlsCharacteristic, valueList);
-        ble_info().BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
       },
     );
 
