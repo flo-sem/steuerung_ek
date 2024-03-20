@@ -349,7 +349,7 @@ class ControlPageState extends State<ControlPage> {
       (timer) async {
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
-        ble_info().BLE_WriteCharateristics(
+        await ble_info().BLE_WriteCharateristics(
             ble_info().wControlsCharacteristic, valueList);
         await ble_info()
             .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
