@@ -405,10 +405,20 @@ class ControlPageState extends State<ControlPage> {
         onEvent: (event) => setState(() => _text = '$event'));
   }
 
+  // Define a debounce duration (e.g., 200 milliseconds)
+  final Duration _debounceDuration = Duration(milliseconds: 40);
+  Timer? _joystickTimer;
+
   void handleLeftJoystickEvent(JoystickEvent event) {
-    setState(() {
-      print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
-      _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+    _joystickTimer?.cancel();
+    // Start a new timer to execute the joystick handling logic after the debounce duration
+    _joystickTimer = Timer(_debounceDuration, () {
+      // Your joystick handling logic goes here
+      setState(() {
+        print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
+        _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+        // Write to Bluetooth Characteristic here
+      });
     });
   }
 
@@ -429,7 +439,7 @@ class ControlPageState extends State<ControlPage> {
   // Handle right trigger event
   void handleRightTriggerEvent(TriggerEvent event) {
     setState(() {
-      print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+      print('[CONTROLLER] RightTrigger: (z: ${event.z})');
     });
   }
 
