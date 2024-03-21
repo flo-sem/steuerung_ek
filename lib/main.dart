@@ -405,31 +405,52 @@ class ControlPageState extends State<ControlPage> {
         onEvent: (event) => setState(() => _text = '$event'));
   }
 
+  // Define a debounce duration (e.g., 200 milliseconds)
+  final Duration _debounceDuration = Duration(milliseconds: 40);
+  Timer? _leftJoystickTimer;
+  Timer? _rightJoystickTimer;
+  Timer? _leftTriggerTimer;
+  Timer? _rightTriggerTimer;
+
   void handleLeftJoystickEvent(JoystickEvent event) {
-    setState(() {
-      print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
-      _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+    _leftJoystickTimer?.cancel();
+    // Start a new timer to execute the joystick handling logic after the debounce duration
+    _leftJoystickTimer = Timer(_debounceDuration, () {
+      // Your joystick handling logic goes here
+      setState(() {
+        print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
+        _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+        // Write to Bluetooth Characteristic here
+      });
     });
   }
 
   void handleRightJoystickEvent(JoystickEvent event) {
-    setState(() {
-      print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
+    _rightJoystickTimer?.cancel();
+    _rightJoystickTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
+      });
     });
   }
 
   // Handle left trigger event
   void handleLeftTriggerEvent(TriggerEvent event) {
-    setState(() {
-      print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
-      //_leftTrigger = event.z;
+    _leftTriggerTimer?.cancel();
+    _leftTriggerTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+      });
     });
   }
 
   // Handle right trigger event
   void handleRightTriggerEvent(TriggerEvent event) {
-    setState(() {
-      print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+    _rightTriggerTimer?.cancel();
+    _rightTriggerTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] RightTrigger: (z: ${event.z})');
+      });
     });
   }
 
