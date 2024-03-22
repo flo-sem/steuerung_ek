@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:steuerung_ek/info_battery.dart';
+import 'package:steuerung_ek/batteryDisplay.dart';
+import 'package:steuerung_ek/Horn.dart';
+import 'package:steuerung_ek/BlinkerLeft.dart';
+import 'package:steuerung_ek/BlinkerRight.dart';
+import 'package:steuerung_ek/HazardLightButton.dart';
+import 'package:steuerung_ek/distanceDisplay.dart';
+import 'package:steuerung_ek/pitchDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
+import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
-import 'info_display.dart';
+import 'speedDisplay.dart';
 import 'ble_info.dart';
 import 'package:provider/provider.dart';
 import 'orientation_widget.dart';
@@ -387,16 +394,32 @@ class _PortraitControl extends State<PortraitControl> {
 //Top Row moving battery info to the right side of the view
           Row(
             children: [
+              Container(width: 20),
+              const TemperatureDisplay(),
               Spacer(),
-              const Display_battery(),
-              Container(width: 50, height: 10),
+              const PitchDisplay(),
+              Spacer(),
+              const BatteryDisplay(),
+              Container(width: 20),
             ],
           ),
-
-          //placing the speed view in the center of the view
           Spacer(),
-          const Display(),
+          const DistanceDisplay(),
           Spacer(),
+          const SpeedDisplay(),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const BlinkerLeft(),
+              SizedBox(width: 50),
+              const HazardLightButton(),
+              Container(width: 50),
+              const Horn(),
+              Container(width: 50),
+              const BlinkerRight(),
+            ],
+          ),
 
           //wheel and pedal
           Row(
@@ -449,9 +472,9 @@ class _LandscapeControl extends State<LandscapeControl> {
               Expanded(
                   child: Column(
                 children: [
-                  const Display_battery(),
+                  const BatteryDisplay(),
                   Spacer(),
-                  const Display(),
+                  const SpeedDisplay(),
                   Spacer(),
                 ],
               )),
