@@ -6,18 +6,24 @@ import 'main.dart';
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  final String DEVICE_NAME = "Blank"; //"ESP32 BLE";
-  final String SERVICE_UUID =
+  static const String DEVICE_NAME = "Blank"; //"ESP32 BLE";
+  static const String SERVICE_UUID =
       "00001111-0000-1000-8000-00805f9b34fb"; //"000000ff-0000-1000-8000-00805f9b34fb";
-  final String READ_CHARACTERISTIC_UUID =
-      "00002222-0000-1000-8000-00805f9b34fb";
-  //"0000ff01-0000-1000-8000-00805f9b34fb";
-  final String WRITE_CHARACTERISTIC_UUID =
+  static const String r_SPEED_CHARACTERISTIC_UUID =
+      "00002222-0000-1000-8000-00805f9b34fb"; //"0000ff01-0000-1000-8000-00805f9b34fb";
+  static const String r_TEST1_CHARACTERISTIC_UUID =
+      "00003333-0000-1000-8000-00805f9b34fb";
+  static const String r_TEST2_CHARACTERISTIC_UUID =
+      "00004444-0000-1000-8000-00805f9b34fb";
+  static const String w_CONTROLS_CHARACTERISTIC_UUID =
       "00002222-0000-1000-8000-00805f9b34fb";
   //"00002a2b-0000-1000-8000-00805f9b34fb";
 
-  BluetoothCharacteristic? readCharacteristic;
-  BluetoothCharacteristic? writeCharacteristic;
+  BluetoothCharacteristic? rSpeedCharacteristic;
+  BluetoothCharacteristic? rTest1Characteristic;
+  BluetoothCharacteristic? rTest2Characteristic;
+
+  BluetoothCharacteristic? wControlsCharacteristic;
 
   List<int> inputBuffer = [];
 
@@ -138,24 +144,31 @@ class ble_info {
               //print("[LOG] with value: $value");
 
               //CHECK For correct characteristic
-              if (c.uuid.toString() == READ_CHARACTERISTIC_UUID) {
-                readCharacteristic = c;
-                print(
-                    "[LOG]    FOUND readCharacteristic $READ_CHARACTERISTIC_UUID");
-                print("[LOG]    ---> $value");
-                // Listen to characteristic changes
-                /*c.setNotifyValue(true);
-                c.lastValueStream.listen((value) {
-                  _charValueController.add(value);
-                });*/
-              } else if (c.uuid.toString() == WRITE_CHARACTERISTIC_UUID) {
-                writeCharacteristic = c;
-                print(
-                    "[LOG]    FOUND writeCharacteristic $READ_CHARACTERISTIC_UUID");
+              switch (c.uuid.toString()) {
+                /* READ CHARACTERISTICS */
+                case r_SPEED_CHARACTERISTIC_UUID:
+                  rSpeedCharacteristic = c;
+                  print(
+                      "[LOG] FOUND readCharacteristic Speed $r_SPEED_CHARACTERISTIC_UUID");
+                  break;
+                case r_TEST1_CHARACTERISTIC_UUID:
+                  rTest1Characteristic = c;
+                  print(
+                      "[LOG] FOUND readCharacteristic Test1 $r_TEST1_CHARACTERISTIC_UUID");
+                  break;
+                case r_TEST2_CHARACTERISTIC_UUID:
+                  rTest2Characteristic = c;
+                  print(
+                      "[LOG] FOUND readCharacteristic Test2 $r_TEST2_CHARACTERISTIC_UUID");
+                  break;
+                /* WRITE CHARACTERISTICS */
+                case w_CONTROLS_CHARACTERISTIC_UUID:
+                  wControlsCharacteristic = c;
+                  print(
+                      "[LOG] FOUND writeCharacteristic Test $w_CONTROLS_CHARACTERISTIC_UUID");
+                  break;
               }
-            } /* else {
-              print("[LOG] CHARACTERISTIC NOT READABLE");
-            } */
+            }
           }
         } else {
           print("[LOG] NO CHARACTERISTICS FOUND");
@@ -164,22 +177,44 @@ class ble_info {
     }
   }
 
-  void BLE_WriteCharateristics(List<int> writeData) async {
+  Future<void> BLE_WriteCharateristics(
+      BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
     print("[LOG] WRITING CHARACTERISTICS");
     print("[LOG] ----> ${writeData.toString()}");
     if (writeCharacteristic != null) {
-      await writeCharacteristic?.write(writeData);
+      await writeCharacteristic.write(writeData);
     }
   }
 
-  // Backup function in case the "notifier" doesnt work
-  void BLE_ReadCharacteristics() async {
+  Future<void> BLE_ReadCharacteristics(
+      BluetoothCharacteristic? readCharacteristic) async {
+    if (readCharacteristic == null) {
+      print("[ERROR] readCharacteristic is null");
+      return;
+    }
+
     print("[LOG] READING CHARACTERISTICS");
-    if (readCharacteristic != null) {
-      readCharacteristic?.read().then((value) {
-        MyAppState().UpdateInputBuffer(value);
-        print("[LOG] ----> ${value.toString()}");
+    try {
+      await readCharacteristic.read().then((value) {
+        switch (readCharacteristic.uuid.toString()) {
+          case (r_SPEED_CHARACTERISTIC_UUID):
+            MyAppState().SpeedInputBuffer(value);
+            print("[LOG] Speed: ${value.toString()}");
+            break;
+          case (r_TEST1_CHARACTERISTIC_UUID):
+            MyAppState().Test1InputBuffer(value);
+            print("[LOG] Test1: ${value.toString()}");
+            break;
+          case (r_TEST2_CHARACTERISTIC_UUID):
+            MyAppState().Test2InputBuffer(value);
+            print("[LOG] Test2: ${value.toString()}");
+            break;
+          default:
+            print("[ERROR] NO VALID Characteristic selected");
+        }
       });
+    } catch (e) {
+      print("[ERROR] Exception while reading characteristics: $e");
     }
   }
 }

@@ -18,6 +18,8 @@ import 'dart:async';
 import 'package:convert/convert.dart';
 import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:n_gamepad/n_gamepad.dart';
+import 'package:n_gamepad/src/models/control.dart';
 
 import 'second.dart';
 
@@ -79,8 +81,27 @@ class MyAppState extends ChangeNotifier {
 
   // ble input buffer
   List<int> testBuffer = [];
+  List<int> SpeedBuffer = [];
+  List<int> Test1Buffer = [];
+  List<int> Test2Buffer = [];
+
   void UpdateInputBuffer(List<int> input) {
     testBuffer = input;
+    notifyListeners();
+  }
+
+  void SpeedInputBuffer(List<int> input) {
+    SpeedBuffer = input;
+    notifyListeners();
+  }
+
+  void Test1InputBuffer(List<int> input) {
+    Test1Buffer = input;
+    notifyListeners();
+  }
+
+  void Test2InputBuffer(List<int> input) {
+    Test2Buffer = input;
     notifyListeners();
   }
 
@@ -323,20 +344,173 @@ class ControlPageState extends State<ControlPage> {
   double angle = 0;
   int pedal = 0;
   Timer? timer;
+  final leftJoystick = JoystickHandler.left;
+  final rightJoystick = JoystickHandler.right;
+  String _text = '';
 
   @override
   void initState() {
     super.initState();
     timer = Timer.periodic(
       Duration(seconds: 1),
-      (timer) {
-        //ble_info().BLE_WriteCharateristics(writeData)
+      (timer) async {
         List<int> valueList = [angle.toInt(), pedal];
         print('[DATA_LOG]' + valueList.toString());
-        ble_info().BLE_WriteCharateristics(valueList);
-        ble_info().BLE_ReadCharacteristics();
+        await ble_info().BLE_WriteCharateristics(
+            ble_info().wControlsCharacteristic, valueList);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
       },
     );
+
+    leftJoystick.assignMotionEvent(
+        handleLeftJoystickEvent); // Listen for left joystick events
+    rightJoystick.assignMotionEvent(
+        handleRightJoystickEvent); // Listen for right joystick events
+
+    // Listen for left trigger events
+    TriggerHandler.left.assignMotionEvent(handleLeftTriggerEvent);
+
+    // Listen for right trigger events
+    TriggerHandler.right.assignMotionEvent(handleRightTriggerEvent);
+
+    /*******************
+     *  Button Events  *
+     *******************/
+
+    // Assign button listeners with event handlers
+    Gamepad.instance.assignButtonListener(
+      Button.a,
+      onPress: handleButtonAPress,
+      onRelease: handleButtonARelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.b,
+      onPress: handleButtonBPress,
+      onRelease: handleButtonBRelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.x,
+      onPress: handleButtonXPress,
+      onRelease: handleButtonXRelease,
+    );
+
+    Gamepad.instance.assignButtonListener(
+      Button.y,
+      onPress: handleButtonYPress,
+      onRelease: handleButtonYRelease,
+    );
+
+    // Assign D-pad listener
+    Gamepad.instance.assignDpadListener(
+        onEvent: (event) => setState(() => _text = '$event'));
+  }
+
+  // Define a debounce duration (e.g., 200 milliseconds)
+  final Duration _debounceDuration = Duration(milliseconds: 40);
+  Timer? _leftJoystickTimer;
+  Timer? _rightJoystickTimer;
+  Timer? _leftTriggerTimer;
+  Timer? _rightTriggerTimer;
+
+  void handleLeftJoystickEvent(JoystickEvent event) {
+    _leftJoystickTimer?.cancel();
+    // Start a new timer to execute the joystick handling logic after the debounce duration
+    _leftJoystickTimer = Timer(_debounceDuration, () {
+      // Your joystick handling logic goes here
+      setState(() {
+        print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
+        _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
+        // Write to Bluetooth Characteristic here
+      });
+    });
+  }
+
+  void handleRightJoystickEvent(JoystickEvent event) {
+    _rightJoystickTimer?.cancel();
+    _rightJoystickTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
+      });
+    });
+  }
+
+  // Handle left trigger event
+  void handleLeftTriggerEvent(TriggerEvent event) {
+    _leftTriggerTimer?.cancel();
+    _leftTriggerTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
+      });
+    });
+  }
+
+  // Handle right trigger event
+  void handleRightTriggerEvent(TriggerEvent event) {
+    _rightTriggerTimer?.cancel();
+    _rightTriggerTimer = Timer(_debounceDuration, () {
+      setState(() {
+        print('[CONTROLLER] RightTrigger: (z: ${event.z})');
+      });
+    });
+  }
+
+  // Button event handlers
+  void handleButtonAPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (A) Pressed');
+    });
+  }
+
+  void handleButtonARelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (A) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonBPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (B) Pressed');
+    });
+  }
+
+  void handleButtonBRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (B) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonXPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (X) Pressed');
+    });
+  }
+
+  void handleButtonXRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (X) Released');
+    });
+  }
+
+  // Button event handlers
+  void handleButtonYPress() {
+    setState(() {
+      print('[CONTROLLER] Button: (Y) Pressed');
+    });
+  }
+
+  void handleButtonYRelease() {
+    setState(() {
+      print('[CONTROLLER] Button: (Y) Released');
+    });
   }
 
   @override
@@ -373,12 +547,14 @@ class ControlPageState extends State<ControlPage> {
     return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
         body: OrientationWidget(
-            portrait: PortraitControl(), landscape: LandscapeControl()));
+            portrait: PortraitControl(text: _text),
+            landscape: LandscapeControl()));
   }
 }
 
 class PortraitControl extends StatefulWidget {
-  const PortraitControl({Key? key}) : super(key: key);
+  PortraitControl({Key? key, required this.text}) : super(key: key);
+  String text;
 
   @override
   State<StatefulWidget> createState() => _PortraitControl();
@@ -391,7 +567,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         backgroundColor: stateManager.backgroundColor,
         body: Column(children: [
-//Top Row moving battery info to the right side of the view
+          //Top Row moving battery info to the right side of the view
           Row(
             children: [
               Container(width: 20),
@@ -446,7 +622,6 @@ class _PortraitControl extends State<PortraitControl> {
 
 class LandscapeControl extends StatefulWidget {
   const LandscapeControl({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _LandscapeControl();
 }
