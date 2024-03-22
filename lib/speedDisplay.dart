@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'state_manager.dart';
+import 'main.dart';
 
 class SpeedDisplay extends StatefulWidget {
   const SpeedDisplay({Key? key}) : super(key: key);
@@ -11,9 +12,9 @@ class SpeedDisplay extends StatefulWidget {
 class _SpeedDisplayState extends State<SpeedDisplay> {
   @override
   Widget build(BuildContext context) {
-    //var bluetoothValues = Provider.of<MyAppState>(context); noch benötigt??
+    var stateWatch = Provider.of<MyAppState>(context);
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Text('${stateManager.speed} km/h',
+      return Text('${stateManager.speed} km/h ${stateWatch.Test1Buffer.toString()} ${stateWatch.Test2Buffer.toString()}',
                   style: Theme.of(context).textTheme.headlineSmall
       );
     });
