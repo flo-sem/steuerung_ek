@@ -29,6 +29,10 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/steeringWheel.png
+    - assets/images/horn.png
+    - assets/images/blinkerLeft.png
+    - assets/images/blinkerRight.png
+    - assets/images/hazardLightButton.png
     - assets/images/gasPedal.png
     - assets/images/Wifi.png
     - assets/images/battery0.png
@@ -39,6 +43,10 @@ flutter:
     - assets/images/label_BT.png
     - assets/images/label_noBT.png
     - assets/images/label_loading.png
-    
+    - assets/images/carFromTop.png
+    - assets/images/distanceLong.png
+    - assets/images/distanceMedium.png
+    - assets/images/distanceShort.png
+
   uses-material-design: true
 
