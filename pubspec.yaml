@@ -56,6 +56,7 @@ flutter:
     - assets/images/distanceLongFrontLeft.png
     - assets/images/distanceMediumFrontLeft.png
     - assets/images/distanceShortFrontLeft.png
+    - assets/images/controllerButton.png
 
   uses-material-design: true
 

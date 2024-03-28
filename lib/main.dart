@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/ControllerButton.dart';
 import 'package:steuerung_ek/batteryDisplay.dart';
 import 'package:steuerung_ek/Horn.dart';
 import 'package:steuerung_ek/BlinkerLeft.dart';
@@ -545,7 +546,6 @@ class ControlPageState extends State<ControlPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
         body: OrientationWidget(
             portrait: PortraitControl(text: _text),
             landscape: LandscapeControl()));
@@ -565,6 +565,7 @@ class _PortraitControl extends State<PortraitControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
+        appBar: AppBar(title: const Text('CONTROL')),
         backgroundColor: stateManager.backgroundColor,
         body: Column(children: [
           //Top Row moving battery info to the right side of the view
@@ -632,33 +633,68 @@ class _LandscapeControl extends State<LandscapeControl> {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
         backgroundColor: stateManager.backgroundColor,
-        body: Row(
-
-            //steering wheel on the left hand side
-            children: [
-              Container(width: 20, height: 10),
-
-              //dynamic sizing
-              Expanded(
-                child: const SteeringWheel(),
-              ),
-
-              //vertical combination of battery info and speed in the row center
-              Expanded(
-                  child: Column(
+        body: Column(
+          children: [
+            SizedBox(
+              height:10
+            ),
+            Row(
+              children: [
+                Container(width: 20),
+                const TemperatureDisplay(),
+                Spacer(),
+                const PitchDisplay(),
+                Spacer(),
+                const BatteryDisplay(),
+                Container(width: 20),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(),
+                const SpeedDisplay(),
+                Spacer(),
+                const BlinkerLeft(),
+                SizedBox(width: 50),
+                const HazardLightButton(),
+                Container(width: 50),
+                const Horn(),
+                Container(width: 50),
+                const BlinkerRight(),
+                Spacer(),
+                Spacer(),
+                const ControllerButton(),
+                Spacer()
+              ],
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const BatteryDisplay(),
+                  SizedBox(
+                    width: 50,
+                  ),
+                  Container(
+                    width: 200,
+                    child: const SteeringWheel()
+                  ),
                   Spacer(),
-                  const SpeedDisplay(),
+                  const DistanceDisplay(),
                   Spacer(),
-                ],
-              )),
-
-              //gas pedal on the right hand side
-              Expanded(
-                child: const GasPedal(),
-              ),
-            ]),
+                  SizedBox(
+                    width: 50,
+                  ),
+                  Container(
+                    width: 100,
+                    child: const GasPedal(),
+                  ),
+                  SizedBox(
+                    width: 100,
+                  )
+                ]
+              ))
+      ])
       );
     });
   }

@@ -85,6 +85,12 @@ class StateManager with ChangeNotifier {
   String _distanceBackImage = 'assets/images/distanceLong.png';
   String get distanceBackImage => _distanceBackImage;
 
+  int _controllerConnectionState = 0;
+  int get controllerConnectionState => _controllerConnectionState;
+
+  int _controllerButtonState = 0;
+  int get controllerButtonState => _controllerButtonState;
+
   void setSteeringAngle(double value) {
     _steeringAngle = value;
     notifyListeners();
@@ -292,6 +298,26 @@ class StateManager with ChangeNotifier {
 
   void setBackgroundColor(Color value) {
     _backgroundColor = value;
+    notifyListeners();
+  }
+
+  void toggleControllerConnectionState()
+  {
+    if(_controllerConnectionState == 0)
+      {
+        _controllerConnectionState = 1;
+      }
+    else
+      {
+        _controllerConnectionState = 0;
+      }
+    _controllerButtonState = 1;
+    notifyListeners();
+  }
+
+  void resetControllerButtonState()
+  {
+    _controllerButtonState = 0;
     notifyListeners();
   }
 }
