@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/custom_haptics.dart';
+import 'package:steuerung_ek/my_flutter_app_icons.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -141,13 +142,26 @@ class StartPage extends StatefulWidget {
 class _StartPage extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
+
+
+    /* TODO: Implement this in every view */
+
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
+
+    Color lightBackgroundColor = Colors.white;
+    Color darkBackgroundColor = Colors.black;
+
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
 
-          backgroundColor: stateManager.backgroundColor,
+          backgroundColor: currentBrightness == Brightness.dark
+              ? lightBackgroundColor
+              : darkBackgroundColor,
           appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
-            backgroundColor: stateManager.appbarColor,
+            backgroundColor: currentBrightness == Brightness.dark
+                ? darkBackgroundColor
+                : lightBackgroundColor,//stateManager.appbarColor,
           ),
           body: Stack(children: <Widget>[
             Align(
@@ -171,6 +185,17 @@ class _StartPage extends State<StartPage> {
                     MyAppState().statusImageURL,
                     height: 200,
                   ),
+
+          /* https://api.flutter.dev/flutter/material/Icons-class.html
+          https://medium.com/codechai/how-to-use-custom-icons-in-flutter-834a079d977
+          * */
+
+                      Icon(MyFlutterApp.steeringwheel),
+                  Icon(MyFlutterApp.steeringwheel_fill,
+                  size: 150,
+                    color: Colors.blue,
+                  ),
+
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
