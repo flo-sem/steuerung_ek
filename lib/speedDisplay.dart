@@ -14,9 +14,9 @@ class _SpeedDisplayState extends State<SpeedDisplay> {
   Widget build(BuildContext context) {
     var stateWatch = Provider.of<MyAppState>(context);
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Text('${stateManager.speed} km/h ${stateWatch.Test1Buffer.toString()} ${stateWatch.Test2Buffer.toString()}',
-                  style: Theme.of(context).textTheme.headlineSmall
-      );
+      return Text(
+          '${stateWatch.SpeedBuffer.toString()} km/h ${stateWatch.Test1Buffer.toString()} ${stateWatch.Test2Buffer.toString()}',
+          style: Theme.of(context).textTheme.headlineSmall);
     });
   }
 }

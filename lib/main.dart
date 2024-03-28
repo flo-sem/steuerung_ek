@@ -84,6 +84,37 @@ class MyAppState extends ChangeNotifier {
   List<int> SpeedBuffer = [];
   List<int> Test1Buffer = [];
   List<int> Test2Buffer = [];
+  //ble output buffer
+
+  /* GAMEPAD LEGEND 
+    # First int
+    0 : Button A
+    1 : Button B
+    2 : Button X
+    3 : Button Y
+    10: Left Joystick
+    11: Right Joystick
+    20: Left Trigger
+    21: Right Trigger
+    # Second int
+    Buttons:
+    0 : Released
+    1 : Pressed
+    Joysticks:
+    X - Axis
+    Triggers:
+    Z - Axis
+    # Third int
+    Joysticks:
+    Y - Axis
+  */
+  List<int> ControllerBuffer = [];
+
+  void ControllerOutputBuffer(List<int> input) {
+    ControllerBuffer = input;
+    print("[Controller] : $input");
+    notifyListeners();
+  }
 
   void UpdateInputBuffer(List<int> input) {
     testBuffer = input;
@@ -412,12 +443,39 @@ class ControlPageState extends State<ControlPage> {
         onEvent: (event) => setState(() => _text = '$event'));
   }
 
-  // Define a debounce duration (e.g., 200 milliseconds)
+  // Define a debounce duration (e.g., 40 milliseconds)
   final Duration _debounceDuration = Duration(milliseconds: 40);
   Timer? _leftJoystickTimer;
   Timer? _rightJoystickTimer;
   Timer? _leftTriggerTimer;
   Timer? _rightTriggerTimer;
+
+  /* GAMEPAD LEGEND 
+    # First int
+    0 : Button A
+    1 : Button B
+    2 : Button X
+    3 : Button Y
+    10: Left Joystick
+    11: Right Joystick
+    20: Left Trigger
+    21: Right Trigger
+    # Second int
+    Buttons:
+    0 : Released
+    1 : Pressed
+    Joysticks:
+    X - Axis
+    Triggers:
+    Z - Axis
+    # Third int
+    Joysticks:
+    Y - Axis
+  */
+
+  void setControllerInput(List<int> input) {
+    MyAppState().ControllerOutputBuffer(input);
+  }
 
   void handleLeftJoystickEvent(JoystickEvent event) {
     _leftJoystickTimer?.cancel();
@@ -429,6 +487,9 @@ class ControlPageState extends State<ControlPage> {
         _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
         // Write to Bluetooth Characteristic here
       });
+      double xEvent = event.x * 100;
+      double yEvent = event.y * 100;
+      setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
     });
   }
 
@@ -438,6 +499,9 @@ class ControlPageState extends State<ControlPage> {
       setState(() {
         print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
       });
+      double xEvent = event.x * 100;
+      double yEvent = event.y * 100;
+      setControllerInput([11, xEvent.toInt(), yEvent.toInt()]);
     });
   }
 
@@ -448,6 +512,8 @@ class ControlPageState extends State<ControlPage> {
       setState(() {
         print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
       });
+      double zEvent = event.z * 100;
+      setControllerInput([20, zEvent.toInt()]);
     });
   }
 
@@ -458,6 +524,8 @@ class ControlPageState extends State<ControlPage> {
       setState(() {
         print('[CONTROLLER] RightTrigger: (z: ${event.z})');
       });
+      double zEvent = event.z * 100;
+      setControllerInput([21, zEvent.toInt()]);
     });
   }
 
@@ -466,12 +534,14 @@ class ControlPageState extends State<ControlPage> {
     setState(() {
       print('[CONTROLLER] Button: (A) Pressed');
     });
+    setControllerInput([0, 1]);
   }
 
   void handleButtonARelease() {
     setState(() {
       print('[CONTROLLER] Button: (A) Released');
     });
+    setControllerInput([0, 0]);
   }
 
   // Button event handlers
@@ -479,12 +549,14 @@ class ControlPageState extends State<ControlPage> {
     setState(() {
       print('[CONTROLLER] Button: (B) Pressed');
     });
+    setControllerInput([1, 1]);
   }
 
   void handleButtonBRelease() {
     setState(() {
       print('[CONTROLLER] Button: (B) Released');
     });
+    setControllerInput([1, 0]);
   }
 
   // Button event handlers
@@ -492,12 +564,14 @@ class ControlPageState extends State<ControlPage> {
     setState(() {
       print('[CONTROLLER] Button: (X) Pressed');
     });
+    setControllerInput([2, 1]);
   }
 
   void handleButtonXRelease() {
     setState(() {
       print('[CONTROLLER] Button: (X) Released');
     });
+    setControllerInput([2, 0]);
   }
 
   // Button event handlers
@@ -505,12 +579,14 @@ class ControlPageState extends State<ControlPage> {
     setState(() {
       print('[CONTROLLER] Button: (Y) Pressed');
     });
+    setControllerInput([3, 1]);
   }
 
   void handleButtonYRelease() {
     setState(() {
       print('[CONTROLLER] Button: (Y) Released');
     });
+    setControllerInput([3, 0]);
   }
 
   @override
@@ -529,18 +605,6 @@ class ControlPageState extends State<ControlPage> {
     await ble_info().bluetoothDevice.device.disconnect();
     //appState.ChangeText();
   }
-
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
-        body: OrientationWidget(
-            portrait: _PortraitControl(),
-            landscape: _LandscapeControl()
-        )
-    );
-  }
-}*/
 
   @override
   Widget build(BuildContext context) {
