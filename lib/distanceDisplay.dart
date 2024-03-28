@@ -47,9 +47,7 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
               Container(
                 width: 80,
                 height: 80,
-                child: Expanded(
-                  child: Image.asset('assets/images/carFromTop.png'),
-                )
+                child: Image.asset('assets/images/carFromTop.png')
               ),
               Container(
                 width: 80,
