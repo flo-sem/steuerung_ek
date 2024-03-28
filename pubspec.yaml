@@ -47,6 +47,15 @@ flutter:
     - assets/images/distanceLong.png
     - assets/images/distanceMedium.png
     - assets/images/distanceShort.png
+    - assets/images/distanceLongFrontRight.png
+    - assets/images/distanceMediumFrontRight.png
+    - assets/images/distanceShortFrontRight.png
+    - assets/images/distanceLongFrontMiddle.png
+    - assets/images/distanceMediumFrontMiddle.png
+    - assets/images/distanceShortFrontMiddle.png
+    - assets/images/distanceLongFrontLeft.png
+    - assets/images/distanceMediumFrontLeft.png
+    - assets/images/distanceShortFrontLeft.png
 
   uses-material-design: true
 
