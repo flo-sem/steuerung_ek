@@ -49,8 +49,14 @@ class StateManager with ChangeNotifier {
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
 
-  double _distanceFront = 0;
-  double get distanceFront => _distanceFront;
+  double _distanceFrontLeft = 0;
+  double get distanceFrontLeft => _distanceFrontLeft;
+
+  double _distanceFrontMiddle = 0;
+  double get distanceFrontMiddle => _distanceFrontMiddle;
+
+  double _distanceFrontRight = 0;
+  double get distanceFrontRight => _distanceFrontRight;
 
   double _distanceLeft = 0;
   double get distanceLeft => _distanceLeft;
@@ -61,8 +67,14 @@ class StateManager with ChangeNotifier {
   double _distanceBack = 0;
   double get distanceBack => _distanceBack;
 
-  String _distanceFrontImage = 'assets/images/distanceLong.png';
-  String get distanceFrontImage => _distanceFrontImage;
+  String _distanceFrontLeftImage = 'assets/images/distanceLongFrontLeft.png';
+  String get distanceFrontLeftImage => _distanceFrontLeftImage;
+
+  String _distanceFrontMiddleImage = 'assets/images/distanceLongFrontMiddle.png';
+  String get distanceFrontMiddleImage => _distanceFrontMiddleImage;
+
+  String _distanceFrontRightImage = 'assets/images/distanceLongFrontRight.png';
+  String get distanceFrontRightImage => _distanceFrontRightImage;
 
   String _distanceLeftImage = 'assets/images/distanceLong.png';
   String get distanceLeftImage => _distanceLeftImage;
@@ -171,10 +183,34 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setFrontDistance(double value)
+  void setDistance(List<double> distanceList)
   {
-    _distanceFront = value;
-    _distanceFrontImage = _getDistanceImage(_distanceFront);
+    setFrontLeftDistance(distanceList[0]);
+    setFrontMiddleDistance(distanceList[1]);
+    setFrontRightDistance(distanceList[2]);
+    setRightDistance(distanceList[3]);
+    setBackDistance(distanceList[4]);
+    setLeftDistance(distanceList[5]);
+  }
+
+  void setFrontLeftDistance(double value)
+  {
+    _distanceFrontLeft = value;
+    _distanceFrontLeftImage = _getDistanceFrontLeftImage();
+    notifyListeners();
+  }
+
+  void setFrontMiddleDistance(double value)
+  {
+    _distanceFrontMiddle = value;
+    _distanceFrontMiddleImage = _getDistanceFrontMiddleImage();
+    notifyListeners();
+  }
+
+  void setFrontRightDistance(double value)
+  {
+    _distanceFrontRight = value;
+    _distanceFrontRightImage = _getDistanceFrontRightImage();
     notifyListeners();
   }
 
@@ -199,6 +235,45 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  String _getDistanceFrontLeftImage () {
+    String ret = 'assets/images/distanceShortFrontLeft.png';
+
+    if (_distanceFrontLeft > 3000) {
+      ret = 'assets/images/distanceLongFrontLeft.png';
+    }
+    else if (_distanceFrontLeft <= 3000 && _distanceFrontLeft > 1000) {
+      ret = 'assets/images/distanceMediumFrontLeft.png';
+    }
+
+    return ret;
+  }
+
+  String _getDistanceFrontMiddleImage () {
+    String ret = 'assets/images/distanceShortFrontMiddle.png';
+
+    if (_distanceFrontMiddle > 3000) {
+      ret = 'assets/images/distanceLongFrontMiddle.png';
+    }
+    else if (_distanceFrontMiddle <= 3000 && _distanceFrontMiddle > 1000) {
+      ret = 'assets/images/distanceMediumFrontMiddle.png';
+    }
+
+    return ret;
+  }
+
+  String _getDistanceFrontRightImage () {
+    String ret = 'assets/images/distanceShortFrontRight.png';
+
+    if (_distanceFrontRight > 3000) {
+      ret = 'assets/images/distanceLongFrontRight.png';
+    }
+    else if (_distanceFrontRight <= 3000 && _distanceFrontRight > 1000) {
+      ret = 'assets/images/distanceMediumFrontRight.png';
+    }
+
+    return ret;
+  }
+
   String _getDistanceImage (double distance)
   {
     String ret = 'assets/images/distanceShort.png';
@@ -207,7 +282,7 @@ class StateManager with ChangeNotifier {
     {
       ret = 'assets/images/distanceLong.png';
     }
-    else if(_distanceFront <= 3000 && _distanceFront > 1000)
+    else if(distance <= 3000 && distance > 1000)
     {
       ret = 'assets/images/distanceMedium.png';
     }

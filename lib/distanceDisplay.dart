@@ -20,17 +20,19 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 80,
+                width: 29.5,
                 height: 80,
+                child:  Image.asset(stateManager.distanceFrontLeftImage)
               ),
               Container(
-                width: 80,
+                width: 21.2,
                 height: 80,
-                child: Image.asset(stateManager.distanceFrontImage),
+                child:  Image.asset(stateManager.distanceFrontMiddleImage)
               ),
               SizedBox(
-                width: 80,
+                width: 29.5,
                 height: 80,
+                child: Image.asset(stateManager.distanceFrontRightImage)
               )
             ],
           ),

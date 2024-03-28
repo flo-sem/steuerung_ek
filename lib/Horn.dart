@@ -14,8 +14,8 @@ class _HornState extends State<Horn> {
     return Consumer<StateManager>(
         builder: (context, stateManager, child) {
           return GestureDetector(
-              onTapDown: (_) => stateManager.setFrontDistance(2000),
-              onTapUp: (_) => stateManager.setFrontDistance(0),
+              onTapDown: (_) => stateManager.setDistance([1000, 2000, 3000, 1500, 7000, 840]),
+              onTapUp: (_) => stateManager.setDistance([4000, 4000, 4000, 4000, 4000, 4000]),
               child: Transform.scale(
                 scale: 1 - (0.2*stateManager.hornState),
                 child: Image.asset('assets/images/horn.png', width: 60)
