@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:steuerung_ek/ek_icons.dart';
 
 class ControllerButton extends StatefulWidget {
   const ControllerButton({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class ControllerButton extends StatefulWidget {
 class _ControllerButtonState extends State<ControllerButton> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(
         builder: (context, stateManager, child) {
           return GestureDetector(
@@ -18,8 +20,11 @@ class _ControllerButtonState extends State<ControllerButton> {
               onTapUp: (_) => stateManager.resetControllerButtonState(),
               child: Transform.scale(
                   scale: 1 - (0.2 * stateManager.controllerButtonState),
-                  child: Image.asset(
-                      'assets/images/controllerButton.png', width: 70)
+                 // child: Image.asset('assets/images/controllerButton.png', width: 70)
+                child: Icon(EK_Icons.gamecontroller,
+                    size: 70,
+                    color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
+                ),
               )
           );
         }
