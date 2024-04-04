@@ -42,7 +42,7 @@ flutter:
   uses-material-design: true
 
   fonts:
-    - family: MyFlutterApp
+    - family: EK_Icons
       fonts:
-       - asset: assets/fonts/MyFlutterApp.ttf
+       - asset: assets/fonts/EK_Icons.ttf
 

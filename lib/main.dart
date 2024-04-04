@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/custom_haptics.dart';
-import 'package:steuerung_ek/my_flutter_app_icons.dart';
+import 'package:steuerung_ek/e_k__icons_icons.dart';
 import 'package:steuerung_ek/info_battery.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'steering_wheel.dart';
@@ -190,10 +190,13 @@ class _StartPage extends State<StartPage> {
           https://medium.com/codechai/how-to-use-custom-icons-in-flutter-834a079d977
           * */
 
-                      Icon(MyFlutterApp.steeringwheel),
-                  Icon(MyFlutterApp.steeringwheel_fill,
+                      Icon(EK_Icons.arrowshape_left,
+                        size: 150,
+                        color: Colors.black45,
+                      ),
+                  Icon(EK_Icons.pedal_accelerator ,
                   size: 150,
-                    color: Colors.blue,
+                    color: Colors.green,
                   ),
 
                   SizedBox(height: 20),
