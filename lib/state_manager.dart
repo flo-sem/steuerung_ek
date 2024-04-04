@@ -64,9 +64,6 @@ class StateManager with ChangeNotifier {
   String _batteryImage = 'assets/images/battery4.png';
   String get batteryImage => _batteryImage;
 
-  Color _backgroundColor = Colors.white;
-  Color get backgroundColor => _backgroundColor;
-
   double _distanceFrontLeft = 0;
   double get distanceFrontLeft => _distanceFrontLeft;
 

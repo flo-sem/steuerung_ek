@@ -61,3 +61,7 @@ flutter:
 
   uses-material-design: true
 
+  fonts:
+    - family: EK_Icons
+      fonts:
+        - asset: assets/fonts/EK_Icons.ttf

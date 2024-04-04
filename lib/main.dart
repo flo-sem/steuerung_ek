@@ -10,6 +10,7 @@ import 'package:steuerung_ek/pitchDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'package:steuerung_ek/custom_haptics.dart';
+import 'package:steuerung_ek/ek_icons.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'speedDisplay.dart';
@@ -216,10 +217,10 @@ class _StartPage extends State<StartPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // ← Add this.
                     children: [
-                  Image.asset(
-                    MyAppState().statusImageURL,
-                    height: 200,
-                  ),
+                      Image.asset(
+                      MyAppState().statusImageURL,
+                      height: 200,
+                    ),
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
