@@ -21,7 +21,7 @@ import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:n_gamepad/n_gamepad.dart';
 import 'package:n_gamepad/src/models/control.dart';
-
+import 'package:flutter/services.dart';
 import 'second.dart';
 
 enum ConnectionStateImage {
@@ -45,18 +45,6 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  /*Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'shopping cart control',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
-      ),
-      home: StartPage(title: 'Start Menu'),
-    );
-  }*/
-
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
@@ -190,6 +178,15 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPage extends State<StartPage> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
@@ -383,6 +380,12 @@ class ControlPageState extends State<ControlPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp
+    ]);
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) async {
@@ -600,6 +603,10 @@ class ControlPageState extends State<ControlPage> {
 
   @override
   void dispose() async {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     //var appState = context.watch<MyAppState>();
     timer?.cancel();
     super.dispose();
@@ -696,12 +703,9 @@ class _LandscapeControl extends State<LandscapeControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
-        body: Column(
-          children: [
-            SizedBox(
-              height:10
-            ),
+          backgroundColor: stateManager.backgroundColor,
+          body: Column(children: [
+            SizedBox(height: 10),
             Row(
               children: [
                 Container(width: 20),
@@ -733,33 +737,27 @@ class _LandscapeControl extends State<LandscapeControl> {
               ],
             ),
             Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Container(
-                    width: 200,
-                    child: const SteeringWheel()
-                  ),
-                  Spacer(),
-                  const DistanceDisplay(),
-                  Spacer(),
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Container(
-                    width: 100,
-                    child: const GasPedal(),
-                  ),
-                  SizedBox(
-                    width: 100,
-                  )
-                ]
-              ))
-      ])
-      );
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(
+                width: 50,
+              ),
+              Container(width: 200, child: const SteeringWheel()),
+              Spacer(),
+              const DistanceDisplay(),
+              Spacer(),
+              SizedBox(
+                width: 50,
+              ),
+              Container(
+                width: 100,
+                child: const GasPedal(),
+              ),
+              SizedBox(
+                width: 100,
+              )
+            ]))
+          ]));
     });
   }
 }
