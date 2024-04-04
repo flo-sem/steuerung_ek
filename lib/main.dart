@@ -659,6 +659,8 @@ class _LandscapeControl extends State<LandscapeControl> {
                 children: [
                   Container(
                       width: 180, height: 180, child: const SteeringWheel()),
+                  //These nested widget are necessary, because the "DistanceDisplay" will
+                  //be messed up when resizing through a container.
                   SizedBox(
                     // Wrap DistanceDisplay with SizedBox to adjust its size
                     width: 200, // Set the desired width
