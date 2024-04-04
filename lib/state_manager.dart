@@ -7,6 +7,24 @@ import 'package:convert/convert.dart';
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
 
+  Color _backgroundColor = Colors.white;
+  Color get backgroundColor => _backgroundColor;
+
+  Color _darkBackgroundColor = Colors.black;
+  Color get darkBackgroundColor => _darkBackgroundColor;
+
+  Color _appbarColor = Colors.lightBlueAccent;
+  Color get appbarColor => _appbarColor;
+
+  Color _darkAppbarColor = Colors.deepPurpleAccent ;
+  Color get darkAppbarColor => _darkAppbarColor;
+
+  Color _iconColor = Colors.black;
+  Color get iconColor => _iconColor;
+
+  Color _darkIconColor = Colors.white;
+  Color get darkIconColor => _darkIconColor;
+
   int _speed = 0;
   int get speed => _speed;
 
