@@ -148,20 +148,20 @@ class _StartPage extends State<StartPage> {
 
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
 
-    Color lightBackgroundColor = Colors.white;
-    Color darkBackgroundColor = Colors.black;
+   // Color lightBackgroundColor = Colors.white;
+   // Color darkBackgroundColor = Colors.black;
 
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
 
           backgroundColor: currentBrightness == Brightness.dark
-              ? lightBackgroundColor
-              : darkBackgroundColor,
+              ? stateManager.darkBackgroundColor
+              : stateManager.backgroundColor,
           appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
             backgroundColor: currentBrightness == Brightness.dark
-                ? darkBackgroundColor
-                : lightBackgroundColor,//stateManager.appbarColor,
+                ? stateManager.darkAppbarColor
+                : stateManager.appbarColor,//stateManager.appbarColor,
           ),
           body: Stack(children: <Widget>[
             Align(
@@ -192,7 +192,7 @@ class _StartPage extends State<StartPage> {
 
                       Icon(EK_Icons.arrowshape_left,
                         size: 150,
-                        color: Colors.black45,
+                        color: currentBrightness == Brightness.dark ? Colors.white : Colors.black45 ,
                       ),
                   Icon(EK_Icons.pedal_accelerator ,
                   size: 150,
@@ -286,15 +286,15 @@ class _SettingsPage extends State<SettingsPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.white);
+                          //stateManager.setBackgroundColor(Colors.white);
                         },
                         child: Text('Weiß'),
                       ),
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(
-                              const Color.fromARGB(255, 255, 55, 122));
+                         // stateManager.setBackgroundColor(
+                             // const Color.fromARGB(255, 255, 55, 122));
                         },
                         child: Text('Pink'),
                       ),

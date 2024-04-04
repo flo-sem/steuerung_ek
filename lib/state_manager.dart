@@ -28,12 +28,16 @@ class StateManager with ChangeNotifier {
   String get batteryImage => _batteryImage;
 
   Color _backgroundColor = Colors.white;
-
   Color get backgroundColor => _backgroundColor;
 
-  Color _appbarColor = Colors.lightBlueAccent;
+  Color _darkBackgroundColor = Colors.black;
+  Color get darkBackgroundColor => _darkBackgroundColor;
 
+  Color _appbarColor = Colors.lightBlueAccent;
   Color get appbarColor => _appbarColor;
+
+  Color _darkAppbarColor = Colors.deepPurpleAccent ;
+  Color get darkAppbarColor => _darkAppbarColor;
 
   /* properties for ble send interval control */
 
@@ -63,13 +67,5 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setBackgroundColor(Color value) {
-    _backgroundColor = value;
-    notifyListeners();
-  }
 
-  void setAppbarColor(Color value) {
-    _appbarColor = value;
-    notifyListeners();
-  }
 }
