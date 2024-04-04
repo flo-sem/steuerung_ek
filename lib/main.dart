@@ -666,6 +666,7 @@ class _LandscapeControl extends State<LandscapeControl> {
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 50,
