@@ -9,6 +9,7 @@ import 'package:steuerung_ek/distanceDisplay.dart';
 import 'package:steuerung_ek/pitchDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
+import 'package:steuerung_ek/custom_haptics.dart.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'speedDisplay.dart';
