@@ -39,6 +39,12 @@ class StateManager with ChangeNotifier {
   Color _darkAppbarColor = Colors.deepPurpleAccent ;
   Color get darkAppbarColor => _darkAppbarColor;
 
+  Color _iconColor = Colors.black;
+  Color get iconColor => _iconColor;
+
+  Color _darkIconColor = Colors.white ;
+  Color get darkIconColor => _darkIconColor;
+
   /* properties for ble send interval control */
 
   void setSteeringAngle(double value) {

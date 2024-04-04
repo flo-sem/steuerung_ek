@@ -192,7 +192,7 @@ class _StartPage extends State<StartPage> {
 
                       Icon(EK_Icons.arrowshape_left,
                         size: 150,
-                        color: currentBrightness == Brightness.dark ? Colors.white : Colors.black45 ,
+                        color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor ,
                       ),
                   Icon(EK_Icons.pedal_accelerator ,
                   size: 150,
