@@ -643,47 +643,39 @@ class _LandscapeControl extends State<LandscapeControl> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
                 const SpeedDisplay(),
-                Spacer(),
                 const BlinkerLeft(),
-                SizedBox(width: 50),
                 const HazardLightButton(),
-                Container(width: 50),
                 const Horn(),
-                Container(width: 50),
                 const BlinkerRight(),
-                Spacer(),
-                Spacer(),
                 const ControllerButton(),
-                Spacer()
               ],
             ),
-            Expanded(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      width: 180, height: 180, child: const SteeringWheel()),
                   SizedBox(
-                    width: 50,
-                  ),
-                  Container(width: 200, child: const SteeringWheel()),
-                  Spacer(),
-                  const DistanceDisplay(),
-                  Spacer(),
-                  SizedBox(
-                    width: 50,
+                    // Wrap DistanceDisplay with SizedBox to adjust its size
+                    width: 200, // Set the desired width
+                    height: 200, // Set the desired height
+                    child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: const DistanceDisplay(),
+                        )),
                   ),
                   Container(
-                    width: 100,
+                    width: 180,
+                    height: 180,
                     child: const GasPedal(),
                   ),
-                  SizedBox(
-                    width: 100,
-                  )
-                ]))
+                ])
           ]));
     });
   }
