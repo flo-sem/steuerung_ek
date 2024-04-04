@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/custom_haptics.dart';
 import 'package:steuerung_ek/batteryDisplay.dart';
 import 'package:steuerung_ek/Horn.dart';
 import 'package:steuerung_ek/BlinkerLeft.dart';
