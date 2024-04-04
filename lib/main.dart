@@ -567,7 +567,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
         backgroundColor: stateManager.backgroundColor,
-        body: Column(children: [
+        body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
           Row(
             children: [
@@ -582,31 +582,32 @@ class _PortraitControl extends State<PortraitControl> {
           ),
           const DistanceDisplay(),
           const SpeedDisplay(),
-          Spacer(),
+          SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const BlinkerLeft(),
-              SizedBox(width: 40),
               const HazardLightButton(),
-              Container(width: 40),
               const Horn(),
-              Container(width: 40),
               const BlinkerRight(),
             ],
           ),
-
+          SizedBox(height: 40),
           //wheel and pedal
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             // Adjust alignment as needed
             children: [
-              Container(width: 10),
-              Expanded(
-                child: const SteeringWheel(),
+              Container(
+                width: 160, // Adjust the width as needed
+                height: 160,
+                child: SteeringWheel(),
               ),
-              Expanded(
-                child: const GasPedal(),
+              SizedBox(width: 10), // Add spacing
+              Container(
+                width: 160, // Adjust the width as needed
+                height: 160,
+                child: GasPedal(),
               ),
             ],
           ),
@@ -627,12 +628,9 @@ class _LandscapeControl extends State<LandscapeControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
-        body: Column(
-          children: [
-            SizedBox(
-              height:10
-            ),
+          backgroundColor: stateManager.backgroundColor,
+          body: Column(children: [
+            SizedBox(height: 10),
             Row(
               children: [
                 Container(width: 20),
@@ -645,53 +643,42 @@ class _LandscapeControl extends State<LandscapeControl> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
                 const SpeedDisplay(),
-                Spacer(),
                 const BlinkerLeft(),
-                SizedBox(width: 50),
                 const HazardLightButton(),
-                Container(width: 50),
                 const Horn(),
-                Container(width: 50),
                 const BlinkerRight(),
-                Spacer(),
-                Spacer(),
                 const ControllerButton(),
-                Spacer()
               ],
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                      width: 180, height: 180, child: const SteeringWheel()),
+                  //These nested widget are necessary, because the "DistanceDisplay" will
+                  //be messed up when resizing through a container.
                   SizedBox(
-                    width: 50,
+                    // Wrap DistanceDisplay with SizedBox to adjust its size
+                    width: 200, // Set the desired width
+                    height: 200, // Set the desired height
+                    child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: const DistanceDisplay(),
+                        )),
                   ),
                   Container(
-                    width: 200,
-                    child: const SteeringWheel()
-                  ),
-                  Spacer(),
-                  const DistanceDisplay(),
-                  Spacer(),
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Container(
-                    width: 100,
+                    width: 180,
+                    height: 180,
                     child: const GasPedal(),
                   ),
-                  SizedBox(
-                    width: 100,
-                  )
-                ]
-              ))
-      ])
-      );
+                ])
+          ]));
     });
   }
 }
