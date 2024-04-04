@@ -194,11 +194,13 @@ class StartPage extends StatefulWidget {
 class _StartPage extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: stateManager.backgroundColor,
-          appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
+          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+          appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
@@ -275,10 +277,12 @@ class _SettingsPage extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
-        appBar: AppBar(title: const Text('SETTINGS')),
+        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+        appBar: AppBar(title: const Text('SETTINGS'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -629,10 +633,12 @@ class PortraitControl extends StatefulWidget {
 class _PortraitControl extends State<PortraitControl> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
-        backgroundColor: stateManager.backgroundColor,
+        appBar: AppBar(title: const Text('CONTROL'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
+        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
         body: Column(children: [
           //Top Row moving battery info to the right side of the view
           Row(
@@ -696,9 +702,10 @@ class LandscapeControl extends StatefulWidget {
 class _LandscapeControl extends State<LandscapeControl> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
+          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
         body: Column(
           children: [
             SizedBox(
