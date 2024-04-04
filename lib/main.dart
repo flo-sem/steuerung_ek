@@ -580,20 +580,18 @@ class _PortraitControl extends State<PortraitControl> {
               Container(width: 20),
             ],
           ),
-          Spacer(),
           const DistanceDisplay(),
-          Spacer(),
           const SpeedDisplay(),
           Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const BlinkerLeft(),
-              SizedBox(width: 50),
+              SizedBox(width: 40),
               const HazardLightButton(),
-              Container(width: 50),
+              Container(width: 40),
               const Horn(),
-              Container(width: 50),
+              Container(width: 40),
               const BlinkerRight(),
             ],
           ),
@@ -603,10 +601,7 @@ class _PortraitControl extends State<PortraitControl> {
             mainAxisAlignment: MainAxisAlignment.center,
             // Adjust alignment as needed
             children: [
-              //spacer of width 20 to align steering wheel
-              Container(width: 20, height: 10),
-
-              //dynamic sizing
+              Container(width: 10),
               Expanded(
                 child: const SteeringWheel(),
               ),
