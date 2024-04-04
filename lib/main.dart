@@ -567,7 +567,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         appBar: AppBar(title: const Text('CONTROL')),
         backgroundColor: stateManager.backgroundColor,
-        body: Column(children: [
+        body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
           Row(
             children: [
@@ -582,31 +582,32 @@ class _PortraitControl extends State<PortraitControl> {
           ),
           const DistanceDisplay(),
           const SpeedDisplay(),
-          Spacer(),
+          SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const BlinkerLeft(),
-              SizedBox(width: 40),
               const HazardLightButton(),
-              Container(width: 40),
               const Horn(),
-              Container(width: 40),
               const BlinkerRight(),
             ],
           ),
-
+          SizedBox(height: 40),
           //wheel and pedal
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             // Adjust alignment as needed
             children: [
-              Container(width: 10),
-              Expanded(
-                child: const SteeringWheel(),
+              Container(
+                width: 160, // Adjust the width as needed
+                height: 160,
+                child: SteeringWheel(),
               ),
-              Expanded(
-                child: const GasPedal(),
+              SizedBox(width: 10), // Add spacing
+              Container(
+                width: 160, // Adjust the width as needed
+                height: 160,
+                child: GasPedal(),
               ),
             ],
           ),
@@ -627,12 +628,9 @@ class _LandscapeControl extends State<LandscapeControl> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
-        body: Column(
-          children: [
-            SizedBox(
-              height:10
-            ),
+          backgroundColor: stateManager.backgroundColor,
+          body: Column(children: [
+            SizedBox(height: 10),
             Row(
               children: [
                 Container(width: 20),
@@ -664,17 +662,14 @@ class _LandscapeControl extends State<LandscapeControl> {
               ],
             ),
             Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   SizedBox(
                     width: 50,
                   ),
-                  Container(
-                    width: 200,
-                    child: const SteeringWheel()
-                  ),
+                  Container(width: 200, child: const SteeringWheel()),
                   Spacer(),
                   const DistanceDisplay(),
                   Spacer(),
@@ -688,10 +683,8 @@ class _LandscapeControl extends State<LandscapeControl> {
                   SizedBox(
                     width: 100,
                   )
-                ]
-              ))
-      ])
-      );
+                ]))
+          ]));
     });
   }
 }
