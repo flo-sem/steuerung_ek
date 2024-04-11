@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'state_manager.dart';
 import 'dart:math' as math;
+import 'package:steuerung_ek/ek_icons.dart';
 
 class DistanceDisplay extends StatefulWidget {
   const DistanceDisplay({Key? key}) : super(key: key);
@@ -12,8 +13,18 @@ class DistanceDisplay extends StatefulWidget {
 class _DistanceDisplayState extends State<DistanceDisplay> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Column(
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix([
+          -1,  0,  0, 0,currentBrightness == Brightness.dark ? 255 : 0, // Red
+          0, -1,  0, 0, currentBrightness == Brightness.dark ? 255 : 0, // Green
+          0,  0, -1, 0, currentBrightness == Brightness.dark ? 255 : 0, // Blue
+          0,  0,  0, 1,   0  // Alpha
+        ]),
+        child:
+
+       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
@@ -49,7 +60,11 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
               Container(
                 width: 80,
                 height: 80,
-                child: Image.asset('assets/images/carFromTop.png')
+                //child: Image.asset('assets/images/carFromTop.png')
+                child: Icon(EK_Icons.cart,
+                    size: 50,
+                    color: currentBrightness == Brightness.light ? stateManager.darkIconColor : stateManager.iconColor
+                )
               ),
               Container(
                 width: 80,
@@ -81,6 +96,7 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
             ],
           )
         ],
+      ),
       );
     });
   }

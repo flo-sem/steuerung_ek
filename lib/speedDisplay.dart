@@ -12,11 +12,15 @@ class SpeedDisplay extends StatefulWidget {
 class _SpeedDisplayState extends State<SpeedDisplay> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     var stateWatch = Provider.of<MyAppState>(context);
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Text(
-          '${stateWatch.SpeedBuffer.toString()} km/h ${stateWatch.Test1Buffer.toString()} ${stateWatch.Test2Buffer.toString()}',
-          style: Theme.of(context).textTheme.headlineSmall);
+        '${stateWatch.SpeedBuffer.toString()} km/h ${stateWatch.Test1Buffer.toString()} ${stateWatch.Test2Buffer.toString()}',
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+        ),
+      );
     });
   }
 }

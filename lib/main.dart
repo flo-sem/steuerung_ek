@@ -9,6 +9,8 @@ import 'package:steuerung_ek/distanceDisplay.dart';
 import 'package:steuerung_ek/pitchDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
+import 'package:steuerung_ek/custom_haptics.dart';
+import 'package:steuerung_ek/ek_icons.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'speedDisplay.dart';
@@ -189,11 +191,13 @@ class _StartPage extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: stateManager.backgroundColor,
-          appBar: AppBar(title: const Text('Einkaufswagen Steuerung')),
+          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+          appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
@@ -212,10 +216,17 @@ class _StartPage extends State<StartPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // ← Add this.
                     children: [
-                  Image.asset(
-                    MyAppState().statusImageURL,
-                    height: 200,
-                  ),
+                      /*
+                      Image.asset(
+                      MyAppState().statusImageURL,
+                      height: 200,
+                    ),
+                    */
+                        Icon(
+                            appState.statusImageURL == "assets/images/label_noBT.png" ? EK_Icons.bluetooth_disabled : EK_Icons.bluetooth_connected,
+                          size: 150,
+                          color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
+                      ),
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
@@ -270,10 +281,12 @@ class _SettingsPage extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: stateManager.backgroundColor,
-        appBar: AppBar(title: const Text('SETTINGS')),
+        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+        appBar: AppBar(title: const Text('SETTINGS'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -288,6 +301,7 @@ class _SettingsPage extends State<SettingsPage> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
                           ),
                         ),
                       ),
@@ -326,6 +340,7 @@ class _SettingsPage extends State<SettingsPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
                             ),
                           ),
                           Spacer()
@@ -634,12 +649,14 @@ class PortraitControl extends StatefulWidget {
 class _PortraitControl extends State<PortraitControl> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL')),
-        backgroundColor: stateManager.backgroundColor,
+        appBar: AppBar(title: const Text('CONTROL'),
+            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
+          Container(height: 10),
           Row(
             children: [
               Container(width: 20),
@@ -648,7 +665,7 @@ class _PortraitControl extends State<PortraitControl> {
               const PitchDisplay(),
               Spacer(),
               const BatteryDisplay(),
-              Container(width: 20),
+              Container(width: 50),
             ],
           ),
           const DistanceDisplay(),
@@ -697,11 +714,15 @@ class LandscapeControl extends StatefulWidget {
 class _LandscapeControl extends State<LandscapeControl> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: stateManager.backgroundColor,
-          body: Column(children: [
-            SizedBox(height: 10),
+          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+        body: Column(
+          children: [
+            SizedBox(
+              height:10
+            ),
             Row(
               children: [
                 Container(width: 20),
@@ -710,9 +731,10 @@ class _LandscapeControl extends State<LandscapeControl> {
                 const PitchDisplay(),
                 Spacer(),
                 const BatteryDisplay(),
-                Container(width: 20),
+                Container(width: 50),
               ],
             ),
+            Container(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
