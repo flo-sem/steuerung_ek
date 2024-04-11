@@ -81,4 +81,16 @@ class _ControllerDisplay extends State<ControllerDisplay> {
               );
     });
   }
+
+  @override
+  void dispose() {
+    // Resetting the screen orientation preferences when leaving View B
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 }
