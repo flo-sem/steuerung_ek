@@ -315,17 +315,17 @@ class _SettingsPage extends State<SettingsPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.white);
+                        stateManager.setBackgroundColor(Colors.red);
                         },
-                        child: Text('Weiß'),
+                        child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(
-                              const Color.fromARGB(255, 255, 55, 122));
+                          stateManager.setBackgroundColor(Colors.red);
+
                         },
-                        child: Text('Pink'),
+                        child: Text('Color Profile 2'),
                       ),
                     ],
                   ),

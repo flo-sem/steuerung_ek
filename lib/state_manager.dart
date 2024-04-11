@@ -11,27 +11,51 @@ class StateManager with ChangeNotifier {
 
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
+  set backgroundColor(Color color) {
+    _backgroundColor = color;
+  }
 
   Color _darkBackgroundColor = Colors.black;
   Color get darkBackgroundColor => _darkBackgroundColor;
+  set darkBackgroundColor(Color color) {
+    _darkBackgroundColor = color;
+  }
 
   Color _appbarColor = Colors.lightBlueAccent;
   Color get appbarColor => _appbarColor;
+  set appbarColor(Color color) {
+    _appbarColor = color;
+  }
 
-  Color _darkAppbarColor = Colors.deepPurpleAccent ;
+  Color _darkAppbarColor = Colors.deepPurpleAccent;
   Color get darkAppbarColor => _darkAppbarColor;
+  set darkAppbarColor(Color color) {
+    _darkAppbarColor = color;
+  }
 
   Color _iconColor = Colors.black;
   Color get iconColor => _iconColor;
+  set iconColor(Color color) {
+    _iconColor = color;
+  }
 
   Color _darkIconColor = Colors.white;
   Color get darkIconColor => _darkIconColor;
+  set darkIconColor(Color color) {
+    _darkIconColor = color;
+  }
 
   Color _textColor = Colors.black;
   Color get textColor => _textColor;
+  set textColor(Color color) {
+    _textColor = color;
+  }
 
   Color _darkTextColor = Colors.white70;
   Color get darkTextColor => _darkTextColor;
+  set darkTextColor(Color color) {
+    _darkTextColor = color;
+  }
 
   int _speed = 0;
   int get speed => _speed;
