@@ -14,6 +14,8 @@ import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'speedDisplay.dart';
+import 'package:flutter/services.dart';
+
 
 class ControllerDisplay extends StatefulWidget {
   const ControllerDisplay({Key? key}) : super(key: key);
@@ -24,6 +26,10 @@ class ControllerDisplay extends StatefulWidget {
 class _ControllerDisplay extends State<ControllerDisplay> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
