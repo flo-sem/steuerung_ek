@@ -31,11 +31,15 @@ class _SpeedDisplayState extends State<SpeedDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     var stateWatch = Provider.of<MyAppState>(context);
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Text(
           '${stateManager.speed} km/h',
-          style: Theme.of(context).textTheme.headlineSmall);
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+        ),
+      );
     });
   }
 }

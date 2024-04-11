@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/ek_icons.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -39,7 +40,11 @@ class _HazardLightButtonState extends State<HazardLightButton> {
             onTapUp: (_) => stateManager.resetHazardLightButton(),
             child: Transform.scale(
               scale: 1 - (0.2*stateManager.hazardLightButton),
-              child: Image.asset('assets/images/hazardLightButton.png', width: 60)
+              //child: Image.asset('assets/images/hazardLightButton.png', width: 60)
+              child:  Icon(EK_Icons.hazardsign,
+                size: 60,
+                color: Colors.deepOrange
+              ),
             )
           );
         }

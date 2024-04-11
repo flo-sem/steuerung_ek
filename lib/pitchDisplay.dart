@@ -30,9 +30,13 @@ class _PitchDisplayState extends State<PitchDisplay> {
   }
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Text('${stateManager.pitch}%',
-          style: Theme.of(context).textTheme.headlineSmall
+      return Text(
+        '${stateManager.pitch}%',
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+        ),
       );
     });
   }
