@@ -315,15 +315,27 @@ class _SettingsPage extends State<SettingsPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                        stateManager.setBackgroundColor(Colors.red);
-                        },
+                          stateManager.backgroundColor = Colors.white;
+                          stateManager.darkBackgroundColor = Colors.black;
+                          stateManager.appbarColor = Colors.lightBlueAccent;
+                          stateManager.darkAppbarColor = Colors.deepPurpleAccent;
+                          stateManager.iconColor = Colors.black;
+                          stateManager.darkIconColor = Colors.white;
+                          stateManager.textColor = Colors.black;
+                          stateManager.darkTextColor = Colors.white70;                        },
                         child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.red);
-
+                          stateManager.backgroundColor = Colors.white;
+                          stateManager.darkBackgroundColor = Colors.black;
+                          stateManager.appbarColor = Color.fromARGB(255, 252, 132, 2);
+                          stateManager.darkAppbarColor = Color.fromARGB(255, 252, 53, 3);
+                          stateManager.iconColor = Colors.black;
+                          stateManager.darkIconColor = Colors.white;
+                          stateManager.textColor = Colors.black;
+                          stateManager.darkTextColor = Colors.white70;
                         },
                         child: Text('Color Profile 2'),
                       ),
