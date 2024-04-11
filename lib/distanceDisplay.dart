@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'state_manager.dart';
 import 'dart:math' as math;
+import 'main.dart';
+import 'dart:async';
 
 class DistanceDisplay extends StatefulWidget {
   const DistanceDisplay({Key? key}) : super(key: key);
@@ -10,6 +12,23 @@ class DistanceDisplay extends StatefulWidget {
 }
 
 class _DistanceDisplayState extends State<DistanceDisplay> {
+  Timer? updateTimer;
+  @override
+  void initState() {
+    super.initState();
+    updateTimer = Timer.periodic(Duration(seconds: 1), (updateTimer) {
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      stateManager.setDistance(MyAppState().getDistance());
+    });
+  }
+
+  @override
+  void dispose()
+  {
+    super.dispose();
+    updateTimer?.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<StateManager>(builder: (context, stateManager, child) {

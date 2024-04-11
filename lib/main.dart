@@ -70,9 +70,75 @@ class MyAppState extends ChangeNotifier {
 
   // ble input buffer
   List<int> testBuffer = [];
+  List<double> pitchBuffer = [];
+  List<int> temperatureBuffer = [];
+  List<int> batteryStateBuffer = [];
+  List<List<double>> distanceBuffer = [];
   List<int> SpeedBuffer = [];
   List<int> Test1Buffer = [];
   List<int> Test2Buffer = [];
+
+  List<double> getDistance()
+  {
+    if(distanceBuffer.isEmpty)
+      {
+        return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+      }
+    else
+      {
+        return distanceBuffer[0];
+      }
+  }
+
+  double getPitch()
+  {
+    if(pitchBuffer.isEmpty)
+      {
+        return 0.0;
+      }
+    else
+      {
+        return pitchBuffer[0];
+      }
+  }
+
+  int getBatteryState()
+  {
+    if(batteryStateBuffer.isEmpty)
+      {
+        return 0;
+      }
+    else
+      {
+        return batteryStateBuffer[0];
+      }
+  }
+
+  int getTemperature()
+  {
+    if(temperatureBuffer.isEmpty)
+      {
+        return 20;
+      }
+    else
+      {
+        return temperatureBuffer[0];
+      }
+  }
+
+  int getSpeed()
+  {
+    if(SpeedBuffer.isEmpty)
+      {
+        return 0;
+      }
+    else
+      {
+        return SpeedBuffer[0];
+      }
+  }
+
+
   //ble output buffer
 
   /* GAMEPAD LEGEND 

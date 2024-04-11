@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/main.dart';
 import 'ble_info.dart';
 import 'package:convert/convert.dart';
 
@@ -10,8 +11,8 @@ class StateManager with ChangeNotifier {
   int _speed = 0;
   int get speed => _speed;
 
-  double _temperature = 0;
-  double get temperature => _temperature;
+  int _temperature = 0;
+  int get temperature => _temperature;
 
   double _pitch = 0;
   double get pitch => _pitch;
@@ -96,6 +97,25 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  void setSpeed(int value) {
+    _speed = value;
+    print('[UPDATE_LOG]---> speed:$value');
+    notifyListeners();
+  }
+
+  void setTemperature(int value) {
+    _temperature = value;
+    print('[UPDATE_LOG]---> temperature:$value');
+    notifyListeners();
+  }
+
+  void setPitch(double value)
+  {
+    _pitch = value;
+    print('[UPDATE_LOG]---> pitch:$value');
+    notifyListeners();
+  }
+
   void setHornState(int value) {
     _hornState = value;
     notifyListeners();
@@ -175,6 +195,7 @@ class StateManager with ChangeNotifier {
 
   void setBatteryChargingState(int value) {
     _batteryChargingState = value;
+    print('[UPDATE_LOG]---> temperature:$value');
     if (value < 20) {
       _batteryImage = 'assets/images/battery0.png';
     } else if ((value >= 20) && (value < 40)) {
@@ -197,6 +218,13 @@ class StateManager with ChangeNotifier {
     setRightDistance(distanceList[3]);
     setBackDistance(distanceList[4]);
     setLeftDistance(distanceList[5]);
+    print('[UPDATE_LOG]---> Distances:');
+    print('[UPDATE_LOG]---> FrontLeft:${distanceList[0]}');
+    print('[UPDATE_LOG]---> FrontMiddle:${distanceList[0]}');
+    print('[UPDATE_LOG]---> FrontRight:${distanceList[0]}');
+    print('[UPDATE_LOG]---> Right:${distanceList[0]}');
+    print('[UPDATE_LOG]---> Left:${distanceList[0]}');
+    print('[UPDATE_LOG]---> Back:${distanceList[0]}');
   }
 
   void setFrontLeftDistance(double value)
