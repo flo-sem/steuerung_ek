@@ -322,7 +322,8 @@ class _SettingsPage extends State<SettingsPage> {
                           stateManager.iconColor = Colors.black;
                           stateManager.darkIconColor = Colors.white;
                           stateManager.textColor = Colors.black;
-                          stateManager.darkTextColor = Colors.white70;                        },
+                          stateManager.darkTextColor = Colors.white70;
+                          },
                         child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),

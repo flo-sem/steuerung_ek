@@ -11,51 +11,60 @@ class StateManager with ChangeNotifier {
 
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
-  set backgroundColor(Color color) {
+  void set backgroundColor(Color color) {
     _backgroundColor = color;
+    notifyListeners();
   }
 
   Color _darkBackgroundColor = Colors.black;
   Color get darkBackgroundColor => _darkBackgroundColor;
-  set darkBackgroundColor(Color color) {
+  void set darkBackgroundColor(Color color) {
     _darkBackgroundColor = color;
+    notifyListeners();
   }
 
   Color _appbarColor = Colors.lightBlueAccent;
   Color get appbarColor => _appbarColor;
-  set appbarColor(Color color) {
+  void set appbarColor(Color color) {
     _appbarColor = color;
+    notifyListeners();
   }
 
   Color _darkAppbarColor = Colors.deepPurpleAccent;
   Color get darkAppbarColor => _darkAppbarColor;
-  set darkAppbarColor(Color color) {
+  void set darkAppbarColor(Color color) {
     _darkAppbarColor = color;
+    notifyListeners();
   }
 
   Color _iconColor = Colors.black;
   Color get iconColor => _iconColor;
-  set iconColor(Color color) {
+  void set iconColor(Color color) {
     _iconColor = color;
+    notifyListeners();
   }
 
   Color _darkIconColor = Colors.white;
   Color get darkIconColor => _darkIconColor;
-  set darkIconColor(Color color) {
+  void set darkIconColor(Color color) {
     _darkIconColor = color;
+    notifyListeners();
   }
 
   Color _textColor = Colors.black;
   Color get textColor => _textColor;
-  set textColor(Color color) {
+  void set textColor(Color color) {
     _textColor = color;
+    notifyListeners();
   }
 
   Color _darkTextColor = Colors.white70;
   Color get darkTextColor => _darkTextColor;
-  set darkTextColor(Color color) {
+  void set darkTextColor(Color color) {
     _darkTextColor = color;
+    notifyListeners();
   }
+
 
   int _speed = 0;
   int get speed => _speed;
@@ -351,10 +360,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
-  void setBackgroundColor(Color value) {
-    _backgroundColor = value;
-    notifyListeners();
-  }
+
 
   void toggleControllerConnectionState()
   {
