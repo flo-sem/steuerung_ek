@@ -654,6 +654,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         appBar: AppBar(title: const Text('CONTROL'),
             backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
+        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
           Container(height: 10),
