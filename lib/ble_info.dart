@@ -8,15 +8,12 @@ class ble_info {
   static final ble_info _instance = ble_info._internal();
   static const String DEVICE_NAME = "Blank"; //"ESP32 BLE";
   static const String SERVICE_UUID =
-      "00001111-0000-1000-8000-00805f9b34fb"; //"000000ff-0000-1000-8000-00805f9b34fb";
+      "1111"; //"000000ff-0000-1000-8000-00805f9b34fb";
   static const String r_SPEED_CHARACTERISTIC_UUID =
-      "00002222-0000-1000-8000-00805f9b34fb"; //"0000ff01-0000-1000-8000-00805f9b34fb";
-  static const String r_TEST1_CHARACTERISTIC_UUID =
-      "00003333-0000-1000-8000-00805f9b34fb";
-  static const String r_TEST2_CHARACTERISTIC_UUID =
-      "00004444-0000-1000-8000-00805f9b34fb";
-  static const String w_CONTROLS_CHARACTERISTIC_UUID =
-      "00002222-0000-1000-8000-00805f9b34fb";
+      "2222"; //"0000ff01-0000-1000-8000-00805f9b34fb";
+  static const String r_TEST1_CHARACTERISTIC_UUID = "3333";
+  static const String r_TEST2_CHARACTERISTIC_UUID = "4444";
+  static const String w_CONTROLS_CHARACTERISTIC_UUID = "9999";
   //"00002a2b-0000-1000-8000-00805f9b34fb";
 
   BluetoothCharacteristic? rSpeedCharacteristic;
@@ -124,12 +121,15 @@ class ble_info {
     List<BluetoothService> services =
         await bluetoothDevice.device.discoverServices();
     int index = 1;
+    int found = 0;
     for (BluetoothService service in services) {
       print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
       index++;
+      //print("[LOG] Comparing ${service.uuid.toString()} and ${SERVICE_UUID}");
       if (service.uuid.toString() == SERVICE_UUID) {
         // Reads all characteristics
         print("[LOG] ${service.uuid} IS THE CORRECT SERVICE!!");
+        found = 1;
         var characteristics = service.characteristics;
         if (!characteristics.isEmpty) {
           for (BluetoothCharacteristic c in characteristics) {
@@ -174,6 +174,9 @@ class ble_info {
           print("[LOG] NO CHARACTERISTICS FOUND");
         }
       }
+    }
+    if (found == 0) {
+      print("[LOG] didnt find $SERVICE_UUID");
     }
   }
 
