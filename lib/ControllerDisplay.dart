@@ -14,6 +14,8 @@ import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
 import 'speedDisplay.dart';
+import 'package:flutter/services.dart';
+
 
 class ControllerDisplay extends StatefulWidget {
   const ControllerDisplay({Key? key}) : super(key: key);
@@ -24,9 +26,14 @@ class ControllerDisplay extends StatefulWidget {
 class _ControllerDisplay extends State<ControllerDisplay> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: stateManager.backgroundColor,
+          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
           body: Column(
               children: [
                 SizedBox(
@@ -40,7 +47,7 @@ class _ControllerDisplay extends State<ControllerDisplay> {
                     const PitchDisplay(),
                     Spacer(),
                     const BatteryDisplay(),
-                    Container(width: 20),
+                    Container(width: 50),
                   ],
                 ),
                 Row(
@@ -73,5 +80,17 @@ class _ControllerDisplay extends State<ControllerDisplay> {
                 )
               );
     });
+  }
+
+  @override
+  void dispose() {
+    // Resetting the screen orientation preferences when leaving View B
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 }

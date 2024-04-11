@@ -315,17 +315,30 @@ class _SettingsPage extends State<SettingsPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(Colors.white);
-                        },
-                        child: Text('Weiß'),
+                          stateManager.backgroundColor = Colors.white;
+                          stateManager.darkBackgroundColor = Colors.black;
+                          stateManager.appbarColor = Colors.lightBlueAccent;
+                          stateManager.darkAppbarColor = Colors.deepPurpleAccent;
+                          stateManager.iconColor = Colors.black;
+                          stateManager.darkIconColor = Colors.white;
+                          stateManager.textColor = Colors.black;
+                          stateManager.darkTextColor = Colors.white70;
+                          },
+                        child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          stateManager.setBackgroundColor(
-                              const Color.fromARGB(255, 255, 55, 122));
+                          stateManager.backgroundColor = Colors.white;
+                          stateManager.darkBackgroundColor = Colors.black;
+                          stateManager.appbarColor = Color.fromARGB(255, 252, 132, 2);
+                          stateManager.darkAppbarColor = Color.fromARGB(255, 252, 53, 3);
+                          stateManager.iconColor = Colors.black;
+                          stateManager.darkIconColor = Colors.white;
+                          stateManager.textColor = Colors.black;
+                          stateManager.darkTextColor = Colors.white70;
                         },
-                        child: Text('Pink'),
+                        child: Text('Color Profile 2'),
                       ),
                     ],
                   ),
@@ -654,6 +667,7 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         appBar: AppBar(title: const Text('CONTROL'),
             backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
+        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
           Container(height: 10),

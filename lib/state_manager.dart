@@ -11,27 +11,60 @@ class StateManager with ChangeNotifier {
 
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
+  void set backgroundColor(Color color) {
+    _backgroundColor = color;
+    notifyListeners();
+  }
 
   Color _darkBackgroundColor = Colors.black;
   Color get darkBackgroundColor => _darkBackgroundColor;
+  void set darkBackgroundColor(Color color) {
+    _darkBackgroundColor = color;
+    notifyListeners();
+  }
 
   Color _appbarColor = Colors.lightBlueAccent;
   Color get appbarColor => _appbarColor;
+  void set appbarColor(Color color) {
+    _appbarColor = color;
+    notifyListeners();
+  }
 
-  Color _darkAppbarColor = Colors.deepPurpleAccent ;
+  Color _darkAppbarColor = Colors.deepPurpleAccent;
   Color get darkAppbarColor => _darkAppbarColor;
+  void set darkAppbarColor(Color color) {
+    _darkAppbarColor = color;
+    notifyListeners();
+  }
 
   Color _iconColor = Colors.black;
   Color get iconColor => _iconColor;
+  void set iconColor(Color color) {
+    _iconColor = color;
+    notifyListeners();
+  }
 
   Color _darkIconColor = Colors.white;
   Color get darkIconColor => _darkIconColor;
+  void set darkIconColor(Color color) {
+    _darkIconColor = color;
+    notifyListeners();
+  }
 
   Color _textColor = Colors.black;
   Color get textColor => _textColor;
+  void set textColor(Color color) {
+    _textColor = color;
+    notifyListeners();
+  }
 
   Color _darkTextColor = Colors.white70;
   Color get darkTextColor => _darkTextColor;
+  void set darkTextColor(Color color) {
+    _darkTextColor = color;
+    notifyListeners();
+  }
+
 
   int _speed = 0;
   int get speed => _speed;
@@ -327,10 +360,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
-  void setBackgroundColor(Color value) {
-    _backgroundColor = value;
-    notifyListeners();
-  }
+
 
   void toggleControllerConnectionState()
   {
