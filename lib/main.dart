@@ -219,10 +219,17 @@ class _StartPage extends State<StartPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // ← Add this.
                     children: [
+                      /*
                       Image.asset(
                       MyAppState().statusImageURL,
                       height: 200,
                     ),
+                    */
+                        Icon(
+                            appState.statusImageURL == "assets/images/label_noBT.png" ? EK_Icons.bluetooth_disabled : EK_Icons.bluetooth_connected,
+                          size: 150,
+                          color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
+                      ),
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
@@ -297,6 +304,7 @@ class _SettingsPage extends State<SettingsPage> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
                           ),
                         ),
                       ),
@@ -335,6 +343,7 @@ class _SettingsPage extends State<SettingsPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
                             ),
                           ),
                           Spacer()
@@ -641,6 +650,7 @@ class _PortraitControl extends State<PortraitControl> {
         backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
         body: Column(children: [
           //Top Row moving battery info to the right side of the view
+          Container(height: 10),
           Row(
             children: [
               Container(width: 20),
@@ -649,7 +659,7 @@ class _PortraitControl extends State<PortraitControl> {
               const PitchDisplay(),
               Spacer(),
               const BatteryDisplay(),
-              Container(width: 20),
+              Container(width: 50),
             ],
           ),
           Spacer(),
@@ -719,9 +729,10 @@ class _LandscapeControl extends State<LandscapeControl> {
                 const PitchDisplay(),
                 Spacer(),
                 const BatteryDisplay(),
-                Container(width: 20),
+                Container(width: 50),
               ],
             ),
+            Container(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

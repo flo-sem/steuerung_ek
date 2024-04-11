@@ -23,7 +23,7 @@ class _SteeringAngle extends State<SteeringWheel> {
         return Align(
             //alignment: Alignment.bottomLeft,
             child: SizedBox(
-                width: 300,
+                width: 350,
                 height: 350,
                 child: Stack(
                     children: <Widget> [
@@ -51,7 +51,7 @@ class _SteeringAngle extends State<SteeringWheel> {
                                 );
                               },
                               appearance: CircularSliderAppearance(
-                                  size: 220,
+                                  size: 170,
                                   startAngle: 210,
                                   angleRange: 120,
                                   customColors: CustomSliderColors(

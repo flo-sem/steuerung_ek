@@ -15,7 +15,16 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Column(
+      return ColorFiltered(
+        colorFilter: ColorFilter.matrix([
+          -1,  0,  0, 0,currentBrightness == Brightness.dark ? 255 : 0, // Red
+          0, -1,  0, 0, currentBrightness == Brightness.dark ? 255 : 0, // Green
+          0,  0, -1, 0, currentBrightness == Brightness.dark ? 255 : 0, // Blue
+          0,  0,  0, 1,   0  // Alpha
+        ]),
+        child:
+
+       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
@@ -52,9 +61,9 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
                 width: 80,
                 height: 80,
                 //child: Image.asset('assets/images/carFromTop.png')
-                child: Icon(EK_Icons.cart_fill,
+                child: Icon(EK_Icons.cart,
                     size: 50,
-                    color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
+                    color: currentBrightness == Brightness.light ? stateManager.darkIconColor : stateManager.iconColor
                 )
               ),
               Container(
@@ -87,6 +96,7 @@ class _DistanceDisplayState extends State<DistanceDisplay> {
             ],
           )
         ],
+      ),
       );
     });
   }

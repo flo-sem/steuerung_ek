@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'ble_info.dart';
 import 'package:convert/convert.dart';
+import 'package:steuerung_ek/ek_icons.dart';
+
 
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
@@ -24,6 +26,12 @@ class StateManager with ChangeNotifier {
 
   Color _darkIconColor = Colors.white;
   Color get darkIconColor => _darkIconColor;
+
+  Color _textColor = Colors.black;
+  Color get textColor => _textColor;
+
+  Color _darkTextColor = Colors.white70;
+  Color get darkTextColor => _darkTextColor;
 
   int _speed = 0;
   int get speed => _speed;
@@ -63,6 +71,9 @@ class StateManager with ChangeNotifier {
 
   String _batteryImage = 'assets/images/battery4.png';
   String get batteryImage => _batteryImage;
+
+  IconData _batteryIcon = EK_Icons.battery_100percent;
+  IconData get batteryIcon => _batteryIcon;
 
   double _distanceFrontLeft = 0;
   double get distanceFrontLeft => _distanceFrontLeft;
@@ -192,14 +203,19 @@ class StateManager with ChangeNotifier {
     _batteryChargingState = value;
     if (value < 20) {
       _batteryImage = 'assets/images/battery0.png';
+      _batteryIcon = EK_Icons.battery_0percent;
     } else if ((value >= 20) && (value < 40)) {
       _batteryImage = 'assets/images/battery1.png';
+      _batteryIcon = EK_Icons.battery_25percent;
     } else if ((value >= 40) && (value < 60)) {
       _batteryImage = 'assets/images/battery2.png';
+      _batteryIcon = EK_Icons.battery_50percent;
     } else if ((value >= 60) && (value < 80)) {
       _batteryImage = 'assets/images/battery3.png';
+      _batteryIcon = EK_Icons.battery_75percent;
     } else {
       _batteryImage = 'assets/images/battery4.png';
+      _batteryIcon = EK_Icons.battery_100percent;
     }
     notifyListeners();
   }

@@ -11,9 +11,13 @@ class TemperatureDisplay extends StatefulWidget {
 class _TemperatureDisplayState extends State<TemperatureDisplay> {
   @override
   Widget build(BuildContext context) {
+    Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Text('${stateManager.temperature}°C',
-          style: Theme.of(context).textTheme.headlineSmall
+      return Text(
+        '${stateManager.temperature}°C',
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+        ),
       );
     });
   }
