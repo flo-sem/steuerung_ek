@@ -35,6 +35,7 @@ class _HazardLightButtonState extends State<HazardLightButton> {
   Widget build(BuildContext context) {
     return Consumer<StateManager>(
         builder: (context, stateManager, child) {
+          Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
           return GestureDetector(
             onTapDown: (_) => stateManager.toggleBothBlinkerState(),
             onTapUp: (_) => stateManager.resetHazardLightButton(),
@@ -43,7 +44,9 @@ class _HazardLightButtonState extends State<HazardLightButton> {
               //child: Image.asset('assets/images/hazardLightButton.png', width: 60)
               child:  Icon(EK_Icons.hazardsign,
                 size: 60,
-                color: Colors.deepOrange
+                color: currentBrightness == Brightness.dark
+                    ? stateManager.darkAppbarColor
+                    : stateManager.appbarColor
               ),
             )
           );

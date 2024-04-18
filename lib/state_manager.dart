@@ -153,6 +153,13 @@ class StateManager with ChangeNotifier {
   int _controllerButtonState = 0;
   int get controllerButtonState => _controllerButtonState;
 
+  void resetAll()
+  {
+    _steeringAngle = 0;
+    _blinkerLeftState = 0;
+    _blinkerRightState = 0;
+  }
+
   void setSteeringAngle(double value) {
     _steeringAngle = value.toInt();
     notifyListeners();
