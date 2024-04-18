@@ -254,13 +254,17 @@ class _StartPage extends State<StartPage> {
               : stateManager.backgroundColor,
           appBar: AppBar(
               title: const Text('Einkaufswagen Steuerung'),
+              foregroundColor: currentBrightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
               backgroundColor: currentBrightness == Brightness.dark
-                  ? stateManager.darkAppbarColor
-                  : stateManager.appbarColor),
+                  ? stateManager.darkBackgroundColor
+                  : stateManager.backgroundColor,
+          ),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
-                child: ElevatedButton(
+                child: OutlinedButton(
                     onPressed: () {
                       stateManager.setSteeringAngle(0.0);
                       Navigator.push(context,
@@ -269,7 +273,20 @@ class _StartPage extends State<StartPage> {
                         return const SettingsPage();
                       }));
                     },
-                    child: const Text('Settings'))),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: currentBrightness == Brightness.dark
+                          ? stateManager.darkAppbarColor
+                          : stateManager.appbarColor,
+                      fixedSize: Size(110, 50),
+                      side: BorderSide(
+                          width: 3,
+                          style:BorderStyle.solid,
+                          color: currentBrightness == Brightness.dark
+                              ? stateManager.darkAppbarColor
+                              : stateManager.appbarColor)
+
+                    ),
+                    child: const Text('Settings', textScaleFactor: 1.1,))),
             Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -290,8 +307,9 @@ class _StartPage extends State<StartPage> {
                           ? stateManager.darkIconColor
                           : stateManager.iconColor),
                   SizedBox(height: 20),
-                  ElevatedButton(
+                  OutlinedButton(
                       onPressed: () {
+                        stateManager.resetAll();
                         if (appState.statusImageURL ==
                             "assets/images/label_noBT.png") {
                           appState.ChangeText();
@@ -305,7 +323,19 @@ class _StartPage extends State<StartPage> {
                           }));
                         } else {}
                       },
-                      child: Text(appState.MainButtonText)),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: currentBrightness == Brightness.dark
+                            ? stateManager.darkAppbarColor
+                            : stateManager.appbarColor,
+                        fixedSize: Size(150, 50),
+                        side: BorderSide(
+                          width: 3,
+                          style: BorderStyle.solid,
+                          color: currentBrightness == Brightness.dark
+                              ? stateManager.darkAppbarColor
+                              : stateManager.appbarColor)
+                      ),
+                      child: Text(appState.MainButtonText, textScaleFactor: 1.1,)),
                   SizedBox(height: 50),
                 ])),
             Column(children: [
@@ -314,14 +344,23 @@ class _StartPage extends State<StartPage> {
                 Container(width: 20, height: 10),
                 Align(
                     alignment: Alignment.bottomLeft,
-                    child: ElevatedButton(
+                    child: OutlinedButton(
                         onPressed: () {
-                          stateManager.setSteeringAngle(0.0);
+                          stateManager.resetAll();
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return ControlPage(title: '');
                           }));
                         },
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                                width: 3,
+                                style: BorderStyle.solid,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkAppbarColor
+                                    : stateManager.appbarColor)
+                        ),
                         child: const Text('C'))),
               ]),
               Container(width: 10, height: 20),
@@ -340,6 +379,10 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPage extends State<SettingsPage> {
   //final String title;
+  Color profile1dark = Colors.deepPurpleAccent;
+  Color profile2dark = Color.fromARGB(255, 252, 53, 3);
+  Color profile1light = Colors.lightBlueAccent;
+  Color profile2light = Color.fromARGB(255, 252, 132, 2);
 
   @override
   Widget build(BuildContext context) {
@@ -351,9 +394,13 @@ class _SettingsPage extends State<SettingsPage> {
             : stateManager.backgroundColor,
         appBar: AppBar(
             title: const Text('SETTINGS'),
+            foregroundColor: currentBrightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
             backgroundColor: currentBrightness == Brightness.dark
-                ? stateManager.darkAppbarColor
-                : stateManager.appbarColor),
+                ? stateManager.darkBackgroundColor
+                : stateManager.backgroundColor
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -382,34 +429,55 @@ class _SettingsPage extends State<SettingsPage> {
                   Row(
                     children: [
                       SizedBox(width: 16),
-                      ElevatedButton(
+                      OutlinedButton(
                         onPressed: () {
                           stateManager.backgroundColor = Colors.white;
                           stateManager.darkBackgroundColor = Colors.black;
-                          stateManager.appbarColor = Colors.lightBlueAccent;
-                          stateManager.darkAppbarColor =
-                              Colors.deepPurpleAccent;
+                          stateManager.appbarColor = profile1light;
+                          stateManager.darkAppbarColor = profile1dark;
                           stateManager.iconColor = Colors.black;
                           stateManager.darkIconColor = Colors.white;
                           stateManager.textColor = Colors.black;
                           stateManager.darkTextColor = Colors.white70;
                         },
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor: currentBrightness == Brightness.dark
+                                ? profile1dark
+                                : profile1light,
+                            fixedSize: Size(150, 50),
+                            side: BorderSide(
+                                width: 3,
+                                style: BorderStyle.solid,
+                                color: currentBrightness == Brightness.dark
+                                    ? profile1dark
+                                    : profile1light)
+                        ),
                         child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
-                      ElevatedButton(
+                      OutlinedButton(
                         onPressed: () {
                           stateManager.backgroundColor = Colors.white;
                           stateManager.darkBackgroundColor = Colors.black;
-                          stateManager.appbarColor =
-                              Color.fromARGB(255, 252, 132, 2);
-                          stateManager.darkAppbarColor =
-                              Color.fromARGB(255, 252, 53, 3);
+                          stateManager.appbarColor = profile2light;
+                          stateManager.darkAppbarColor = profile2dark;
                           stateManager.iconColor = Colors.black;
                           stateManager.darkIconColor = Colors.white;
                           stateManager.textColor = Colors.black;
                           stateManager.darkTextColor = Colors.white70;
                         },
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor: currentBrightness == Brightness.dark
+                                ? profile2dark
+                                : profile2light,
+                            fixedSize: Size(150, 50),
+                            side: BorderSide(
+                                width: 3,
+                                style: BorderStyle.solid,
+                                color: currentBrightness == Brightness.dark
+                                    ? profile2dark
+                                    : profile2light)
+                        ),
                         child: Text('Color Profile 2'),
                       ),
                     ],
@@ -741,9 +809,13 @@ class _PortraitControl extends State<PortraitControl> {
       return Scaffold(
         appBar: AppBar(
             title: const Text('CONTROL'),
+            foregroundColor: currentBrightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
             backgroundColor: currentBrightness == Brightness.dark
-                ? stateManager.darkAppbarColor
-                : stateManager.appbarColor),
+                ? stateManager.darkBackgroundColor
+                : stateManager.backgroundColor
+        ),
         backgroundColor: currentBrightness == Brightness.dark
             ? stateManager.darkBackgroundColor
             : stateManager.backgroundColor,
