@@ -70,77 +70,6 @@ class MyAppState extends ChangeNotifier {
 
   MyAppState._internal();
 
-  // ble input buffer
-  List<int> testBuffer = [];
-  List<double> pitchBuffer = [];
-  List<int> temperatureBuffer = [];
-  List<int> batteryStateBuffer = [];
-  List<List<double>> distanceBuffer = [];
-  List<int> SpeedBuffer = [];
-  List<int> Test1Buffer = [];
-  List<int> Test2Buffer = [];
-
-  List<double> getDistance()
-  {
-    if(distanceBuffer.isEmpty)
-      {
-        return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-      }
-    else
-      {
-        return distanceBuffer[0];
-      }
-  }
-
-  double getPitch()
-  {
-    if(pitchBuffer.isEmpty)
-      {
-        return 0.0;
-      }
-    else
-      {
-        return pitchBuffer[0];
-      }
-  }
-
-  int getBatteryState()
-  {
-    if(batteryStateBuffer.isEmpty)
-      {
-        return 0;
-      }
-    else
-      {
-        return batteryStateBuffer[0];
-      }
-  }
-
-  int getTemperature()
-  {
-    if(temperatureBuffer.isEmpty)
-      {
-        return 20;
-      }
-    else
-      {
-        return temperatureBuffer[0];
-      }
-  }
-
-  int getSpeed()
-  {
-    if(SpeedBuffer.isEmpty)
-      {
-        return 0;
-      }
-    else
-      {
-        return SpeedBuffer[0];
-      }
-  }
-
-
   //ble output buffer
 
   /* GAMEPAD LEGEND 
@@ -167,6 +96,19 @@ class MyAppState extends ChangeNotifier {
   */
   List<int> ControllerBuffer = [];
 
+  // ble input buffer
+  List<int> testBuffer = [];
+  List<double> pitchBuffer = [];
+  List<int> temperatureBuffer = [];
+  List<int> batteryStateBuffer = [];
+  List<List<double>> distanceBuffer = [];
+
+  List<int> SpeedBuffer = [];
+  List<int> AkkuBuffer = [];
+  List<int> TempBuffer = [];
+  List<int> DistanceBuffer = [];
+  List<int> SlopeBuffer = [];
+
   void ControllerOutputBuffer(List<int> input) {
     ControllerBuffer = input;
     print("[Controller] : $input");
@@ -183,14 +125,64 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void Test1InputBuffer(List<int> input) {
-    Test1Buffer = input;
+  void AkkuInputBuffer(List<int> input) {
+    AkkuBuffer = input;
     notifyListeners();
   }
 
-  void Test2InputBuffer(List<int> input) {
-    Test2Buffer = input;
+  void TempInputBuffer(List<int> input) {
+    TempBuffer = input;
     notifyListeners();
+  }
+
+  void DistanceInputBuffer(List<int> input) {
+    DistanceBuffer = input;
+    notifyListeners();
+  }
+
+  void SlopeInputBuffer(List<int> input) {
+    SlopeBuffer = input;
+    notifyListeners();
+  }
+
+  List<double> getDistance() {
+    if (distanceBuffer.isEmpty) {
+      return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+    } else {
+      return distanceBuffer[0];
+    }
+  }
+
+  double getPitch() {
+    if (pitchBuffer.isEmpty) {
+      return 0.0;
+    } else {
+      return pitchBuffer[0];
+    }
+  }
+
+  int getBatteryState() {
+    if (batteryStateBuffer.isEmpty) {
+      return 0;
+    } else {
+      return batteryStateBuffer[0];
+    }
+  }
+
+  int getTemperature() {
+    if (temperatureBuffer.isEmpty) {
+      return 20;
+    } else {
+      return temperatureBuffer[0];
+    }
+  }
+
+  int getSpeed() {
+    if (SpeedBuffer.isEmpty) {
+      return 0;
+    } else {
+      return SpeedBuffer[0];
+    }
   }
 
   var MainButtonText = "Suche starten";
@@ -261,9 +253,14 @@ class _StartPage extends State<StartPage> {
     var appState = context.watch<MyAppState>();
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
-          appBar: AppBar(title: const Text('Einkaufswagen Steuerung'),
-            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
+          backgroundColor: currentBrightness == Brightness.dark
+              ? stateManager.darkBackgroundColor
+              : stateManager.backgroundColor,
+          appBar: AppBar(
+              title: const Text('Einkaufswagen Steuerung'),
+              backgroundColor: currentBrightness == Brightness.dark
+                  ? stateManager.darkAppbarColor
+                  : stateManager.appbarColor),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
@@ -282,17 +279,20 @@ class _StartPage extends State<StartPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // ← Add this.
                     children: [
-                      /*
+                  /*
                       Image.asset(
                       MyAppState().statusImageURL,
                       height: 200,
                     ),
                     */
-                        Icon(
-                            appState.statusImageURL == "assets/images/label_noBT.png" ? EK_Icons.bluetooth_disabled : EK_Icons.bluetooth_connected,
-                          size: 150,
-                          color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-                      ),
+                  Icon(
+                      appState.statusImageURL == "assets/images/label_noBT.png"
+                          ? EK_Icons.bluetooth_disabled
+                          : EK_Icons.bluetooth_connected,
+                      size: 150,
+                      color: currentBrightness == Brightness.dark
+                          ? stateManager.darkIconColor
+                          : stateManager.iconColor),
                   SizedBox(height: 20),
                   ElevatedButton(
                       onPressed: () {
@@ -350,9 +350,14 @@ class _SettingsPage extends State<SettingsPage> {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
-        appBar: AppBar(title: const Text('SETTINGS'),
-            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
+        backgroundColor: currentBrightness == Brightness.dark
+            ? stateManager.darkBackgroundColor
+            : stateManager.backgroundColor,
+        appBar: AppBar(
+            title: const Text('SETTINGS'),
+            backgroundColor: currentBrightness == Brightness.dark
+                ? stateManager.darkAppbarColor
+                : stateManager.appbarColor),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -367,7 +372,9 @@ class _SettingsPage extends State<SettingsPage> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+                            color: currentBrightness == Brightness.dark
+                                ? stateManager.darkTextColor
+                                : stateManager.textColor,
                           ),
                         ),
                       ),
@@ -384,12 +391,13 @@ class _SettingsPage extends State<SettingsPage> {
                           stateManager.backgroundColor = Colors.white;
                           stateManager.darkBackgroundColor = Colors.black;
                           stateManager.appbarColor = Colors.lightBlueAccent;
-                          stateManager.darkAppbarColor = Colors.deepPurpleAccent;
+                          stateManager.darkAppbarColor =
+                              Colors.deepPurpleAccent;
                           stateManager.iconColor = Colors.black;
                           stateManager.darkIconColor = Colors.white;
                           stateManager.textColor = Colors.black;
                           stateManager.darkTextColor = Colors.white70;
-                          },
+                        },
                         child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
@@ -397,8 +405,10 @@ class _SettingsPage extends State<SettingsPage> {
                         onPressed: () {
                           stateManager.backgroundColor = Colors.white;
                           stateManager.darkBackgroundColor = Colors.black;
-                          stateManager.appbarColor = Color.fromARGB(255, 252, 132, 2);
-                          stateManager.darkAppbarColor = Color.fromARGB(255, 252, 53, 3);
+                          stateManager.appbarColor =
+                              Color.fromARGB(255, 252, 132, 2);
+                          stateManager.darkAppbarColor =
+                              Color.fromARGB(255, 252, 53, 3);
                           stateManager.iconColor = Colors.black;
                           stateManager.darkIconColor = Colors.white;
                           stateManager.textColor = Colors.black;
@@ -419,7 +429,9 @@ class _SettingsPage extends State<SettingsPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkTextColor
+                                  : stateManager.textColor,
                             ),
                           ),
                           Spacer()
@@ -489,10 +501,8 @@ class ControlPageState extends State<ControlPage> {
             ble_info().wControlsCharacteristic, valueList);
         await ble_info()
             .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
+        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
+        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
       },
     );
 
@@ -731,9 +741,14 @@ class _PortraitControl extends State<PortraitControl> {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-        appBar: AppBar(title: const Text('CONTROL'),
-            backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkAppbarColor : stateManager.appbarColor),
-        backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+        appBar: AppBar(
+            title: const Text('CONTROL'),
+            backgroundColor: currentBrightness == Brightness.dark
+                ? stateManager.darkAppbarColor
+                : stateManager.appbarColor),
+        backgroundColor: currentBrightness == Brightness.dark
+            ? stateManager.darkBackgroundColor
+            : stateManager.backgroundColor,
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           //Top Row moving battery info to the right side of the view
           Container(height: 10),
@@ -797,12 +812,11 @@ class _LandscapeControl extends State<LandscapeControl> {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
-        body: Column(
-          children: [
-            SizedBox(
-              height:10
-            ),
+          backgroundColor: currentBrightness == Brightness.dark
+              ? stateManager.darkBackgroundColor
+              : stateManager.backgroundColor,
+          body: Column(children: [
+            SizedBox(height: 10),
             Row(
               children: [
                 Container(width: 20),
