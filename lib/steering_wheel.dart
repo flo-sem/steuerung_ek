@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:steuerung_ek/ble_info.dart';
 import 'dart:math' as math;
 
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/ek_icons.dart';
+import 'main.dart';
+import 'dart:async';
 
 class SteeringWheel extends StatefulWidget {
   const SteeringWheel({Key? key}) : super(key: key);
@@ -14,6 +17,23 @@ class SteeringWheel extends StatefulWidget {
 }
 
 class _SteeringAngle extends State<SteeringWheel> {
+
+  Timer? sendTimer;
+  @override
+  void initState() {
+    super.initState();
+    sendTimer = Timer.periodic(Duration(seconds: 1), (sendTimer) async {
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      //await ble_info().BLE_WriteCharateristics(ble_info().wSteeringWheelCharacteristic, [stateManager.steeringAngle]);
+    });
+  }
+
+  @override
+  void dispose()
+  {
+    super.dispose();
+    sendTimer?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {

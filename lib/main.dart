@@ -72,19 +72,19 @@ class MyAppState extends ChangeNotifier {
 
   // ble input buffer
   List<int> testBuffer = [];
-  List<double> pitchBuffer = [];
+  List<int> pitchBuffer = [];
   List<int> temperatureBuffer = [];
   List<int> batteryStateBuffer = [];
-  List<List<double>> distanceBuffer = [];
+  List<List<int>> distanceBuffer = [];
   List<int> SpeedBuffer = [];
   List<int> Test1Buffer = [];
   List<int> Test2Buffer = [];
 
-  List<double> getDistance()
+  List<int> getDistance()
   {
     if(distanceBuffer.isEmpty)
       {
-        return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        return [0, 0, 0, 0, 0, 0];
       }
     else
       {
@@ -92,11 +92,11 @@ class MyAppState extends ChangeNotifier {
       }
   }
 
-  double getPitch()
+  int getPitch()
   {
     if(pitchBuffer.isEmpty)
       {
-        return 0.0;
+        return 0;
       }
     else
       {
@@ -464,7 +464,7 @@ class ControlPage extends StatefulWidget {
 
 //Adding landscape support
 class ControlPageState extends State<ControlPage> {
-  double angle = 0;
+  int angle = 0;
   int pedal = 0;
   Timer? timer;
   final leftJoystick = JoystickHandler.left;
@@ -483,7 +483,7 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) async {
-        List<int> valueList = [angle.toInt(), pedal];
+        List<int> valueList = [angle, pedal];
         print('[DATA_LOG]' + valueList.toString());
         await ble_info().BLE_WriteCharateristics(
             ble_info().wControlsCharacteristic, valueList);
