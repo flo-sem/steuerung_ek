@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:steuerung_ek/custom_haptics.dart';
 import 'package:steuerung_ek/main.dart';
 import 'ble_info.dart';
 import 'package:convert/convert.dart';
@@ -9,6 +10,7 @@ import 'package:steuerung_ek/ek_icons.dart';
 
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
+  CustomHaptics haptics = CustomHaptics();
 
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
@@ -274,7 +276,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setDistance(List<double> distanceList)
+  void setDistance(List<int> distanceList)
   {
     setFrontLeftDistance(distanceList[0]);
     setFrontMiddleDistance(distanceList[1]);
@@ -289,6 +291,22 @@ class StateManager with ChangeNotifier {
     print('[UPDATE_LOG]---> Right:${distanceList[0]}');
     print('[UPDATE_LOG]---> Left:${distanceList[0]}');
     print('[UPDATE_LOG]---> Back:${distanceList[0]}');
+
+    hapticOnObjectDetection(distanceList);
+  }
+
+  void hapticOnObjectDetection(List<int> distanceList) {
+    int minimum = distanceList[0];
+    for (int i = 1; i < distanceList.length; i++) {
+      if (distanceList[i] < minimum) {
+        minimum = distanceList[i];
+      }
+    }
+    if( minimum <= 1000 ) {
+      haptics.objectCloser();
+    } else if( minimum <= 3000 ) {
+      haptics.objectDetected();
+    } else { return; }
   }
 
   void setFrontLeftDistance(double value)

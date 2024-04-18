@@ -8,7 +8,7 @@ import 'dart:io';
 class CustomHaptics {
   void objectDetected() {
     for (int i = 1; i <= 3; i++) {
-      Future.delayed(Duration(milliseconds: 700*i), () {
+      Future.delayed(Duration(milliseconds: 300*i), () {
         // Code to be executed after the delay
         HapticFeedback.lightImpact();
         print("objectDetected");
@@ -17,7 +17,7 @@ class CustomHaptics {
 
   void objectClose() {
     for (int i = 1; i <= 5; i++) {
-      Future.delayed(Duration(milliseconds: 500*i), () {
+      Future.delayed(Duration(milliseconds: 150*i), () {
         // Code to be executed after the delay
         HapticFeedback.mediumImpact();
         print("objectClose");
@@ -26,7 +26,7 @@ class CustomHaptics {
 
   void objectCloser() {
     for (int i = 1; i <= 7; i++) {
-      Future.delayed(Duration(milliseconds: 200*i), () {
+      Future.delayed(Duration(milliseconds: 100*i), () {
         // Code to be executed after the delay
         HapticFeedback.heavyImpact();
         print("objectCloser");
