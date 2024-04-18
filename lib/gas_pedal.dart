@@ -3,6 +3,7 @@ import 'package:steuerung_ek/state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 import 'dart:async';
+import 'package:steuerung_ek/ble_info.dart';
 
 
 class GasPedal extends StatefulWidget {
@@ -19,7 +20,7 @@ class _GasPedalState extends State<GasPedal> {
     super.initState();
     sendTimer = Timer.periodic(Duration(seconds: 1), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      //await ble_info().BLE_WriteCharateristics(ble_info().wGasPedalCharacteristic, [stateManager.pedalState]);
+      await ble_info().BLE_WriteCharateristics(ble_info().wGasCharacteristic, [stateManager.pedalState]);
     });
   }
 

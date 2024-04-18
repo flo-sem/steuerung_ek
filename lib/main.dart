@@ -142,23 +142,23 @@ class MyAppState extends ChangeNotifier {
   }
 
   List<int> getDistance() {
-    if (distanceBuffer.isEmpty) {
+    if (DistanceBuffer.isEmpty) {
       return [0, 0, 0, 0, 0, 0];
     } else {
-      return DistanceBuffer[0];
+      return DistanceBuffer;
     }
   }
 
   int getPitch() {
-    if (pitchBuffer.isEmpty) {
-      return 0.0;
+    if (SlopeBuffer.isEmpty) {
+      return 0;
     } else {
       return SlopeBuffer[0];
     }
   }
 
   int getBatteryState() {
-    if (batteryStateBuffer.isEmpty) {
+    if (AkkuBuffer.isEmpty) {
       return 0;
     } else {
       return AkkuBuffer[0];
@@ -166,7 +166,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   int getTemperature() {
-    if (temperatureBuffer.isEmpty) {
+    if (TempBuffer.isEmpty) {
       return 20;
     } else {
       return TempBuffer[0];
@@ -491,14 +491,16 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) async {
-        List<int> valueList = [angle, pedal];
-        print('[DATA_LOG]' + valueList.toString());
-        await ble_info().BLE_WriteCharateristics(
-            ble_info().wControlsCharacteristic, valueList);
         await ble_info()
             .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
-        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
-        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTempCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic);
       },
     );
 
