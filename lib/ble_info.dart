@@ -9,18 +9,32 @@ class ble_info {
   static const String DEVICE_NAME = "Blank"; //"ESP32 BLE";
   static const String SERVICE_UUID =
       "1111"; //"000000ff-0000-1000-8000-00805f9b34fb";
-  static const String r_SPEED_CHARACTERISTIC_UUID =
-      "2222"; //"0000ff01-0000-1000-8000-00805f9b34fb";
-  static const String r_TEST1_CHARACTERISTIC_UUID = "3333";
-  static const String r_TEST2_CHARACTERISTIC_UUID = "4444";
+
+  static const String r_AKKU_CHARACTERISTIC_UUID = "2301";
+  static const String r_SPEED_CHARACTERISTIC_UUID = "2222";
+  static const String r_TEMP_CHARACTERISTIC_UUID = "2501";
+  static const String r_DISTANCE_CHARACTERISTIC_UUID = "2502";
+  static const String r_SLOPE_CHARACTERISTIC_UUID = "2503";
+
+  static const String w_HORN_CHARACTERISTIC_UUID = "2601";
+  static const String w_TURN_LEFT_CHARACTERISTIC_UUID = "2602";
+  static const String w_TURN_RIGHT_CHARACTERISTIC_UUID = "2603";
   static const String w_CONTROLS_CHARACTERISTIC_UUID = "9999";
+  static const String w_GAS_CHARACTERISTIC_UUID = "2403";
+
   //"00002a2b-0000-1000-8000-00805f9b34fb";
 
+  BluetoothCharacteristic? rAkkuCharacteristic;
   BluetoothCharacteristic? rSpeedCharacteristic;
-  BluetoothCharacteristic? rTest1Characteristic;
-  BluetoothCharacteristic? rTest2Characteristic;
+  BluetoothCharacteristic? rTempCharacteristic;
+  BluetoothCharacteristic? rDistanceCharacteristic;
+  BluetoothCharacteristic? rSlopeCharacteristic;
 
+  BluetoothCharacteristic? wHornCharacteristic;
+  BluetoothCharacteristic? wTurnLeftCharacteristic;
+  BluetoothCharacteristic? wTurnRightCharacteristic;
   BluetoothCharacteristic? wControlsCharacteristic;
+  BluetoothCharacteristic? wGasCharacteristic;
 
   List<int> inputBuffer = [];
 
@@ -79,7 +93,7 @@ class ble_info {
       for (ScanResult r in results) {
         // DEBUG STATEMENTS
         // Search for specific device
-        if (r.advertisementData.localName == DEVICE_NAME) {
+        if (r.advertisementData.advName == DEVICE_NAME) {
           // Assign device
           bluetoothDevice = r;
           print("[LOG] FOUND DEVICE $DEVICE_NAME");
@@ -129,7 +143,6 @@ class ble_info {
       if (service.uuid.toString() == SERVICE_UUID) {
         // Reads all characteristics
         print("[LOG] ${service.uuid} IS THE CORRECT SERVICE!!");
-        found = 1;
         var characteristics = service.characteristics;
         if (!characteristics.isEmpty) {
           for (BluetoothCharacteristic c in characteristics) {
@@ -148,35 +161,54 @@ class ble_info {
                 /* READ CHARACTERISTICS */
                 case r_SPEED_CHARACTERISTIC_UUID:
                   rSpeedCharacteristic = c;
-                  print(
-                      "[LOG] FOUND readCharacteristic Speed $r_SPEED_CHARACTERISTIC_UUID");
+                  found++;
+                case r_AKKU_CHARACTERISTIC_UUID:
+                  rAkkuCharacteristic = c;
+                  found++;
                   break;
-                case r_TEST1_CHARACTERISTIC_UUID:
-                  rTest1Characteristic = c;
-                  print(
-                      "[LOG] FOUND readCharacteristic Test1 $r_TEST1_CHARACTERISTIC_UUID");
+                case r_TEMP_CHARACTERISTIC_UUID:
+                  rTempCharacteristic = c;
+                  found++;
                   break;
-                case r_TEST2_CHARACTERISTIC_UUID:
-                  rTest2Characteristic = c;
-                  print(
-                      "[LOG] FOUND readCharacteristic Test2 $r_TEST2_CHARACTERISTIC_UUID");
+                case r_DISTANCE_CHARACTERISTIC_UUID:
+                  rDistanceCharacteristic = c;
+                  found++;
                   break;
+                case r_SLOPE_CHARACTERISTIC_UUID:
+                  rSlopeCharacteristic = c;
+                  found++;
+                  break;
+
                 /* WRITE CHARACTERISTICS */
                 case w_CONTROLS_CHARACTERISTIC_UUID:
                   wControlsCharacteristic = c;
-                  print(
-                      "[LOG] FOUND writeCharacteristic Test $w_CONTROLS_CHARACTERISTIC_UUID");
+                  found++;
+                  break;
+                case w_HORN_CHARACTERISTIC_UUID:
+                  wHornCharacteristic = c;
+                  found++;
+                  break;
+                case w_TURN_LEFT_CHARACTERISTIC_UUID:
+                  wTurnLeftCharacteristic = c;
+                  found++;
+                  break;
+                case w_TURN_RIGHT_CHARACTERISTIC_UUID:
+                  wTurnRightCharacteristic = c;
+                  found++;
+                  ;
+                  break;
+                case w_GAS_CHARACTERISTIC_UUID:
+                  wGasCharacteristic = c;
+                  found++;
                   break;
               }
             }
           }
+          print("[LOG] FOUND $found out of 10 Characteristics");
         } else {
           print("[LOG] NO CHARACTERISTICS FOUND");
         }
       }
-    }
-    if (found == 0) {
-      print("[LOG] didnt find $SERVICE_UUID");
     }
   }
 
@@ -204,13 +236,21 @@ class ble_info {
             MyAppState().SpeedInputBuffer(value);
             print("[LOG] Speed: ${value.toString()}");
             break;
-          case (r_TEST1_CHARACTERISTIC_UUID):
-            MyAppState().Test1InputBuffer(value);
-            print("[LOG] Test1: ${value.toString()}");
+          case r_AKKU_CHARACTERISTIC_UUID:
+            MyAppState().AkkuInputBuffer(value);
+            print("[LOG] Akku: ${value.toString()}");
             break;
-          case (r_TEST2_CHARACTERISTIC_UUID):
-            MyAppState().Test2InputBuffer(value);
-            print("[LOG] Test2: ${value.toString()}");
+          case r_TEMP_CHARACTERISTIC_UUID:
+            MyAppState().TempInputBuffer(value);
+            print("[LOG] Temp: ${value.toString()}");
+            break;
+          case r_DISTANCE_CHARACTERISTIC_UUID:
+            MyAppState().DistanceInputBuffer(value);
+            print("[LOG] Distance: ${value.toString()}");
+            break;
+          case r_SLOPE_CHARACTERISTIC_UUID:
+            MyAppState().SlopeInputBuffer(value);
+            print("[LOG] Slope: ${value.toString()}");
             break;
           default:
             print("[ERROR] NO VALID Characteristic selected");
