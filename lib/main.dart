@@ -253,7 +253,9 @@ class _StartPage extends State<StartPage> {
               ? stateManager.darkBackgroundColor
               : stateManager.backgroundColor,
           appBar: AppBar(
-              title: const Text('Einkaufswagen Steuerung'),
+              title: const Center(
+                child: Text('Einkaufswagen Steuerung'),
+              ),
               foregroundColor: currentBrightness == Brightness.dark
                   ? Colors.white
                   : Colors.black,
@@ -264,7 +266,15 @@ class _StartPage extends State<StartPage> {
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
-                child: OutlinedButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      OutlinedButton(
                     onPressed: () {
                       stateManager.setSteeringAngle(0.0);
                       Navigator.push(context,
@@ -286,7 +296,10 @@ class _StartPage extends State<StartPage> {
                               : stateManager.appbarColor)
 
                     ),
-                    child: const Text('Settings', textScaleFactor: 1.1,))),
+                    child: const Text('Settings', textScaleFactor: 1.1,))]),
+                    SizedBox(
+                      width: 10,
+                    )])),
             Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
