@@ -75,11 +75,11 @@ class StateManager with ChangeNotifier {
   int _temperature = 0;
   int get temperature => _temperature;
 
-  double _pitch = 0;
-  double get pitch => _pitch;
+  int _pitch = 0;
+  int get pitch => _pitch;
 
-  double _steeringAngle = 0.0;
-  double get steeringAngle => _steeringAngle;
+  int _steeringAngle = 0;
+  int get steeringAngle => _steeringAngle;
 
   int _hornState = 0;
   int get hornState => _hornState;
@@ -111,23 +111,23 @@ class StateManager with ChangeNotifier {
   IconData _batteryIcon = EK_Icons.battery_100percent;
   IconData get batteryIcon => _batteryIcon;
 
-  double _distanceFrontLeft = 0;
-  double get distanceFrontLeft => _distanceFrontLeft;
+  int _distanceFrontLeft = 0;
+  int get distanceFrontLeft => _distanceFrontLeft;
 
-  double _distanceFrontMiddle = 0;
-  double get distanceFrontMiddle => _distanceFrontMiddle;
+  int _distanceFrontMiddle = 0;
+  int get distanceFrontMiddle => _distanceFrontMiddle;
 
-  double _distanceFrontRight = 0;
-  double get distanceFrontRight => _distanceFrontRight;
+  int _distanceFrontRight = 0;
+  int get distanceFrontRight => _distanceFrontRight;
 
-  double _distanceLeft = 0;
-  double get distanceLeft => _distanceLeft;
+  int _distanceLeft = 0;
+  int get distanceLeft => _distanceLeft;
 
-  double _distanceRight = 0;
-  double get distanceRight => _distanceRight;
+  int _distanceRight = 0;
+  int get distanceRight => _distanceRight;
 
-  double _distanceBack = 0;
-  double get distanceBack => _distanceBack;
+  int _distanceBack = 0;
+  int get distanceBack => _distanceBack;
 
   String _distanceFrontLeftImage = 'assets/images/distanceLongFrontLeft.png';
   String get distanceFrontLeftImage => _distanceFrontLeftImage;
@@ -154,7 +154,7 @@ class StateManager with ChangeNotifier {
   int get controllerButtonState => _controllerButtonState;
 
   void setSteeringAngle(double value) {
-    _steeringAngle = value;
+    _steeringAngle = value.toInt();
     notifyListeners();
   }
 
@@ -170,7 +170,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setPitch(double value)
+  void setPitch(int value)
   {
     _pitch = value;
     print('[UPDATE_LOG]---> pitch:$value');
@@ -309,42 +309,42 @@ class StateManager with ChangeNotifier {
     } else { return; }
   }
 
-  void setFrontLeftDistance(double value)
+  void setFrontLeftDistance(int value)
   {
     _distanceFrontLeft = value;
     _distanceFrontLeftImage = _getDistanceFrontLeftImage();
     notifyListeners();
   }
 
-  void setFrontMiddleDistance(double value)
+  void setFrontMiddleDistance(int value)
   {
     _distanceFrontMiddle = value;
     _distanceFrontMiddleImage = _getDistanceFrontMiddleImage();
     notifyListeners();
   }
 
-  void setFrontRightDistance(double value)
+  void setFrontRightDistance(int value)
   {
     _distanceFrontRight = value;
     _distanceFrontRightImage = _getDistanceFrontRightImage();
     notifyListeners();
   }
 
-  void setLeftDistance(double value)
+  void setLeftDistance(int value)
   {
     _distanceLeft = value;
     _distanceLeftImage = _getDistanceImage(_distanceLeft);
     notifyListeners();
   }
 
-  void setRightDistance(double value)
+  void setRightDistance(int value)
   {
     _distanceRight = value;
     _distanceRightImage = _getDistanceImage(_distanceRight);
     notifyListeners();
   }
 
-  void setBackDistance(double value)
+  void setBackDistance(int value)
   {
     _distanceBack = value;
     _distanceBackImage = _getDistanceImage(_distanceBack);
@@ -390,7 +390,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
-  String _getDistanceImage (double distance)
+  String _getDistanceImage (int distance)
   {
     String ret = 'assets/images/distanceShort.png';
 

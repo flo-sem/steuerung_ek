@@ -98,10 +98,6 @@ class MyAppState extends ChangeNotifier {
 
   // ble input buffer
   List<int> testBuffer = [];
-  List<double> pitchBuffer = [];
-  List<int> temperatureBuffer = [];
-  List<int> batteryStateBuffer = [];
-  List<List<double>> distanceBuffer = [];
 
   List<int> SpeedBuffer = [];
   List<int> AkkuBuffer = [];
@@ -145,35 +141,35 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<double> getDistance() {
-    if (distanceBuffer.isEmpty) {
-      return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  List<int> getDistance() {
+    if (DistanceBuffer.isEmpty) {
+      return [0, 0, 0, 0, 0, 0];
     } else {
-      return distanceBuffer[0];
+      return DistanceBuffer;
     }
   }
 
-  double getPitch() {
-    if (pitchBuffer.isEmpty) {
-      return 0.0;
+  int getPitch() {
+    if (SlopeBuffer.isEmpty) {
+      return 0;
     } else {
-      return pitchBuffer[0];
+      return SlopeBuffer[0];
     }
   }
 
   int getBatteryState() {
-    if (batteryStateBuffer.isEmpty) {
+    if (AkkuBuffer.isEmpty) {
       return 0;
     } else {
-      return batteryStateBuffer[0];
+      return AkkuBuffer[0];
     }
   }
 
   int getTemperature() {
-    if (temperatureBuffer.isEmpty) {
+    if (TempBuffer.isEmpty) {
       return 20;
     } else {
-      return temperatureBuffer[0];
+      return TempBuffer[0];
     }
   }
 
@@ -476,7 +472,7 @@ class ControlPage extends StatefulWidget {
 
 //Adding landscape support
 class ControlPageState extends State<ControlPage> {
-  double angle = 0;
+  int angle = 0;
   int pedal = 0;
   Timer? timer;
   final leftJoystick = JoystickHandler.left;
@@ -495,14 +491,16 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) async {
-        List<int> valueList = [angle.toInt(), pedal];
-        print('[DATA_LOG]' + valueList.toString());
-        await ble_info().BLE_WriteCharateristics(
-            ble_info().wControlsCharacteristic, valueList);
         await ble_info()
             .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
-        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest1Characteristic);
-        //await ble_info().BLE_ReadCharacteristics(ble_info().rTest2Characteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rTempCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic);
+        await ble_info()
+            .BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic);
       },
     );
 
