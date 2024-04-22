@@ -76,6 +76,7 @@ class StateManager with ChangeNotifier {
   int _pitch = 0;
   int get pitch => _pitch;
 
+  //Used in Characteristic
   int _steeringAngle = 0;
   int get steeringAngle => _steeringAngle;
 
@@ -85,9 +86,11 @@ class StateManager with ChangeNotifier {
   int _blinkTact = 0;
   int get blinkTact => _blinkTact;
 
+  //Used in characteristic
   int _blinkerRightState = 0;
   int get blinkerRightState => _blinkerRightState;
 
+  //Used in characteristic
   int _blinkerLeftState = 0;
   int get blinkerLeftState => _blinkerLeftState;
 
@@ -97,6 +100,7 @@ class StateManager with ChangeNotifier {
   int _hazardLightButton = 0;
   int get hazardLightButton => _hazardLightButton;
 
+  //Used in characteristic
   int _pedalState = 0;
   int get pedalState => _pedalState;
 
