@@ -67,6 +67,13 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  int _usingController = 0;
+  int get usingController => _usingController;
+  void set usingController(int controller) {
+    _usingController = controller;
+    notifyListeners();
+  }
+
   int _speed = 0;
   int get speed => _speed;
 
