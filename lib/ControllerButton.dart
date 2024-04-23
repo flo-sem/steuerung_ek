@@ -35,10 +35,13 @@ class _ControllerButtonState extends State<ControllerButton> {
     stateManager.toggleControllerConnectionState();
     if (stateManager.controllerConnectionState == 1) {
       stateManager.usingController = 1;
+      print('[CONTROLLER] Controller Enabled');
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => ControllerDisplay()));
     } else {
       stateManager.usingController = 0;
+      print('[CONTROLLER] Controller Disabled');
+
       Navigator.of(context).pop();
     }
   }

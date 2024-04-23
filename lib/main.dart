@@ -612,21 +612,21 @@ class ControlPageState extends State<ControlPage> {
       DeviceOrientation.portraitUp
     ]);
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    timer = Timer.periodic(
-      Duration(milliseconds: stateManager.sendInterval),
-      (timer) async {
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rTempCharacteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic);
-        await ble_info()
-            .BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic);
-      },
-    );
+    timer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval),
+        (timer) async {
+      List<Future> futures = [];
+      for (var func in [
+        ble_info().BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic),
+        ble_info().BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic),
+        ble_info().BLE_ReadCharacteristics(ble_info().rTempCharacteristic),
+        ble_info().BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic),
+        ble_info().BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic)
+      ]) {
+        futures.add(func);
+      }
+
+      await Future.wait(futures);
+    });
 
     leftJoystick.assignMotionEvent(
         handleLeftJoystickEvent); // Listen for left joystick events
@@ -723,6 +723,7 @@ class ControlPageState extends State<ControlPage> {
       //setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
       var stateManager = Provider.of<StateManager>(context, listen: false);
       if (stateManager.usingController == 1) {
+        print('[CONTROLLER][BLE] Writing steering Angle');
         stateManager.setSteeringAngle(xEvent);
       }
     });
@@ -762,6 +763,7 @@ class ControlPageState extends State<ControlPage> {
       double zEvent = event.z * 100;
       var stateManager = Provider.of<StateManager>(context, listen: false);
       if (stateManager.usingController == 1) {
+        print('[CONTROLLER][BLE] Writing Pedal state');
         stateManager.setPedalState(zEvent.toInt());
       }
       //setControllerInput([21, zEvent.toInt()]);
@@ -918,7 +920,7 @@ class _PortraitControl extends State<PortraitControl> {
             // Adjust alignment as needed
             children: [
               Container(
-                width: 160, // Adjust the width as needed
+                width: 160, // Adjust the width as neededd
                 height: 160,
                 child: SteeringWheel(),
               ),

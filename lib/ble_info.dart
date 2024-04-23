@@ -219,9 +219,26 @@ class ble_info {
 
   Future<void> BLE_WriteCharateristics(
       BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
-    print("[LOG] WRITING CHARACTERISTICS");
-    print("[LOG] ----> ${writeData.toString()}");
     if (writeCharacteristic != null) {
+      switch (writeCharacteristic.uuid.toString()) {
+        case (w_HORN_CHARACTERISTIC_UUID):
+          print("[LOG][BLE] WRITING ${writeData} to HORN");
+          break;
+        case w_TURN_LEFT_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to TURN LEFT");
+          break;
+        case w_TURN_RIGHT_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to TURN RIGHT");
+          break;
+        case w_CONTROLS_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to CONTROLS");
+          break;
+        case w_GAS_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to GAS");
+          break;
+        default:
+          print("[ERROR] NO VALID Characteristic selected");
+      }
       await writeCharacteristic.write(writeData);
     }
   }
@@ -232,30 +249,28 @@ class ble_info {
       print("[ERROR] readCharacteristic is null");
       return;
     }
-
-    print("[LOG] READING CHARACTERISTICS");
     try {
       await readCharacteristic.read().then((value) {
         switch (readCharacteristic.uuid.toString()) {
           case (r_SPEED_CHARACTERISTIC_UUID):
             MyAppState().SpeedInputBuffer(value);
-            print("[LOG] Speed: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from SPEED");
             break;
           case r_AKKU_CHARACTERISTIC_UUID:
             MyAppState().AkkuInputBuffer(value);
-            print("[LOG] Akku: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from AKKU");
             break;
           case r_TEMP_CHARACTERISTIC_UUID:
             MyAppState().TempInputBuffer(value);
-            print("[LOG] Temp: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from TEMP");
             break;
           case r_DISTANCE_CHARACTERISTIC_UUID:
             MyAppState().DistanceInputBuffer(value);
-            print("[LOG] Distance: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from DISTANCE");
             break;
           case r_SLOPE_CHARACTERISTIC_UUID:
             MyAppState().SlopeInputBuffer(value);
-            print("[LOG] Slope: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from SLOPE");
             break;
           default:
             print("[ERROR] NO VALID Characteristic selected");
