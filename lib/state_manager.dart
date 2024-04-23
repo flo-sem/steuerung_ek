@@ -7,7 +7,6 @@ import 'ble_info.dart';
 import 'package:convert/convert.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 
-
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
   CustomHaptics haptics = CustomHaptics();
@@ -68,6 +67,12 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  int _usingController = 0;
+  int get usingController => _usingController;
+  void set usingController(int controller) {
+    _usingController = controller;
+    notifyListeners();
+  }
 
   int _speed = 0;
   int get speed => _speed;
@@ -78,6 +83,7 @@ class StateManager with ChangeNotifier {
   int _pitch = 0;
   int get pitch => _pitch;
 
+  //Used in Characteristic
   int _steeringAngle = 0;
   int get steeringAngle => _steeringAngle;
 
@@ -87,9 +93,11 @@ class StateManager with ChangeNotifier {
   int _blinkTact = 0;
   int get blinkTact => _blinkTact;
 
+  //Used in characteristic
   int _blinkerRightState = 0;
   int get blinkerRightState => _blinkerRightState;
 
+  //Used in characteristic
   int _blinkerLeftState = 0;
   int get blinkerLeftState => _blinkerLeftState;
 
@@ -99,6 +107,7 @@ class StateManager with ChangeNotifier {
   int _hazardLightButton = 0;
   int get hazardLightButton => _hazardLightButton;
 
+  //Used in characteristic
   int _pedalState = 0;
   int get pedalState => _pedalState;
 
@@ -132,7 +141,8 @@ class StateManager with ChangeNotifier {
   String _distanceFrontLeftImage = 'assets/images/distanceLongFrontLeft.png';
   String get distanceFrontLeftImage => _distanceFrontLeftImage;
 
-  String _distanceFrontMiddleImage = 'assets/images/distanceLongFrontMiddle.png';
+  String _distanceFrontMiddleImage =
+      'assets/images/distanceLongFrontMiddle.png';
   String get distanceFrontMiddleImage => _distanceFrontMiddleImage;
 
   String _distanceFrontRightImage = 'assets/images/distanceLongFrontRight.png';
@@ -153,8 +163,7 @@ class StateManager with ChangeNotifier {
   int _controllerButtonState = 0;
   int get controllerButtonState => _controllerButtonState;
 
-  void resetAll()
-  {
+  void resetAll() {
     _steeringAngle = 0;
     _blinkerLeftState = 0;
     _blinkerRightState = 0;
@@ -177,8 +186,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setPitch(int value)
-  {
+  void setPitch(int value) {
     _pitch = value;
     print('[UPDATE_LOG]---> pitch:$value');
     notifyListeners();
@@ -189,69 +197,52 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleBlinkTact()
-  {
-    if(_blinkTact == 0)
-    {
+  void toggleBlinkTact() {
+    if (_blinkTact == 0) {
       _blinkTact = 1;
-    }
-    else
-    {
+    } else {
       _blinkTact = 0;
     }
     notifyListeners();
   }
 
-  void toggleBlinkerRightState()
-  {
-    if(_hazardLightState == 0 && _blinkerLeftState == 0) {
-      if(_blinkerRightState == 0)
-        {
-          _blinkerRightState = 1;
-        }
-      else
-        {
-          _blinkerRightState = 0;
-        }
-      notifyListeners();
-    }
-  }
-
-  void toggleBlinkerLeftState()
-  {
-    if(_hazardLightState == 0 && _blinkerRightState == 0) {
-      if(_blinkerLeftState == 0)
-      {
-        _blinkerLeftState = 1;
-      }
-      else
-      {
-        _blinkerLeftState = 0;
-      }
-      notifyListeners();
-    }
-  }
-
-  void toggleBothBlinkerState()
-  {
-    if(_hazardLightState == 0)
-      {
-        _hazardLightState = 1;
-        _blinkerLeftState = 1;
+  void toggleBlinkerRightState() {
+    if (_hazardLightState == 0 && _blinkerLeftState == 0) {
+      if (_blinkerRightState == 0) {
         _blinkerRightState = 1;
-      }
-    else
-      {
-        _hazardLightState = 0;
-        _blinkerLeftState = 0;
+      } else {
         _blinkerRightState = 0;
       }
+      notifyListeners();
+    }
+  }
+
+  void toggleBlinkerLeftState() {
+    if (_hazardLightState == 0 && _blinkerRightState == 0) {
+      if (_blinkerLeftState == 0) {
+        _blinkerLeftState = 1;
+      } else {
+        _blinkerLeftState = 0;
+      }
+      notifyListeners();
+    }
+  }
+
+  void toggleBothBlinkerState() {
+    if (_hazardLightState == 0) {
+      _hazardLightState = 1;
+      _blinkerLeftState = 1;
+      _blinkerRightState = 1;
+    } else {
+      _hazardLightState = 0;
+      _blinkerLeftState = 0;
+      _blinkerRightState = 0;
+    }
     _hazardLightButton = 1;
     notifyListeners();
   }
 
-  void resetHazardLightButton()
-  {
+  void resetHazardLightButton() {
     _hazardLightButton = 0;
     notifyListeners();
   }
@@ -283,8 +274,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setDistance(List<int> distanceList)
-  {
+  void setDistance(List<int> distanceList) {
     setFrontLeftDistance(distanceList[0]);
     setFrontMiddleDistance(distanceList[1]);
     setFrontRightDistance(distanceList[2]);
@@ -309,128 +299,110 @@ class StateManager with ChangeNotifier {
         minimum = distanceList[i];
       }
     }
-    if( minimum <= 1000 ) {
+    if (minimum <= 1000) {
       haptics.objectCloser();
-    } else if( minimum <= 3000 ) {
+    } else if (minimum <= 3000) {
       haptics.objectDetected();
-    } else { return; }
+    } else {
+      return;
+    }
   }
 
-  void setFrontLeftDistance(int value)
-  {
+  void setFrontLeftDistance(int value) {
     _distanceFrontLeft = value;
     _distanceFrontLeftImage = _getDistanceFrontLeftImage();
     notifyListeners();
   }
 
-  void setFrontMiddleDistance(int value)
-  {
+  void setFrontMiddleDistance(int value) {
     _distanceFrontMiddle = value;
     _distanceFrontMiddleImage = _getDistanceFrontMiddleImage();
     notifyListeners();
   }
 
-  void setFrontRightDistance(int value)
-  {
+  void setFrontRightDistance(int value) {
     _distanceFrontRight = value;
     _distanceFrontRightImage = _getDistanceFrontRightImage();
     notifyListeners();
   }
 
-  void setLeftDistance(int value)
-  {
+  void setLeftDistance(int value) {
     _distanceLeft = value;
     _distanceLeftImage = _getDistanceImage(_distanceLeft);
     notifyListeners();
   }
 
-  void setRightDistance(int value)
-  {
+  void setRightDistance(int value) {
     _distanceRight = value;
     _distanceRightImage = _getDistanceImage(_distanceRight);
     notifyListeners();
   }
 
-  void setBackDistance(int value)
-  {
+  void setBackDistance(int value) {
     _distanceBack = value;
     _distanceBackImage = _getDistanceImage(_distanceBack);
     notifyListeners();
   }
 
-  String _getDistanceFrontLeftImage () {
+  String _getDistanceFrontLeftImage() {
     String ret = 'assets/images/distanceShortFrontLeft.png';
 
     if (_distanceFrontLeft > 3000) {
       ret = 'assets/images/distanceLongFrontLeft.png';
-    }
-    else if (_distanceFrontLeft <= 3000 && _distanceFrontLeft > 1000) {
+    } else if (_distanceFrontLeft <= 3000 && _distanceFrontLeft > 1000) {
       ret = 'assets/images/distanceMediumFrontLeft.png';
     }
 
     return ret;
   }
 
-  String _getDistanceFrontMiddleImage () {
+  String _getDistanceFrontMiddleImage() {
     String ret = 'assets/images/distanceShortFrontMiddle.png';
 
     if (_distanceFrontMiddle > 3000) {
       ret = 'assets/images/distanceLongFrontMiddle.png';
-    }
-    else if (_distanceFrontMiddle <= 3000 && _distanceFrontMiddle > 1000) {
+    } else if (_distanceFrontMiddle <= 3000 && _distanceFrontMiddle > 1000) {
       ret = 'assets/images/distanceMediumFrontMiddle.png';
     }
 
     return ret;
   }
 
-  String _getDistanceFrontRightImage () {
+  String _getDistanceFrontRightImage() {
     String ret = 'assets/images/distanceShortFrontRight.png';
 
     if (_distanceFrontRight > 3000) {
       ret = 'assets/images/distanceLongFrontRight.png';
-    }
-    else if (_distanceFrontRight <= 3000 && _distanceFrontRight > 1000) {
+    } else if (_distanceFrontRight <= 3000 && _distanceFrontRight > 1000) {
       ret = 'assets/images/distanceMediumFrontRight.png';
     }
 
     return ret;
   }
 
-  String _getDistanceImage (int distance)
-  {
+  String _getDistanceImage(int distance) {
     String ret = 'assets/images/distanceShort.png';
 
-    if(distance > 3000)
-    {
+    if (distance > 3000) {
       ret = 'assets/images/distanceLong.png';
-    }
-    else if(distance <= 3000 && distance > 1000)
-    {
+    } else if (distance <= 3000 && distance > 1000) {
       ret = 'assets/images/distanceMedium.png';
     }
 
     return ret;
   }
 
-
-
-  void toggleControllerConnectionState()
-  {
-    if(_controllerConnectionState == 0)
-      {
-        _controllerConnectionState = 1;
-      }
-    else
-      {
-        _controllerConnectionState = 0;
-      }
+  void toggleControllerConnectionState() {
+    if (_controllerConnectionState == 0) {
+      _controllerConnectionState = 1;
+    } else {
+      _controllerConnectionState = 0;
+    }
     _controllerButtonState = 1;
     notifyListeners();
   }
 
-  void resetControllerButtonState()
-  {
+  void resetControllerButtonState() {
     _controllerButtonState = 0;
     notifyListeners();
   }
