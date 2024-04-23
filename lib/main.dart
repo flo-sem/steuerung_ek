@@ -676,9 +676,14 @@ class ControlPageState extends State<ControlPage> {
         _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
         // Write to Bluetooth Characteristic here
       });
-      double xEvent = event.x * 100;
-      double yEvent = event.y * 100;
-      setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
+      double xEvent = event.x * 60;
+      //double yEvent = event.y * 100;
+
+      //setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      if (stateManager.usingController == 1) {
+        stateManager.setSteeringAngle(xEvent);
+      }
     });
   }
 
@@ -714,7 +719,11 @@ class ControlPageState extends State<ControlPage> {
         print('[CONTROLLER] RightTrigger: (z: ${event.z})');
       });
       double zEvent = event.z * 100;
-      setControllerInput([21, zEvent.toInt()]);
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      if (stateManager.usingController == 1) {
+        stateManager.setPedalState(zEvent.toInt());
+      }
+      //setControllerInput([21, zEvent.toInt()]);
     });
   }
 
