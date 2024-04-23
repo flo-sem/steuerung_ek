@@ -68,8 +68,8 @@ class _SecondScreen extends State<SecondScreen> {
                     0x6c,
                     0x64**/
                   ];
-                  ble_info().BLE_WriteCharateristics(
-                      ble_info().wControlsCharacteristic, input);
+                  //ble_info().BLE_WriteCharateristics(
+                  // ble_info().wControlsCharacteristic, input);
                 },
                 child: Text('Send HelloWorld'),
               ),

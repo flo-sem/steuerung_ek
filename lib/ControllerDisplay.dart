@@ -17,7 +17,6 @@ import 'gas_pedal.dart';
 import 'speedDisplay.dart';
 import 'package:flutter/services.dart';
 
-
 class ControllerDisplay extends StatefulWidget {
   const ControllerDisplay({Key? key}) : super(key: key);
   @override
@@ -34,54 +33,63 @@ class _ControllerDisplay extends State<ControllerDisplay> {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
-          backgroundColor: currentBrightness == Brightness.dark ? stateManager.darkBackgroundColor : stateManager.backgroundColor,
+          backgroundColor: currentBrightness == Brightness.dark
+              ? stateManager.darkBackgroundColor
+              : stateManager.backgroundColor,
           body: Column(
-              children: [
-                SizedBox(
-                    height:10
-                ),
-                Row(
-                  children: [
-                    Container(width: 20),
-                    const TemperatureDisplay(),
-                    Spacer(),
-                    const RollDisplay(),
-                    Container(width: 20),
-                    const PitchDisplay(),
-                    Spacer(),
-                    const BatteryDisplay(),
-                    Container(width: 50),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(width: 20),
-                    const BlinkerLeft(),
-                    Spacer(),
-                    const HazardLightButton(),
-                    Spacer(),
-                    const BlinkerRight(),
-                    Spacer(),
-                    const ControllerButton(),
-                    Container(width: 67)
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Spacer(),
-                    Spacer(),
-                    const SpeedDisplay(),
-                    Spacer(),
-                    Spacer(),
-                    const DistanceDisplay(),
-                    Spacer(),
-                      ],
-                    )
-                  ],
-                )
-              );
+            children: [
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Container(width: 20),
+                  const TemperatureDisplay(),
+                  Spacer(),
+                  const RollDisplay(),
+                  Container(width: 20),
+                  const PitchDisplay(),
+                  Spacer(),
+                  const BatteryDisplay(),
+                  Container(width: 50),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(width: 20),
+                  const BlinkerLeft(),
+                  Spacer(),
+                  const HazardLightButton(),
+                  Spacer(),
+                  const BlinkerRight(),
+                  Spacer(),
+                  const ControllerButton(),
+                  Container(width: 67)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  Spacer(),
+                  const SpeedDisplay(),
+                  Spacer(),
+                  Spacer(),
+                  SizedBox(
+                    // Wrap DistanceDisplay with SizedBox to adjust its size
+                    width: 200, // Set the desired width
+                    height: 200, // Set the desired height
+                    child: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: const DistanceDisplay(),
+                        )),
+                  ),
+                  Spacer(),
+                ],
+              )
+            ],
+          ));
     });
   }
 

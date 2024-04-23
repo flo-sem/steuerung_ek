@@ -11,6 +11,7 @@ import 'package:steuerung_ek/rollDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'package:steuerung_ek/custom_haptics.dart';
+import 'package:steuerung_ek/controllerHandlers.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 import 'steering_wheel.dart';
 import 'gas_pedal.dart';
@@ -73,30 +74,6 @@ class MyAppState extends ChangeNotifier {
 
   MyAppState._internal();
 
-  //ble output buffer
-
-  /* GAMEPAD LEGEND 
-    # First int
-    0 : Button A
-    1 : Button B
-    2 : Button X
-    3 : Button Y
-    10: Left Joystick
-    11: Right Joystick
-    20: Left Trigger
-    21: Right Trigger
-    # Second int
-    Buttons:
-    0 : Released
-    1 : Pressed
-    Joysticks:
-    X - Axis
-    Triggers:
-    Z - Axis
-    # Third int
-    Joysticks:
-    Y - Axis
-  */
   List<int> ControllerBuffer = [];
 
   // ble input buffer
@@ -601,7 +578,6 @@ class ControlPageState extends State<ControlPage> {
   final leftJoystick = JoystickHandler.left;
   final rightJoystick = JoystickHandler.right;
   String _text = '';
-
   @override
   void initState() {
     super.initState();
@@ -611,6 +587,7 @@ class ControlPageState extends State<ControlPage> {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp
     ]);
+    var ControllerHandler = ControllerHandlers(handlerContext: context);
     var stateManager = Provider.of<StateManager>(context, listen: false);
     timer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval),
         (timer) async {
@@ -628,16 +605,18 @@ class ControlPageState extends State<ControlPage> {
       await Future.wait(futures);
     });
 
-    leftJoystick.assignMotionEvent(
-        handleLeftJoystickEvent); // Listen for left joystick events
-    rightJoystick.assignMotionEvent(
-        handleRightJoystickEvent); // Listen for right joystick events
+    leftJoystick.assignMotionEvent(ControllerHandler
+        .handleLeftJoystickEvent); // Listen for left joystick events
+    rightJoystick.assignMotionEvent(ControllerHandler
+        .handleRightJoystickEvent); // Listen for right joystick events
 
     // Listen for left trigger events
-    TriggerHandler.left.assignMotionEvent(handleLeftTriggerEvent);
+    TriggerHandler.left
+        .assignMotionEvent(ControllerHandler.handleLeftTriggerEvent);
 
     // Listen for right trigger events
-    TriggerHandler.right.assignMotionEvent(handleRightTriggerEvent);
+    TriggerHandler.right
+        .assignMotionEvent(ControllerHandler.handleRightTriggerEvent);
 
     /*******************
      *  Button Events  *
@@ -646,169 +625,31 @@ class ControlPageState extends State<ControlPage> {
     // Assign button listeners with event handlers
     Gamepad.instance.assignButtonListener(
       Button.a,
-      onPress: handleButtonAPress,
-      onRelease: handleButtonARelease,
+      onPress: ControllerHandler.handleButtonAPress,
+      onRelease: ControllerHandler.handleButtonARelease,
     );
 
     Gamepad.instance.assignButtonListener(
       Button.b,
-      onPress: handleButtonBPress,
-      onRelease: handleButtonBRelease,
+      onPress: ControllerHandler.handleButtonBPress,
+      onRelease: ControllerHandler.handleButtonBRelease,
     );
 
     Gamepad.instance.assignButtonListener(
       Button.x,
-      onPress: handleButtonXPress,
-      onRelease: handleButtonXRelease,
+      onPress: ControllerHandler.handleButtonXPress,
+      onRelease: ControllerHandler.handleButtonXRelease,
     );
 
     Gamepad.instance.assignButtonListener(
       Button.y,
-      onPress: handleButtonYPress,
-      onRelease: handleButtonYRelease,
+      onPress: ControllerHandler.handleButtonYPress,
+      onRelease: ControllerHandler.handleButtonYRelease,
     );
 
     // Assign D-pad listener
     Gamepad.instance.assignDpadListener(
         onEvent: (event) => setState(() => _text = '$event'));
-  }
-
-  // Define a debounce duration (e.g., 40 milliseconds)
-  final Duration _debounceDuration = Duration(milliseconds: 40);
-  Timer? _leftJoystickTimer;
-  Timer? _rightJoystickTimer;
-  Timer? _leftTriggerTimer;
-  Timer? _rightTriggerTimer;
-
-  /* GAMEPAD LEGEND 
-    # First int
-    0 : Button A
-    1 : Button B
-    2 : Button X
-    3 : Button Y
-    10: Left Joystick
-    11: Right Joystick
-    20: Left Trigger
-    21: Right Trigger
-    # Second int
-    Buttons:
-    0 : Released
-    1 : Pressed
-    Joysticks:
-    X - Axis
-    Triggers:
-    Z - Axis
-    # Third int
-    Joysticks:
-    Y - Axis
-  */
-
-  void handleLeftJoystickEvent(JoystickEvent event) {
-    _leftJoystickTimer?.cancel();
-    // Start a new timer to execute the joystick handling logic after the debounce duration
-    _leftJoystickTimer = Timer(_debounceDuration, () {
-      // Your joystick handling logic goes here
-      print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
-
-      double xEvent = event.x * 60;
-      //double yEvent = event.y * 100;
-
-      //setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      if (stateManager.usingController == 1) {
-        print('[CONTROLLER][BLE] Writing steering Angle');
-        stateManager.setSteeringAngle(xEvent);
-      }
-    });
-  }
-
-  void handleRightJoystickEvent(JoystickEvent event) {
-    _rightJoystickTimer?.cancel();
-    _rightJoystickTimer = Timer(_debounceDuration, () {
-      print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
-    });
-  }
-
-  // Handle left trigger event
-  void handleLeftTriggerEvent(TriggerEvent event) {
-    _leftTriggerTimer?.cancel();
-    _leftTriggerTimer = Timer(_debounceDuration, () {
-      setState(() {
-        print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
-      });
-      double zEvent = event.z * 100;
-    });
-  }
-
-  // Handle right trigger event
-  void handleRightTriggerEvent(TriggerEvent event) {
-    _rightTriggerTimer?.cancel();
-    _rightTriggerTimer = Timer(_debounceDuration, () {
-      print('[CONTROLLER] RightTrigger: (z: ${event.z})');
-      double zEvent = event.z * 100;
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      if (stateManager.usingController == 1) {
-        print('[CONTROLLER][BLE] Writing Pedal state');
-        stateManager.setPedalState(zEvent.toInt());
-      }
-      //setControllerInput([21, zEvent.toInt()]);
-    });
-  }
-
-  // Button event handlers
-  void handleButtonAPress() {
-    print('[CONTROLLER] Button: (A) Pressed');
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    if (stateManager.usingController == 1) {
-      print('[CONTROLLER][BLE] Set Horn State');
-      stateManager.setHornState(1);
-    }
-  }
-
-  void handleButtonARelease() {
-    print('[CONTROLLER] Button: (A) Released');
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    if (stateManager.usingController == 1) {
-      print('[CONTROLLER][BLE] Set Horn State');
-      stateManager.setHornState(0);
-    }
-  }
-
-  // Button event handlers
-  void handleButtonBPress() {
-    print('[CONTROLLER] Button: (B) Pressed');
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    if (stateManager.usingController == 1) {
-      print('[CONTROLLER][BLE] Toggle Left Blinker State');
-      stateManager.toggleBlinkerRightState();
-    }
-  }
-
-  void handleButtonBRelease() {
-    print('[CONTROLLER] Button: (B) Released');
-  }
-
-  // Button event handlers
-  void handleButtonXPress() {
-    print('[CONTROLLER] Button: (X) Pressed');
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    if (stateManager.usingController == 1) {
-      print('[CONTROLLER][BLE] Toggle Left Blinker State');
-      stateManager.toggleBlinkerLeftState();
-    }
-  }
-
-  void handleButtonXRelease() {
-    print('[CONTROLLER] Button: (X) Released');
-  }
-
-  // Button event handlers
-  void handleButtonYPress() {
-    print('[CONTROLLER] Button: (Y) Pressed');
-  }
-
-  void handleButtonYRelease() {
-    print('[CONTROLLER] Button: (Y) Released');
   }
 
   @override
