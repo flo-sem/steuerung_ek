@@ -5,7 +5,6 @@ import 'package:steuerung_ek/ek_icons.dart';
 import 'dart:async';
 import 'package:steuerung_ek/ble_info.dart';
 
-
 class GasPedal extends StatefulWidget {
   const GasPedal({Key? key}) : super(key: key);
   @override
@@ -21,13 +20,13 @@ class _GasPedalState extends State<GasPedal> {
     var stateManager = Provider.of<StateManager>(context, listen: false);
     sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wGasCharacteristic, [stateManager.pedalState]);
+      await ble_info().BLE_WriteCharateristics(
+          ble_info().wGasCharacteristic, [stateManager.pedalState]);
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     sendTimer?.cancel();
   }
@@ -35,33 +34,28 @@ class _GasPedalState extends State<GasPedal> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-      builder: (context, stateManager, child) {
-        return Stack(
-          children: <Widget> [
-            Align(
-                child: SizedBox(
-                    height: 240,
-                    width: 130,
-                    child: Center(
-                        child: GestureDetector(
-                            onTapDown: (_) => stateManager.setPedalState(1),
-                            onTapUp: (_) => stateManager.setPedalState(0),
-                            child: Transform(
-                                transform: Matrix4.rotationX(0.3*stateManager.pedalState),
-                                //child: Image.asset('assets/images/gasPedal.png', height: 170)
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return Stack(
+        children: <Widget>[
+          Align(
+              child: SizedBox(
+                  height: 240,
+                  width: 130,
+                  child: Center(
+                      child: GestureDetector(
+                          onTapDown: (_) => stateManager.setPedalState(100),
+                          onTapUp: (_) => stateManager.setPedalState(0),
+                          child: Transform(
+                              transform: Matrix4.rotationX(
+                                  0.3 * stateManager.pedalState),
+                              //child: Image.asset('assets/images/gasPedal.png', height: 170)
                               child: Icon(EK_Icons.pedal_accelerator,
                                   size: 150,
-                                  color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-                              )
-                            )
-                        )
-                    )
-                )
-            ),
-          ],
-        );
-      }
-    );
+                                  color: currentBrightness == Brightness.dark
+                                      ? stateManager.darkIconColor
+                                      : stateManager.iconColor)))))),
+        ],
+      );
+    });
   }
 }

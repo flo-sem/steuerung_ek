@@ -26,6 +26,8 @@ import 'package:n_gamepad/n_gamepad.dart';
 import 'package:n_gamepad/src/models/control.dart';
 import 'package:flutter/services.dart';
 import 'second.dart';
+import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
 
 enum ConnectionStateImage {
   disconnected,
@@ -254,53 +256,54 @@ class _StartPage extends State<StartPage> {
               ? stateManager.darkBackgroundColor
               : stateManager.backgroundColor,
           appBar: AppBar(
-              title: const Center(
-                child: Text('Einkaufswagen Steuerung'),
-              ),
-              foregroundColor: currentBrightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
-              backgroundColor: currentBrightness == Brightness.dark
-                  ? stateManager.darkBackgroundColor
-                  : stateManager.backgroundColor,
+            title: const Center(
+              child: Text('Einkaufswagen Steuerung'),
+            ),
+            foregroundColor: currentBrightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            backgroundColor: currentBrightness == Brightness.dark
+                ? stateManager.darkBackgroundColor
+                : stateManager.backgroundColor,
           ),
           body: Stack(children: <Widget>[
             Align(
                 alignment: Alignment.topRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      OutlinedButton(
-                    onPressed: () {
-                      stateManager.setSteeringAngle(0.0);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        //return ControlPage(title: 'SettingPage');
-                        return const SettingsPage();
-                      }));
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: currentBrightness == Brightness.dark
-                          ? stateManager.darkAppbarColor
-                          : stateManager.appbarColor,
-                      fixedSize: Size(110, 50),
-                      side: BorderSide(
-                          width: 3,
-                          style:BorderStyle.solid,
-                          color: currentBrightness == Brightness.dark
-                              ? stateManager.darkAppbarColor
-                              : stateManager.appbarColor)
-
-                    ),
-                    child: const Text('Settings', textScaleFactor: 1.1,))]),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Column(children: [
                     SizedBox(
-                      width: 10,
-                    )])),
+                      height: 20,
+                    ),
+                    OutlinedButton(
+                        onPressed: () {
+                          stateManager.setSteeringAngle(0.0);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            //return ControlPage(title: 'SettingPage');
+                            return const SettingsPage();
+                          }));
+                        },
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor:
+                                currentBrightness == Brightness.dark
+                                    ? Colors.white
+                                    : stateManager.appbarColor,
+                            fixedSize: Size(110, 50),
+                            side: BorderSide(
+                                width: 2,
+                                style: BorderStyle.solid,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkAppbarColor
+                                    : stateManager.appbarColor)),
+                        child: const Text(
+                          'Settings',
+                          textScaleFactor: 1.1,
+                        ))
+                  ]),
+                  SizedBox(
+                    width: 10,
+                  )
+                ])),
             Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -323,7 +326,6 @@ class _StartPage extends State<StartPage> {
                   SizedBox(height: 20),
                   OutlinedButton(
                       onPressed: () {
-                        stateManager.resetAll();
                         if (appState.statusImageURL ==
                             "assets/images/label_noBT.png") {
                           appState.ChangeText();
@@ -338,18 +340,20 @@ class _StartPage extends State<StartPage> {
                         } else {}
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: currentBrightness == Brightness.dark
-                            ? stateManager.darkAppbarColor
-                            : stateManager.appbarColor,
-                        fixedSize: Size(150, 50),
-                        side: BorderSide(
-                          width: 3,
-                          style: BorderStyle.solid,
-                          color: currentBrightness == Brightness.dark
-                              ? stateManager.darkAppbarColor
-                              : stateManager.appbarColor)
-                      ),
-                      child: Text(appState.MainButtonText, textScaleFactor: 1.1,)),
+                          foregroundColor: currentBrightness == Brightness.dark
+                              ? Colors.white
+                              : stateManager.appbarColor,
+                          fixedSize: Size(150, 50),
+                          side: BorderSide(
+                              width: 2,
+                              style: BorderStyle.solid,
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkAppbarColor
+                                  : stateManager.appbarColor)),
+                      child: Text(
+                        appState.MainButtonText,
+                        textScaleFactor: 1.1,
+                      )),
                   SizedBox(height: 50),
                 ])),
             Column(children: [
@@ -369,12 +373,11 @@ class _StartPage extends State<StartPage> {
                         style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
                             side: BorderSide(
-                                width: 3,
+                                width: 2,
                                 style: BorderStyle.solid,
                                 color: currentBrightness == Brightness.dark
                                     ? stateManager.darkAppbarColor
-                                    : stateManager.appbarColor)
-                        ),
+                                    : stateManager.appbarColor)),
                         child: const Text('C'))),
               ]),
               Container(width: 10, height: 20),
@@ -413,8 +416,7 @@ class _SettingsPage extends State<SettingsPage> {
                 : Colors.black,
             backgroundColor: currentBrightness == Brightness.dark
                 ? stateManager.darkBackgroundColor
-                : stateManager.backgroundColor
-        ),
+                : stateManager.backgroundColor),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -464,8 +466,7 @@ class _SettingsPage extends State<SettingsPage> {
                                 style: BorderStyle.solid,
                                 color: currentBrightness == Brightness.dark
                                     ? profile1dark
-                                    : profile1light)
-                        ),
+                                    : profile1light)),
                         child: Text('Color Profile 1'),
                       ),
                       SizedBox(width: 16),
@@ -490,8 +491,7 @@ class _SettingsPage extends State<SettingsPage> {
                                 style: BorderStyle.solid,
                                 color: currentBrightness == Brightness.dark
                                     ? profile2dark
-                                    : profile2light)
-                        ),
+                                    : profile2light)),
                         child: Text('Color Profile 2'),
                       ),
                     ],
@@ -718,9 +718,14 @@ class ControlPageState extends State<ControlPage> {
         _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
         // Write to Bluetooth Characteristic here
       });
-      double xEvent = event.x * 100;
-      double yEvent = event.y * 100;
-      setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
+      double xEvent = event.x * 60;
+      //double yEvent = event.y * 100;
+
+      //setControllerInput([10, xEvent.toInt(), yEvent.toInt()]);
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      if (stateManager.usingController == 1) {
+        stateManager.setSteeringAngle(xEvent);
+      }
     });
   }
 
@@ -756,7 +761,11 @@ class ControlPageState extends State<ControlPage> {
         print('[CONTROLLER] RightTrigger: (z: ${event.z})');
       });
       double zEvent = event.z * 100;
-      setControllerInput([21, zEvent.toInt()]);
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      if (stateManager.usingController == 1) {
+        stateManager.setPedalState(zEvent.toInt());
+      }
+      //setControllerInput([21, zEvent.toInt()]);
     });
   }
 
@@ -871,8 +880,7 @@ class _PortraitControl extends State<PortraitControl> {
                 : Colors.black,
             backgroundColor: currentBrightness == Brightness.dark
                 ? stateManager.darkBackgroundColor
-                : stateManager.backgroundColor
-        ),
+                : stateManager.backgroundColor),
         backgroundColor: currentBrightness == Brightness.dark
             ? stateManager.darkBackgroundColor
             : stateManager.backgroundColor,
@@ -977,7 +985,7 @@ class _LandscapeControl extends State<LandscapeControl> {
                 children: [
                   Container(
                       width: 180, height: 180, child: const SteeringWheel()),
-                  //These nested widget are necessary, because the "DistanceDisplay" will
+                  //These nested wid  get are necessary, because the "DistanceDisplay" will
                   //be messed up when resizing through a container.
                   SizedBox(
                     // Wrap DistanceDisplay with SizedBox to adjust its size
