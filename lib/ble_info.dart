@@ -6,12 +6,14 @@ import 'main.dart';
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  static const String DEVICE_NAME = "Blank"; //"ESP32 BLE";
-  static const String SERVICE_UUID =
-      "1111"; //"000000ff-0000-1000-8000-00805f9b34fb";
+  static const String DEVICE_NAME = "ESP32-BLE"; //"ESP32 BLE";
+  static const String SERVICE_UUID1 = "2300";
+  static const String SERVICE_UUID2 = "2400";
+  static const String SERVICE_UUID3 = "2500";
+  static const String SERVICE_UUID4 = "2600";
 
   static const String r_AKKU_CHARACTERISTIC_UUID = "2301";
-  static const String r_SPEED_CHARACTERISTIC_UUID = "2222";
+  static const String r_SPEED_CHARACTERISTIC_UUID = "2401";
   static const String r_TEMP_CHARACTERISTIC_UUID = "2501";
   static const String r_DISTANCE_CHARACTERISTIC_UUID = "2502";
   static const String r_SLOPE_CHARACTERISTIC_UUID = "2503";
@@ -19,7 +21,7 @@ class ble_info {
   static const String w_HORN_CHARACTERISTIC_UUID = "2601";
   static const String w_TURN_LEFT_CHARACTERISTIC_UUID = "2602";
   static const String w_TURN_RIGHT_CHARACTERISTIC_UUID = "2603";
-  static const String w_CONTROLS_CHARACTERISTIC_UUID = "9999";
+  static const String w_CONTROLS_CHARACTERISTIC_UUID = "2402";
   static const String w_GAS_CHARACTERISTIC_UUID = "2403";
 
   //"00002a2b-0000-1000-8000-00805f9b34fb";
@@ -140,7 +142,10 @@ class ble_info {
       print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
       index++;
       //print("[LOG] Comparing ${service.uuid.toString()} and ${SERVICE_UUID}");
-      if (service.uuid.toString() == SERVICE_UUID) {
+      if (service.uuid.toString() == SERVICE_UUID1 ||
+          service.uuid.toString() == SERVICE_UUID2 ||
+          service.uuid.toString() == SERVICE_UUID3 ||
+          service.uuid.toString() == SERVICE_UUID4) {
         // Reads all characteristics
         print("[LOG] ${service.uuid} IS THE CORRECT SERVICE!!");
         var characteristics = service.characteristics;

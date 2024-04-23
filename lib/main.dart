@@ -240,6 +240,7 @@ class _StartPage extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+    FlutterBluePlus.setLogLevel(LogLevel.none, color: false);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -457,9 +458,10 @@ class _SettingsPage extends State<SettingsPage> {
                           stateManager.darkTextColor = Colors.white70;
                         },
                         style: OutlinedButton.styleFrom(
-                            foregroundColor: currentBrightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                            foregroundColor:
+                                currentBrightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fixedSize: Size(150, 50),
                             side: BorderSide(
                                 width: 3,
@@ -482,9 +484,10 @@ class _SettingsPage extends State<SettingsPage> {
                           stateManager.darkTextColor = Colors.white70;
                         },
                         style: OutlinedButton.styleFrom(
-                            foregroundColor: currentBrightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                            foregroundColor:
+                                currentBrightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fixedSize: Size(150, 50),
                             side: BorderSide(
                                 width: 3,
@@ -513,16 +516,14 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            '${stateManager.sendInterval} ms',
-                            style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: currentBrightness == Brightness.dark
-                                ? stateManager.darkTextColor
-                                : stateManager.textColor,
-                          )
-                          ),
+                          Text('${stateManager.sendInterval} ms',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              )),
                         ],
                       ),
                       Slider(
@@ -535,7 +536,7 @@ class _SettingsPage extends State<SettingsPage> {
                         value: stateManager.sendInterval.toDouble(),
                         onChanged: (double value) {
                           stateManager.setSendInterval(value.toInt());
-                          },
+                        },
                       ),
                       Row(
                         children: [
@@ -550,16 +551,14 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                              '${stateManager.receiveInterval} ms',
+                          Text('${stateManager.receiveInterval} ms',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: currentBrightness == Brightness.dark
                                     ? stateManager.darkTextColor
                                     : stateManager.textColor,
-                              )
-                          ),
+                              )),
                         ],
                       ),
                       Slider(
