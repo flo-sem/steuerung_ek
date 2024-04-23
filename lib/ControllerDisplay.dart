@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:steuerung_ek/rollDisplay.dart';
 import 'state_manager.dart';
 import 'package:steuerung_ek/ControllerButton.dart';
 import 'package:steuerung_ek/batteryDisplay.dart';
@@ -44,6 +45,8 @@ class _ControllerDisplay extends State<ControllerDisplay> {
                     Container(width: 20),
                     const TemperatureDisplay(),
                     Spacer(),
+                    const RollDisplay(),
+                    Container(width: 20),
                     const PitchDisplay(),
                     Spacer(),
                     const BatteryDisplay(),

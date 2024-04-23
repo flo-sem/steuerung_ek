@@ -67,6 +67,12 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  int _sendInterval = 100;
+  int get sendInterval => _sendInterval;
+
+  int _receiveInterval = 100;
+  int get receiveInterval => _receiveInterval;
+
   int _usingController = 0;
   int get usingController => _usingController;
   void set usingController(int controller) {
@@ -82,6 +88,9 @@ class StateManager with ChangeNotifier {
 
   int _pitch = 0;
   int get pitch => _pitch;
+
+  int _roll = 0;
+  int get roll => _roll;
 
   //Used in Characteristic
   int _steeringAngle = 0;
@@ -169,6 +178,18 @@ class StateManager with ChangeNotifier {
     _blinkerRightState = 0;
   }
 
+  void setSendInterval(int value) {
+    _sendInterval = value;
+    print('[UPDATE]---> sendIntervallFast:$value');
+    notifyListeners();
+  }
+
+  void setReceiveInterval(int value) {
+    _receiveInterval = value;
+    print('[UPDATE]---> receiveIntervall:$value');
+    notifyListeners();
+  }
+
   void setSteeringAngle(double value) {
     _steeringAngle = value.toInt();
     notifyListeners();
@@ -189,6 +210,13 @@ class StateManager with ChangeNotifier {
   void setPitch(int value) {
     _pitch = value;
     print('[UPDATE_LOG]---> pitch:$value');
+    notifyListeners();
+  }
+
+  void setRoll(int value)
+  {
+    _roll = value;
+    print('[UPDATE_LOG]---> roll:$value');
     notifyListeners();
   }
 
