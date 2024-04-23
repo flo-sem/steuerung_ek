@@ -16,9 +16,11 @@ class _SpeedDisplayState extends State<SpeedDisplay> {
   void initState()
   {
     super.initState();
-    updateTimer = Timer.periodic(Duration(seconds: 1), (updateTimer) {
+    var stateManager = Provider.of<StateManager>(context, listen:false);
+    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast), (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen:false);
       stateManager.setSpeed(MyAppState().getSpeed());
+      print('[receive]fast');
     });
   }
 
@@ -36,7 +38,7 @@ class _SpeedDisplayState extends State<SpeedDisplay> {
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Text(
           '${stateManager.speed} km/h',
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
           color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
         ),
       );

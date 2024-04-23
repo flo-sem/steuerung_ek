@@ -16,7 +16,8 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
   void initState()
   {
     super.initState();
-    updateTimer = Timer.periodic(Duration(seconds: 1), (updateTimer) {
+    var stateManager = Provider.of<StateManager>(context, listen:false);
+    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast), (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen:false);
       stateManager.setTemperature(MyAppState().getTemperature());
     });

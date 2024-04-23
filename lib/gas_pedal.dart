@@ -34,21 +34,21 @@ class _GasPedalState extends State<GasPedal> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(builder: (context, stateManager, child) {
-      return Stack(
-        children: <Widget>[
-          Align(
-              child: SizedBox(
-                  height: 240,
-                  width: 130,
-                  child: Center(
-                      child: GestureDetector(
-                          onTapDown: (_) => stateManager.setPedalState(100),
-                          onTapUp: (_) => stateManager.setPedalState(0),
-                          child: Transform(
-                              transform: Matrix4.rotationX(
-                                  0.3 * stateManager.pedalState),
-                              //child: Image.asset('assets/images/gasPedal.png', height: 170)
+    return Consumer<StateManager>(
+      builder: (context, stateManager, child) {
+        return Stack(
+          children: <Widget> [
+            Align(
+                child: SizedBox(
+                    height: 240,
+                    width: 130,
+                    child: Center(
+                        child: GestureDetector(
+                            onTapDown: (_) => stateManager.setPedalState(100),
+                            onTapUp: (_) => stateManager.setPedalState(0),
+                            child: Transform(
+                                transform: Matrix4.rotationX(0.003*stateManager.pedalState),
+                                //child: Image.asset('assets/images/gasPedal.png', height: 170)
                               child: Icon(EK_Icons.pedal_accelerator,
                                   size: 150,
                                   color: currentBrightness == Brightness.dark

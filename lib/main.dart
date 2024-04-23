@@ -137,6 +137,15 @@ class MyAppState extends ChangeNotifier {
     }
   }
 
+  int getRoll() {
+    if (SlopeBuffer.isEmpty) {
+      return 0;
+    }
+    else {
+      return SlopeBuffer[1];
+    }
+  }
+
   int getBatteryState() {
     if (AkkuBuffer.isEmpty) {
       return 0;
@@ -493,20 +502,22 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text('${stateManager.sendInterval} ms',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: currentBrightness == Brightness.dark
-                                    ? stateManager.darkTextColor
-                                    : stateManager.textColor,
-                              )),
+                          Text(
+                            '${stateManager.sendInterval} ms',
+                            style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: currentBrightness == Brightness.dark
+                                ? stateManager.darkTextColor
+                                : stateManager.textColor,
+                          )
+                          ),
                         ],
                       ),
                       Slider(
-                        min: 100,
-                        max: 1000,
-                        divisions: 18,
+                        min: 50,
+                        max: 500,
+                        divisions: 9,
                         activeColor: currentBrightness == Brightness.dark
                             ? stateManager.darkAppbarColor
                             : stateManager.appbarColor,
@@ -517,18 +528,35 @@ class _SettingsPage extends State<SettingsPage> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            'Receive Interval',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          Tooltip(
+                            margin: EdgeInsets.only(right: 20, left: 20),
+                            decoration: BoxDecoration(
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkAppbarColor
+                                  : stateManager.appbarColor,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 25,
                               color: currentBrightness == Brightness.dark
                                   ? stateManager.darkTextColor
                                   : stateManager.textColor,
                             ),
+                            message: 'Temperature, Pitch, Roll, ChargingState',
+                            child: Text(
+                              'Receive Interval Slow',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              ),
+                            ),
                           ),
                           Spacer(),
-                          Text('${stateManager.receiveInterval} ms',
+
+                          Text(
+                              '${stateManager.receiveIntervalSlow} ms',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -539,15 +567,67 @@ class _SettingsPage extends State<SettingsPage> {
                         ],
                       ),
                       Slider(
-                        min: 100,
-                        max: 1000,
-                        divisions: 18,
+                        min: 500,
+                        max: 5000,
+                        divisions: 9,
                         activeColor: currentBrightness == Brightness.dark
                             ? stateManager.darkAppbarColor
                             : stateManager.appbarColor,
-                        value: stateManager.receiveInterval.toDouble(),
+                        value: stateManager.receiveIntervalSlow.toDouble(),
                         onChanged: (double value) {
-                          stateManager.setReceiveInterval(value.toInt());
+                          stateManager.setReceiveIntervalSlow(value.toInt());
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Tooltip(
+                            margin: EdgeInsets.only(right: 20, left: 20),
+                            decoration: BoxDecoration(
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkAppbarColor
+                                  : stateManager.appbarColor,
+                            ),
+                            textStyle: TextStyle(
+                              fontSize: 25,
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkTextColor
+                                  : stateManager.textColor,
+                            ),
+                            message: 'Speed, Distance',
+                            child: Text(
+                              'Receive Interval Fast',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                              '${stateManager.receiveIntervalFast} ms',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              )
+                          ),
+                        ],
+                      ),
+                      Slider(
+                        min: 50,
+                        max: 500,
+                        divisions: 9,
+                        activeColor: currentBrightness == Brightness.dark
+                            ? stateManager.darkAppbarColor
+                            : stateManager.appbarColor,
+                        value: stateManager.receiveIntervalFast.toDouble(),
+                        onChanged: (double value) {
+                          stateManager.setReceiveIntervalFast(value.toInt());
                         },
                       ),
                     ]),
