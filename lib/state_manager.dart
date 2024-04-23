@@ -70,8 +70,11 @@ class StateManager with ChangeNotifier {
   int _sendInterval = 100;
   int get sendInterval => _sendInterval;
 
-  int _receiveInterval = 100;
-  int get receiveInterval => _receiveInterval;
+  int _receiveIntervalFast = 100;
+  int get receiveIntervalFast => _receiveIntervalFast;
+
+  int _receiveIntervalSlow = 1000;
+  int get receiveIntervalSlow => _receiveIntervalSlow;
 
   int _usingController = 0;
   int get usingController => _usingController;
@@ -184,9 +187,15 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setReceiveInterval(int value) {
-    _receiveInterval = value;
-    print('[UPDATE]---> receiveIntervall:$value');
+  void setReceiveIntervalFast(int value) {
+    _receiveIntervalFast = value;
+    print('[UPDATE]---> receiveIntervallFast:$value');
+    notifyListeners();
+  }
+
+  void setReceiveIntervalSlow(int value) {
+    _receiveIntervalSlow = value;
+    print('[UPDATE]---> receiveIntervallSlow:$value');
     notifyListeners();
   }
 
