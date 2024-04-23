@@ -703,20 +703,13 @@ class ControlPageState extends State<ControlPage> {
     Y - Axis
   */
 
-  void setControllerInput(List<int> input) {
-    MyAppState().ControllerOutputBuffer(input);
-  }
-
   void handleLeftJoystickEvent(JoystickEvent event) {
     _leftJoystickTimer?.cancel();
     // Start a new timer to execute the joystick handling logic after the debounce duration
     _leftJoystickTimer = Timer(_debounceDuration, () {
       // Your joystick handling logic goes here
-      setState(() {
-        print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
-        _text = 'LeftJoystick: (x: ${event.x}), (y: ${event.y})';
-        // Write to Bluetooth Characteristic here
-      });
+      print('[CONTROLLER] LeftJoystick: (x: ${event.x}), (y: ${event.y})');
+
       double xEvent = event.x * 60;
       //double yEvent = event.y * 100;
 
@@ -732,12 +725,7 @@ class ControlPageState extends State<ControlPage> {
   void handleRightJoystickEvent(JoystickEvent event) {
     _rightJoystickTimer?.cancel();
     _rightJoystickTimer = Timer(_debounceDuration, () {
-      setState(() {
-        print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
-      });
-      double xEvent = event.x * 100;
-      double yEvent = event.y * 100;
-      setControllerInput([11, xEvent.toInt(), yEvent.toInt()]);
+      print('[CONTROLLER] RightJoystick: (x: ${event.x}), (y: ${event.y})');
     });
   }
 
@@ -749,7 +737,6 @@ class ControlPageState extends State<ControlPage> {
         print('[CONTROLLER] LeftTrigger: (z: ${event.z})');
       });
       double zEvent = event.z * 100;
-      setControllerInput([20, zEvent.toInt()]);
     });
   }
 
@@ -757,9 +744,7 @@ class ControlPageState extends State<ControlPage> {
   void handleRightTriggerEvent(TriggerEvent event) {
     _rightTriggerTimer?.cancel();
     _rightTriggerTimer = Timer(_debounceDuration, () {
-      setState(() {
-        print('[CONTROLLER] RightTrigger: (z: ${event.z})');
-      });
+      print('[CONTROLLER] RightTrigger: (z: ${event.z})');
       double zEvent = event.z * 100;
       var stateManager = Provider.of<StateManager>(context, listen: false);
       if (stateManager.usingController == 1) {
@@ -772,62 +757,58 @@ class ControlPageState extends State<ControlPage> {
 
   // Button event handlers
   void handleButtonAPress() {
-    setState(() {
-      print('[CONTROLLER] Button: (A) Pressed');
-    });
-    setControllerInput([0, 1]);
+    print('[CONTROLLER] Button: (A) Pressed');
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    if (stateManager.usingController == 1) {
+      print('[CONTROLLER][BLE] Set Horn State');
+      stateManager.setHornState(1);
+    }
   }
 
   void handleButtonARelease() {
-    setState(() {
-      print('[CONTROLLER] Button: (A) Released');
-    });
-    setControllerInput([0, 0]);
+    print('[CONTROLLER] Button: (A) Released');
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    if (stateManager.usingController == 1) {
+      print('[CONTROLLER][BLE] Set Horn State');
+      stateManager.setHornState(0);
+    }
   }
 
   // Button event handlers
   void handleButtonBPress() {
-    setState(() {
-      print('[CONTROLLER] Button: (B) Pressed');
-    });
-    setControllerInput([1, 1]);
+    print('[CONTROLLER] Button: (B) Pressed');
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    if (stateManager.usingController == 1) {
+      print('[CONTROLLER][BLE] Toggle Left Blinker State');
+      stateManager.toggleBlinkerRightState();
+    }
   }
 
   void handleButtonBRelease() {
-    setState(() {
-      print('[CONTROLLER] Button: (B) Released');
-    });
-    setControllerInput([1, 0]);
+    print('[CONTROLLER] Button: (B) Released');
   }
 
   // Button event handlers
   void handleButtonXPress() {
-    setState(() {
-      print('[CONTROLLER] Button: (X) Pressed');
-    });
-    setControllerInput([2, 1]);
+    print('[CONTROLLER] Button: (X) Pressed');
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    if (stateManager.usingController == 1) {
+      print('[CONTROLLER][BLE] Toggle Left Blinker State');
+      stateManager.toggleBlinkerLeftState();
+    }
   }
 
   void handleButtonXRelease() {
-    setState(() {
-      print('[CONTROLLER] Button: (X) Released');
-    });
-    setControllerInput([2, 0]);
+    print('[CONTROLLER] Button: (X) Released');
   }
 
   // Button event handlers
   void handleButtonYPress() {
-    setState(() {
-      print('[CONTROLLER] Button: (Y) Pressed');
-    });
-    setControllerInput([3, 1]);
+    print('[CONTROLLER] Button: (Y) Pressed');
   }
 
   void handleButtonYRelease() {
-    setState(() {
-      print('[CONTROLLER] Button: (Y) Released');
-    });
-    setControllerInput([3, 0]);
+    print('[CONTROLLER] Button: (Y) Released');
   }
 
   @override
