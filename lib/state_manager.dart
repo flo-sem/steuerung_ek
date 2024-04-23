@@ -222,8 +222,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void setRoll(int value)
-  {
+  void setRoll(int value) {
     _roll = value;
     print('[UPDATE_LOG]---> roll:$value');
     notifyListeners();
@@ -312,12 +311,12 @@ class StateManager with ChangeNotifier {
   }
 
   void setDistance(List<int> distanceList) {
-    setFrontLeftDistance(distanceList[0]);
-    setFrontMiddleDistance(distanceList[1]);
-    setFrontRightDistance(distanceList[2]);
-    setRightDistance(distanceList[3]);
-    setBackDistance(distanceList[4]);
-    setLeftDistance(distanceList[5]);
+    //setFrontLeftDistance(distanceList[0]);
+    //setFrontMiddleDistance(distanceList[1]);
+    //setFrontRightDistance(distanceList[2]);
+    //setRightDistance(distanceList[3]);
+    //setBackDistance(distanceList[4]);
+    //setLeftDistance(distanceList[5]);
     print('[UPDATE_LOG]---> Distances:');
     print('[UPDATE_LOG]---> FrontLeft:${distanceList[0]}');
     print('[UPDATE_LOG]---> FrontMiddle:${distanceList[0]}');

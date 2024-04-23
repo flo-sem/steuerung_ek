@@ -17,21 +17,21 @@ class SteeringWheel extends StatefulWidget {
 }
 
 class _SteeringAngle extends State<SteeringWheel> {
-
   Timer? sendTimer;
   @override
   void initState() {
     super.initState();
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
+    sendTimer = Timer.periodic(
+        Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wGasCharacteristic, [stateManager.steeringAngle]);
+      await ble_info().BLE_WriteCharateristics(
+          ble_info().wControlsCharacteristic, [stateManager.steeringAngle]);
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     sendTimer?.cancel();
   }
@@ -39,64 +39,51 @@ class _SteeringAngle extends State<SteeringWheel> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-      builder: (context, stateManager, child) {
-        return Align(
-            //alignment: Alignment.bottomLeft,
-            child: SizedBox(
-                width: 350,
-                height: 350,
-                child: Stack(
-                    children: <Widget> [
-                      Center(
-                          child: Transform.rotate(
-                              angle: (stateManager.steeringAngle * (math.pi/180)),
-                              //child: Image.asset('assets/images/steeringWheel.png', width: 270,)
-                            child: Icon(EK_Icons.steeringwheel,
-                                size: 170,
-                                color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-                            )
-                          )
-                      ),
-                      Center(
-                          child: SleekCircularSlider(
-                              min: -60,
-                              max: 60,
-                              initialValue: 0,
-                              innerWidget: (double value) {
-                                return Center(
-                                    child: Transform.rotate(
-                                        angle: (value * (math.pi/180)),
-                                        //child: const FaIcon(FontAwesomeIcons.circle, size:50)
-                                    )
-                                );
-                              },
-                              appearance: CircularSliderAppearance(
-                                  size: 170,
-                                  startAngle: 210,
-                                  angleRange: 120,
-                                  customColors: CustomSliderColors(
-                                      trackColor: Colors.transparent,
-                                      progressBarColors: null,
-                                      progressBarColor: Colors.transparent,
-                                      dotColor: Colors.transparent
-                                  ),
-                                  customWidths: CustomSliderWidths(
-                                      progressBarWidth: 0,
-                                      trackWidth: 50,
-                                      handlerSize: 100
-                                  )
-                              ),
-                              onChange: (double value) {
-                                  stateManager.setSteeringAngle(value);
-                                }
-                          )
-                      )
-                    ]
-                )
-            )
-        );
-      }
-    );
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return Align(
+          //alignment: Alignment.bottomLeft,
+          child: SizedBox(
+              width: 350,
+              height: 350,
+              child: Stack(children: <Widget>[
+                Center(
+                    child: Transform.rotate(
+                        angle: (stateManager.steeringAngle * (math.pi / 180)),
+                        //child: Image.asset('assets/images/steeringWheel.png', width: 270,)
+                        child: Icon(EK_Icons.steeringwheel,
+                            size: 170,
+                            color: currentBrightness == Brightness.dark
+                                ? stateManager.darkIconColor
+                                : stateManager.iconColor))),
+                Center(
+                    child: SleekCircularSlider(
+                        min: -60,
+                        max: 60,
+                        initialValue: 0,
+                        innerWidget: (double value) {
+                          return Center(
+                              child: Transform.rotate(
+                            angle: (value * (math.pi / 180)),
+                            //child: const FaIcon(FontAwesomeIcons.circle, size:50)
+                          ));
+                        },
+                        appearance: CircularSliderAppearance(
+                            size: 170,
+                            startAngle: 210,
+                            angleRange: 120,
+                            customColors: CustomSliderColors(
+                                trackColor: Colors.transparent,
+                                progressBarColors: null,
+                                progressBarColor: Colors.transparent,
+                                dotColor: Colors.transparent),
+                            customWidths: CustomSliderWidths(
+                                progressBarWidth: 0,
+                                trackWidth: 50,
+                                handlerSize: 100)),
+                        onChange: (double value) {
+                          stateManager.setSteeringAngle(value);
+                        }))
+              ])));
+    });
   }
 }

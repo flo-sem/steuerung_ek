@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'main.dart';
+import 'package:vibration/vibration.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
   static final ble_info _instance = ble_info._internal();
-  static const String DEVICE_NAME = "Blank"; //"ESP32 BLE";
-  static const String SERVICE_UUID =
-      "1111"; //"000000ff-0000-1000-8000-00805f9b34fb";
+  static const String DEVICE_NAME = "ESP32-BLE"; //"ESP32 BLE";
+  static const String SERVICE_UUID1 = "2300";
+  static const String SERVICE_UUID2 = "2400";
+  static const String SERVICE_UUID3 = "2500";
+  static const String SERVICE_UUID4 = "2600";
 
   static const String r_AKKU_CHARACTERISTIC_UUID = "2301";
-  static const String r_SPEED_CHARACTERISTIC_UUID = "2222";
+  static const String r_SPEED_CHARACTERISTIC_UUID = "2401";
   static const String r_TEMP_CHARACTERISTIC_UUID = "2501";
   static const String r_DISTANCE_CHARACTERISTIC_UUID = "2502";
   static const String r_SLOPE_CHARACTERISTIC_UUID = "2503";
@@ -19,7 +22,7 @@ class ble_info {
   static const String w_HORN_CHARACTERISTIC_UUID = "2601";
   static const String w_TURN_LEFT_CHARACTERISTIC_UUID = "2602";
   static const String w_TURN_RIGHT_CHARACTERISTIC_UUID = "2603";
-  static const String w_CONTROLS_CHARACTERISTIC_UUID = "9999";
+  static const String w_CONTROLS_CHARACTERISTIC_UUID = "2402";
   static const String w_GAS_CHARACTERISTIC_UUID = "2403";
 
   //"00002a2b-0000-1000-8000-00805f9b34fb";
@@ -104,15 +107,27 @@ class ble_info {
           FlutterBluePlus.stopScan();
           // Cancel subscription
           subscription.cancel();
-          //change Image faster
-          _connectImage();
-          MyAppState().fastUpdate();
+
           // Connect to device
-          await r.device.connect();
-          //Listen to connection changes
-          listenToConnectionChanges();
-          // Discover services
-          BLE_discoverServices();
+          int connectError = 0;
+          try {
+            await r.device.connect();
+          } catch (e) {
+            connectError = 1;
+            print("[ERROR] on Device connect: $e");
+            subscription?.cancel();
+            MyAppState().statusImageURL = "assets/images/label_noBT.png";
+          }
+          if (connectError == 0) {
+            Vibration.vibrate(duration: 50, amplitude: 100);
+            //change Image faster
+            _connectImage();
+            MyAppState().fastUpdate();
+            //Listen to connection changes
+            listenToConnectionChanges();
+            // Discover services
+            BLE_discoverServices();
+          }
         }
       }
     });
@@ -140,7 +155,10 @@ class ble_info {
       print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
       index++;
       //print("[LOG] Comparing ${service.uuid.toString()} and ${SERVICE_UUID}");
-      if (service.uuid.toString() == SERVICE_UUID) {
+      if (service.uuid.toString() == SERVICE_UUID1 ||
+          service.uuid.toString() == SERVICE_UUID2 ||
+          service.uuid.toString() == SERVICE_UUID3 ||
+          service.uuid.toString() == SERVICE_UUID4) {
         // Reads all characteristics
         print("[LOG] ${service.uuid} IS THE CORRECT SERVICE!!");
         var characteristics = service.characteristics;
@@ -214,10 +232,31 @@ class ble_info {
 
   Future<void> BLE_WriteCharateristics(
       BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
-    print("[LOG] WRITING CHARACTERISTICS");
-    print("[LOG] ----> ${writeData.toString()}");
     if (writeCharacteristic != null) {
-      await writeCharacteristic.write(writeData);
+      switch (writeCharacteristic.uuid.toString()) {
+        case (w_HORN_CHARACTERISTIC_UUID):
+          print("[LOG][BLE] WRITING ${writeData} to HORN");
+          break;
+        case w_TURN_LEFT_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to TURN LEFT");
+          break;
+        case w_TURN_RIGHT_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to TURN RIGHT");
+          break;
+        case w_CONTROLS_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to CONTROLS");
+          break;
+        case w_GAS_CHARACTERISTIC_UUID:
+          print("[LOG][BLE] WRITING ${writeData} to GAS");
+          break;
+        default:
+          print("[ERROR] NO VALID Characteristic selected");
+      }
+      try {
+        await writeCharacteristic.write(writeData);
+      } catch (e) {
+        print("[ERROR] on Write to Characteristic: $e");
+      }
     }
   }
 
@@ -227,30 +266,28 @@ class ble_info {
       print("[ERROR] readCharacteristic is null");
       return;
     }
-
-    print("[LOG] READING CHARACTERISTICS");
     try {
       await readCharacteristic.read().then((value) {
         switch (readCharacteristic.uuid.toString()) {
           case (r_SPEED_CHARACTERISTIC_UUID):
             MyAppState().SpeedInputBuffer(value);
-            print("[LOG] Speed: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from SPEED");
             break;
           case r_AKKU_CHARACTERISTIC_UUID:
             MyAppState().AkkuInputBuffer(value);
-            print("[LOG] Akku: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from AKKU");
             break;
           case r_TEMP_CHARACTERISTIC_UUID:
             MyAppState().TempInputBuffer(value);
-            print("[LOG] Temp: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from TEMP");
             break;
           case r_DISTANCE_CHARACTERISTIC_UUID:
             MyAppState().DistanceInputBuffer(value);
-            print("[LOG] Distance: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from DISTANCE");
             break;
           case r_SLOPE_CHARACTERISTIC_UUID:
             MyAppState().SlopeInputBuffer(value);
-            print("[LOG] Slope: ${value.toString()}");
+            print("[LOG][BLE] READING ${value.toString()} from SLOPE");
             break;
           default:
             print("[ERROR] NO VALID Characteristic selected");
