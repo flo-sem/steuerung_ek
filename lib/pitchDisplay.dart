@@ -16,7 +16,8 @@ class _PitchDisplayState extends State<PitchDisplay> {
   void initState()
   {
     super.initState();
-    updateTimer = Timer.periodic(Duration(seconds: 1), (updateTimer) {
+    var stateManager = Provider.of<StateManager>(context, listen:false);
+    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow), (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen:false);
       stateManager.setPitch(MyAppState().getPitch());
     });
