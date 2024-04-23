@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'main.dart';
+import 'package:vibration/vibration.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
@@ -106,15 +107,27 @@ class ble_info {
           FlutterBluePlus.stopScan();
           // Cancel subscription
           subscription.cancel();
-          //change Image faster
-          _connectImage();
-          MyAppState().fastUpdate();
+
           // Connect to device
-          await r.device.connect();
-          //Listen to connection changes
-          listenToConnectionChanges();
-          // Discover services
-          BLE_discoverServices();
+          int connectError = 0;
+          try {
+            await r.device.connect();
+          } catch (e) {
+            connectError = 1;
+            print("[ERROR] on Device connect: $e");
+            subscription?.cancel();
+            MyAppState().statusImageURL = "assets/images/label_noBT.png";
+          }
+          if (connectError == 0) {
+            Vibration.vibrate(duration: 50, amplitude: 100);
+            //change Image faster
+            _connectImage();
+            MyAppState().fastUpdate();
+            //Listen to connection changes
+            listenToConnectionChanges();
+            // Discover services
+            BLE_discoverServices();
+          }
         }
       }
     });
@@ -239,7 +252,11 @@ class ble_info {
         default:
           print("[ERROR] NO VALID Characteristic selected");
       }
-      await writeCharacteristic.write(writeData);
+      try {
+        await writeCharacteristic.write(writeData);
+      } catch (e) {
+        print("[ERROR] on Write to Characteristic: $e");
+      }
     }
   }
 
