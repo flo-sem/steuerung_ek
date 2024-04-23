@@ -22,7 +22,8 @@ class _SteeringAngle extends State<SteeringWheel> {
   @override
   void initState() {
     super.initState();
-    sendTimer = Timer.periodic(Duration(seconds: 1), (sendTimer) async {
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
       await ble_info().BLE_WriteCharateristics(ble_info().wGasCharacteristic, [stateManager.steeringAngle]);
     });

@@ -7,6 +7,7 @@ import 'package:steuerung_ek/BlinkerRight.dart';
 import 'package:steuerung_ek/HazardLightButton.dart';
 import 'package:steuerung_ek/distanceDisplay.dart';
 import 'package:steuerung_ek/pitchDisplay.dart';
+import 'package:steuerung_ek/rollDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
 import 'package:steuerung_ek/custom_haptics.dart';
@@ -455,8 +456,8 @@ class _SettingsPage extends State<SettingsPage> {
                         },
                         style: OutlinedButton.styleFrom(
                             foregroundColor: currentBrightness == Brightness.dark
-                                ? profile1dark
-                                : profile1light,
+                                ? Colors.white
+                                : Colors.black,
                             fixedSize: Size(150, 50),
                             side: BorderSide(
                                 width: 3,
@@ -481,8 +482,8 @@ class _SettingsPage extends State<SettingsPage> {
                         },
                         style: OutlinedButton.styleFrom(
                             foregroundColor: currentBrightness == Brightness.dark
-                                ? profile2dark
-                                : profile2light,
+                                ? Colors.white
+                                : Colors.black,
                             fixedSize: Size(150, 50),
                             side: BorderSide(
                                 width: 3,
@@ -502,7 +503,7 @@ class _SettingsPage extends State<SettingsPage> {
                       Row(
                         children: [
                           Text(
-                            'Min. send Interval',
+                            'Send Interval',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -511,25 +512,67 @@ class _SettingsPage extends State<SettingsPage> {
                                   : stateManager.textColor,
                             ),
                           ),
-                          Spacer()
+                          Spacer(),
+                          Text(
+                            '${stateManager.sendInterval} ms',
+                            style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: currentBrightness == Brightness.dark
+                                ? stateManager.darkTextColor
+                                : stateManager.textColor,
+                          )
+                          ),
                         ],
                       ),
-
-                      //Text input for minimum ble sending interval
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        onChanged: (newValue) {
-                          setState(() {
-                            //Update the numberValue when the text field changes
-                            int num = int.tryParse(newValue) ?? 20;
-                            //print(num);
-                          });
+                      Slider(
+                        min: 100,
+                        max: 1000,
+                        divisions: 18,
+                        activeColor: currentBrightness == Brightness.dark
+                            ? stateManager.darkAppbarColor
+                            : stateManager.appbarColor,
+                        value: stateManager.sendInterval.toDouble(),
+                        onChanged: (double value) {
+                          stateManager.setSendInterval(value.toInt());
+                          },
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Receive Interval',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: currentBrightness == Brightness.dark
+                                  ? stateManager.darkTextColor
+                                  : stateManager.textColor,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                              '${stateManager.receiveInterval} ms',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              )
+                          ),
+                        ],
+                      ),
+                      Slider(
+                        min: 100,
+                        max: 1000,
+                        divisions: 18,
+                        activeColor: currentBrightness == Brightness.dark
+                            ? stateManager.darkAppbarColor
+                            : stateManager.appbarColor,
+                        value: stateManager.receiveInterval.toDouble(),
+                        onChanged: (double value) {
+                          stateManager.setReceiveInterval(value.toInt());
                         },
-                        decoration: InputDecoration(
-                          labelText: '1000 ms',
-                          border: OutlineInputBorder(),
-                          suffixText: 'ms', // Suffix added here
-                        ),
                       ),
                     ]),
                   ),
@@ -569,8 +612,9 @@ class ControlPageState extends State<ControlPage> {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp
     ]);
+    var stateManager = Provider.of<StateManager>(context, listen: false);
     timer = Timer.periodic(
-      Duration(seconds: 1),
+      Duration(milliseconds: stateManager.sendInterval),
       (timer) async {
         await ble_info()
             .BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic);
@@ -840,6 +884,8 @@ class _PortraitControl extends State<PortraitControl> {
               Container(width: 20),
               const TemperatureDisplay(),
               Spacer(),
+              const RollDisplay(),
+              Container(width: 20),
               const PitchDisplay(),
               Spacer(),
               const BatteryDisplay(),
@@ -905,6 +951,8 @@ class _LandscapeControl extends State<LandscapeControl> {
                 Container(width: 20),
                 const TemperatureDisplay(),
                 Spacer(),
+                const RollDisplay(),
+                Container(width: 20),
                 const PitchDisplay(),
                 Spacer(),
                 const BatteryDisplay(),
