@@ -282,11 +282,11 @@ class ble_info {
     }
     if (change) {
       print("## WRITING DATA");
-      print("[LOG][BLE] WRITING ${lastHorn} to HONE HORN");
-      print("[LOG][BLE] WRITING ${lastLeft} to TURN LEFT");
-      print("[LOG][BLE] WRITING ${lastRight} to TURN RIGHT");
-      print("[LOG][BLE] WRITING ${lastControls} to TURN CONTROLS");
-      print("[LOG][BLE] WRITING ${lastGas} to TURN GAS");
+      print("[LOG][DATA] WRITING ${lastHorn} to HONE HORN");
+      print("[LOG][DATA] WRITING ${lastLeft} to TURN LEFT");
+      print("[LOG][DATA] WRITING ${lastRight} to TURN RIGHT");
+      print("[LOG][DATA] WRITING ${lastControls} to TURN CONTROLS");
+      print("[LOG][DATA] WRITING ${lastGas} to TURN GAS");
     }
   }
 
@@ -302,6 +302,63 @@ class ble_info {
     }
   }
 
+  List<int> lastSpeed = [99];
+  List<int> lastAkku = [99];
+  List<int> lastTemp = [99];
+  List<int> lastDistance = [99];
+  List<int> lastSlope = [99];
+
+  void printOnChangeRead(String charUUID, List<int> readData) {
+    bool change = false;
+    switch (charUUID) {
+      case r_SPEED_CHARACTERISTIC_UUID:
+        MyAppState().SpeedInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastSpeed, readData)) {
+          lastSpeed = readData;
+          change = true;
+        }
+        break;
+      case r_AKKU_CHARACTERISTIC_UUID:
+        MyAppState().AkkuInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastAkku, readData)) {
+          lastAkku = readData;
+          change = true;
+        }
+        break;
+      case r_TEMP_CHARACTERISTIC_UUID:
+        MyAppState().TempInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastTemp, readData)) {
+          lastTemp = readData;
+          change = true;
+        }
+        break;
+      case r_DISTANCE_CHARACTERISTIC_UUID:
+        MyAppState().DistanceInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastDistance, readData)) {
+          lastDistance = readData;
+          change = true;
+        }
+        break;
+      case r_SLOPE_CHARACTERISTIC_UUID:
+        MyAppState().SlopeInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastSlope, readData)) {
+          lastSlope = readData;
+          change = true;
+        }
+        break;
+      default:
+        print("[ERROR] NO VALID Characteristic selected");
+    }
+    if (change) {
+      print("## READING DATA");
+      print("[LOG][DATA] READING ${lastSpeed} from SPEED");
+      print("[LOG][DATA] READING ${lastAkku} from AKKU");
+      print("[LOG][DATA] READING ${lastTemp} from TEMP");
+      print("[LOG][DATA] READING ${lastDistance} from DISTANCE");
+      print("[LOG][DATA] READING ${lastSlope} from SLOPE");
+    }
+  }
+
   Future<void> BLE_ReadCharacteristics(
       BluetoothCharacteristic? readCharacteristic) async {
     if (readCharacteristic == null) {
@@ -310,30 +367,7 @@ class ble_info {
     }
     try {
       await readCharacteristic.read().then((value) {
-        switch (readCharacteristic.uuid.toString()) {
-          case (r_SPEED_CHARACTERISTIC_UUID):
-            MyAppState().SpeedInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from SPEED");
-            break;
-          case r_AKKU_CHARACTERISTIC_UUID:
-            MyAppState().AkkuInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from AKKU");
-            break;
-          case r_TEMP_CHARACTERISTIC_UUID:
-            MyAppState().TempInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from TEMP");
-            break;
-          case r_DISTANCE_CHARACTERISTIC_UUID:
-            MyAppState().DistanceInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from DISTANCE");
-            break;
-          case r_SLOPE_CHARACTERISTIC_UUID:
-            MyAppState().SlopeInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from SLOPE");
-            break;
-          default:
-            print("[ERROR] NO VALID Characteristic selected");
-        }
+        printOnChangeRead(readCharacteristic.uuid.toString(), value);
       });
     } catch (e) {
       print("[ERROR] Exception while reading characteristics: $e");
