@@ -13,22 +13,23 @@ class RollDisplay extends StatefulWidget {
 class _RollDisplayState extends State<RollDisplay> {
   Timer? updateTimer;
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow), (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen:false);
-      stateManager.setRoll(MyAppState().getRoll());
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    updateTimer =
+        Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow),
+            (updateTimer) {
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+      //stateManager.setRoll(MyAppState().getRoll());
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     updateTimer?.cancel();
   }
+
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
@@ -36,8 +37,10 @@ class _RollDisplayState extends State<RollDisplay> {
       return Text(
         'r - ${stateManager.roll}%',
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
-        ),
+              color: currentBrightness == Brightness.dark
+                  ? stateManager.darkTextColor
+                  : stateManager.textColor,
+            ),
       );
     });
   }

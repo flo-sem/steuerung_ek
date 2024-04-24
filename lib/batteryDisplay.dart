@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'state_manager.dart';
 import 'main.dart';
 import 'dart:async';
-import 'package:steuerung_ek/ek_icons.dart';
 
 class BatteryDisplay extends StatefulWidget {
   const BatteryDisplay({Key? key}) : super(key: key);
@@ -16,8 +15,10 @@ class _BatteryDisplayState extends State<BatteryDisplay> {
   @override
   void initState() {
     super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow), (updateTimer) {
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    updateTimer =
+        Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow),
+            (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen: false);
       stateManager.setBatteryChargingState(MyAppState().getBatteryState());
       print('[receive]slow');
@@ -25,8 +26,7 @@ class _BatteryDisplayState extends State<BatteryDisplay> {
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     updateTimer?.cancel();
   }
@@ -34,13 +34,12 @@ class _BatteryDisplayState extends State<BatteryDisplay> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-        builder: (context, stateManager, child) {
-          return Icon(
-          stateManager.batteryIcon,
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return Icon(stateManager.batteryIcon,
           size: 30,
-          color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-          );
-        });
+          color: currentBrightness == Brightness.dark
+              ? stateManager.darkIconColor
+              : stateManager.iconColor);
+    });
   }
 }

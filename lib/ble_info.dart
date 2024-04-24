@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'main.dart';
 import 'package:vibration/vibration.dart';
+import 'package:collection/collection.dart';
 
 // Singleton class (jesus help me)
 class ble_info {
@@ -40,6 +40,7 @@ class ble_info {
   BluetoothCharacteristic? wGasCharacteristic;
 
   List<int> inputBuffer = [];
+  int characteristicsFound = 0;
 
   //TODO: Maybe introduce list with Characteristics, and select dem with ID
   // OR : Name the Characteristic UUID after their purpouse
@@ -142,87 +143,94 @@ class ble_info {
     });
   }
 
+  bool isCorrectService(BluetoothService service) {
+    return [SERVICE_UUID1, SERVICE_UUID2, SERVICE_UUID3, SERVICE_UUID4]
+        .any((uuid) => service.uuid.toString() == uuid);
+  }
+
+  void assignCharacteristic(BluetoothCharacteristic c) {
+    switch (c.uuid.toString()) {
+      /* READ CHARACTERISTICS */
+      case r_SPEED_CHARACTERISTIC_UUID:
+        rSpeedCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case r_AKKU_CHARACTERISTIC_UUID:
+        rAkkuCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case r_TEMP_CHARACTERISTIC_UUID:
+        rTempCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case r_DISTANCE_CHARACTERISTIC_UUID:
+        rDistanceCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case r_SLOPE_CHARACTERISTIC_UUID:
+        rSlopeCharacteristic = c;
+        characteristicsFound++;
+        break;
+
+      /* WRITE CHARACTERISTICS */
+      case w_CONTROLS_CHARACTERISTIC_UUID:
+        wControlsCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case w_HORN_CHARACTERISTIC_UUID:
+        wHornCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case w_TURN_LEFT_CHARACTERISTIC_UUID:
+        wTurnLeftCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case w_TURN_RIGHT_CHARACTERISTIC_UUID:
+        wTurnRightCharacteristic = c;
+        characteristicsFound++;
+        break;
+      case w_GAS_CHARACTERISTIC_UUID:
+        wGasCharacteristic = c;
+        characteristicsFound++;
+        break;
+    }
+  }
+
   //Should ONLY be called, when a device is connected!!!
   void BLE_discoverServices() async {
     print("[LOG] STARTED DISCOVERING SERVICES");
     //TODO: Check if device is connected
     //Only start searching if device is connected
+    characteristicsFound = 0;
+
     List<BluetoothService> services =
         await bluetoothDevice.device.discoverServices();
     int index = 1;
-    int found = 0;
+
     for (BluetoothService service in services) {
       print("[LOG] FOUND SERVICE $index with UUID: ${service.uuid}");
       index++;
       //print("[LOG] Comparing ${service.uuid.toString()} and ${SERVICE_UUID}");
-      if (service.uuid.toString() == SERVICE_UUID1 ||
-          service.uuid.toString() == SERVICE_UUID2 ||
-          service.uuid.toString() == SERVICE_UUID3 ||
-          service.uuid.toString() == SERVICE_UUID4) {
+      if (isCorrectService(service)) {
         // Reads all characteristics
         print("[LOG] ${service.uuid} IS THE CORRECT SERVICE!!");
         var characteristics = service.characteristics;
+
         if (!characteristics.isEmpty) {
-          for (BluetoothCharacteristic c in characteristics) {
-            if (c.properties.read) {
-              List<int>? value;
+          for (BluetoothCharacteristic characteristic in characteristics) {
+            if (characteristic.properties.read) {
               try {
-                value = await c.read();
+                await characteristic.read();
               } catch (e) {
                 print("[ERROR]: $e");
               }
-              print("[LOG] FOUND CHARACTERISTIC ${c.uuid}");
-              //print("[LOG] with value: $value");
-
-              //CHECK For correct characteristic
-              switch (c.uuid.toString()) {
-                /* READ CHARACTERISTICS */
-                case r_SPEED_CHARACTERISTIC_UUID:
-                  rSpeedCharacteristic = c;
-                  found++;
-                case r_AKKU_CHARACTERISTIC_UUID:
-                  rAkkuCharacteristic = c;
-                  found++;
-                  break;
-                case r_TEMP_CHARACTERISTIC_UUID:
-                  rTempCharacteristic = c;
-                  found++;
-                  break;
-                case r_DISTANCE_CHARACTERISTIC_UUID:
-                  rDistanceCharacteristic = c;
-                  found++;
-                  break;
-                case r_SLOPE_CHARACTERISTIC_UUID:
-                  rSlopeCharacteristic = c;
-                  found++;
-                  break;
-
-                /* WRITE CHARACTERISTICS */
-                case w_CONTROLS_CHARACTERISTIC_UUID:
-                  wControlsCharacteristic = c;
-                  found++;
-                  break;
-                case w_HORN_CHARACTERISTIC_UUID:
-                  wHornCharacteristic = c;
-                  found++;
-                  break;
-                case w_TURN_LEFT_CHARACTERISTIC_UUID:
-                  wTurnLeftCharacteristic = c;
-                  found++;
-                  break;
-                case w_TURN_RIGHT_CHARACTERISTIC_UUID:
-                  wTurnRightCharacteristic = c;
-                  found++;
-                  ;
-                  break;
-                case w_GAS_CHARACTERISTIC_UUID:
-                  wGasCharacteristic = c;
-                  found++;
-                  break;
-              }
             }
+            print("[LOG] FOUND CHARACTERISTIC ${characteristic.uuid}");
+
+            //CHECK For correct characteristic
+            assignCharacteristic(characteristic);
           }
-          print("[LOG] FOUND $found out of 10 Characteristics");
+          print("[LOG] FOUND $characteristicsFound out of 10 Characteristics");
         } else {
           print("[LOG] NO CHARACTERISTICS FOUND");
         }
@@ -230,33 +238,124 @@ class ble_info {
     }
   }
 
+  List<int> lastHorn = [99];
+  List<int> lastLeft = [99];
+  List<int> lastRight = [99];
+  List<int> lastControls = [99];
+  List<int> lastGas = [99];
+
+  void printOnChangeWrite(String charUUID, List<int> writeData) {
+    bool change = false;
+    switch (charUUID) {
+      case w_HORN_CHARACTERISTIC_UUID:
+        if (!ListEquality<int>().equals(lastHorn, writeData)) {
+          lastHorn = writeData;
+          change = true;
+        }
+        break;
+      case w_TURN_LEFT_CHARACTERISTIC_UUID:
+        if (!ListEquality<int>().equals(lastLeft, writeData)) {
+          lastLeft = writeData;
+          change = true;
+        }
+        break;
+      case w_TURN_RIGHT_CHARACTERISTIC_UUID:
+        if (!ListEquality<int>().equals(lastRight, writeData)) {
+          lastRight = writeData;
+          change = true;
+        }
+        break;
+      case w_CONTROLS_CHARACTERISTIC_UUID:
+        if (!ListEquality<int>().equals(lastControls, writeData)) {
+          lastControls = writeData;
+          change = true;
+        }
+        break;
+      case w_GAS_CHARACTERISTIC_UUID:
+        if (!ListEquality<int>().equals(lastGas, writeData)) {
+          lastGas = writeData;
+          change = true;
+        }
+        break;
+      default:
+        print("[ERROR] NO VALID Characteristic selected");
+    }
+    if (change) {
+      print("## WRITING DATA");
+      print("[LOG][DATA] WRITING ${lastHorn} to HORN");
+      print("[LOG][DATA] WRITING ${lastLeft} to TURN LEFT");
+      print("[LOG][DATA] WRITING ${lastRight} to TURN RIGHT");
+      print("[LOG][DATA] WRITING ${lastControls} to TURN CONTROLS");
+      print("[LOG][DATA] WRITING ${lastGas} to TURN GAS");
+    }
+  }
+
   Future<void> BLE_WriteCharateristics(
       BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
     if (writeCharacteristic != null) {
-      switch (writeCharacteristic.uuid.toString()) {
-        case (w_HORN_CHARACTERISTIC_UUID):
-          print("[LOG][BLE] WRITING ${writeData} to HORN");
-          break;
-        case w_TURN_LEFT_CHARACTERISTIC_UUID:
-          print("[LOG][BLE] WRITING ${writeData} to TURN LEFT");
-          break;
-        case w_TURN_RIGHT_CHARACTERISTIC_UUID:
-          print("[LOG][BLE] WRITING ${writeData} to TURN RIGHT");
-          break;
-        case w_CONTROLS_CHARACTERISTIC_UUID:
-          print("[LOG][BLE] WRITING ${writeData} to CONTROLS");
-          break;
-        case w_GAS_CHARACTERISTIC_UUID:
-          print("[LOG][BLE] WRITING ${writeData} to GAS");
-          break;
-        default:
-          print("[ERROR] NO VALID Characteristic selected");
-      }
+      printOnChangeWrite(writeCharacteristic.uuid.toString(), writeData);
       try {
         await writeCharacteristic.write(writeData);
       } catch (e) {
         print("[ERROR] on Write to Characteristic: $e");
       }
+    }
+  }
+
+  List<int> lastSpeed = [99];
+  List<int> lastAkku = [99];
+  List<int> lastTemp = [99];
+  List<int> lastDistance = [99];
+  List<int> lastSlope = [99];
+
+  void printOnChangeRead(String charUUID, List<int> readData) {
+    bool change = false;
+    switch (charUUID) {
+      case r_SPEED_CHARACTERISTIC_UUID:
+        MyAppState().SpeedInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastSpeed, readData)) {
+          lastSpeed = readData;
+          change = true;
+        }
+        break;
+      case r_AKKU_CHARACTERISTIC_UUID:
+        MyAppState().AkkuInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastAkku, readData)) {
+          lastAkku = readData;
+          change = true;
+        }
+        break;
+      case r_TEMP_CHARACTERISTIC_UUID:
+        MyAppState().TempInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastTemp, readData)) {
+          lastTemp = readData;
+          change = true;
+        }
+        break;
+      case r_DISTANCE_CHARACTERISTIC_UUID:
+        MyAppState().DistanceInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastDistance, readData)) {
+          lastDistance = readData;
+          change = true;
+        }
+        break;
+      case r_SLOPE_CHARACTERISTIC_UUID:
+        MyAppState().SlopeInputBuffer(readData);
+        if (!ListEquality<int>().equals(lastSlope, readData)) {
+          lastSlope = readData;
+          change = true;
+        }
+        break;
+      default:
+        print("[ERROR] NO VALID Characteristic selected");
+    }
+    if (change) {
+      print("## READING DATA");
+      print("[LOG][DATA] READING ${lastSpeed} from SPEED");
+      print("[LOG][DATA] READING ${lastAkku} from AKKU");
+      print("[LOG][DATA] READING ${lastTemp} from TEMP");
+      print("[LOG][DATA] READING ${lastDistance} from DISTANCE");
+      print("[LOG][DATA] READING ${lastSlope} from SLOPE");
     }
   }
 
@@ -268,30 +367,7 @@ class ble_info {
     }
     try {
       await readCharacteristic.read().then((value) {
-        switch (readCharacteristic.uuid.toString()) {
-          case (r_SPEED_CHARACTERISTIC_UUID):
-            MyAppState().SpeedInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from SPEED");
-            break;
-          case r_AKKU_CHARACTERISTIC_UUID:
-            MyAppState().AkkuInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from AKKU");
-            break;
-          case r_TEMP_CHARACTERISTIC_UUID:
-            MyAppState().TempInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from TEMP");
-            break;
-          case r_DISTANCE_CHARACTERISTIC_UUID:
-            MyAppState().DistanceInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from DISTANCE");
-            break;
-          case r_SLOPE_CHARACTERISTIC_UUID:
-            MyAppState().SlopeInputBuffer(value);
-            print("[LOG][BLE] READING ${value.toString()} from SLOPE");
-            break;
-          default:
-            print("[ERROR] NO VALID Characteristic selected");
-        }
+        printOnChangeRead(readCharacteristic.uuid.toString(), value);
       });
     } catch (e) {
       print("[ERROR] Exception while reading characteristics: $e");
