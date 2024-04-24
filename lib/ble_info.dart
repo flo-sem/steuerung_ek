@@ -282,7 +282,7 @@ class ble_info {
     }
     if (change) {
       print("## WRITING DATA");
-      print("[LOG][DATA] WRITING ${lastHorn} to HONE HORN");
+      print("[LOG][DATA] WRITING ${lastHorn} to HORN");
       print("[LOG][DATA] WRITING ${lastLeft} to TURN LEFT");
       print("[LOG][DATA] WRITING ${lastRight} to TURN RIGHT");
       print("[LOG][DATA] WRITING ${lastControls} to TURN CONTROLS");
