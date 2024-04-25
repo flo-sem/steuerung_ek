@@ -183,19 +183,16 @@ class StateManager with ChangeNotifier {
 
   void setSendInterval(int value) {
     _sendInterval = value;
-    print('[UPDATE]---> sendIntervallFast:$value');
     notifyListeners();
   }
 
   void setReceiveIntervalFast(int value) {
     _receiveIntervalFast = value;
-    print('[UPDATE]---> receiveIntervallFast:$value');
     notifyListeners();
   }
 
   void setReceiveIntervalSlow(int value) {
     _receiveIntervalSlow = value;
-    print('[UPDATE]---> receiveIntervallSlow:$value');
     notifyListeners();
   }
 
@@ -206,25 +203,21 @@ class StateManager with ChangeNotifier {
 
   void setSpeed(int value) {
     _speed = value;
-    print('[UPDATE_LOG]---> speed:$value');
     notifyListeners();
   }
 
   void setTemperature(int value) {
     _temperature = value;
-    print('[UPDATE_LOG]---> temperature:$value');
     notifyListeners();
   }
 
   void setPitch(int value) {
     _pitch = value;
-    print('[UPDATE_LOG]---> pitch:$value');
     notifyListeners();
   }
 
   void setRoll(int value) {
     _roll = value;
-    print('[UPDATE_LOG]---> roll:$value');
     notifyListeners();
   }
 
@@ -290,7 +283,6 @@ class StateManager with ChangeNotifier {
 
   void setBatteryChargingState(int value) {
     _batteryChargingState = value;
-    print('[UPDATE_LOG]---> temperature:$value');
     if (value < 20) {
       _batteryImage = 'assets/images/battery0.png';
       _batteryIcon = EK_Icons.battery_0percent;
@@ -311,19 +303,12 @@ class StateManager with ChangeNotifier {
   }
 
   void setDistance(List<int> distanceList) {
-    //setFrontLeftDistance(distanceList[0]);
-    //setFrontMiddleDistance(distanceList[1]);
-    //setFrontRightDistance(distanceList[2]);
-    //setRightDistance(distanceList[3]);
-    //setBackDistance(distanceList[4]);
-    //setLeftDistance(distanceList[5]);
-    print('[UPDATE_LOG]---> Distances:');
-    print('[UPDATE_LOG]---> FrontLeft:${distanceList[0]}');
-    print('[UPDATE_LOG]---> FrontMiddle:${distanceList[0]}');
-    print('[UPDATE_LOG]---> FrontRight:${distanceList[0]}');
-    print('[UPDATE_LOG]---> Right:${distanceList[0]}');
-    print('[UPDATE_LOG]---> Left:${distanceList[0]}');
-    print('[UPDATE_LOG]---> Back:${distanceList[0]}');
+    setFrontLeftDistance(distanceList[0]);
+    setFrontMiddleDistance(distanceList[1]);
+    setFrontRightDistance(distanceList[2]);
+    setRightDistance(distanceList[3]);
+    setBackDistance(distanceList[4]);
+    setLeftDistance(distanceList[5]);
 
     hapticOnObjectDetection(distanceList);
   }
