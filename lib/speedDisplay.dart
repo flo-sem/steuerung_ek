@@ -13,20 +13,19 @@ class SpeedDisplay extends StatefulWidget {
 class _SpeedDisplayState extends State<SpeedDisplay> {
   Timer? updateTimer;
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast), (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen:false);
+    var stateManager = Provider.of<StateManager>(context, listen: false);
+    updateTimer =
+        Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast),
+            (updateTimer) {
+      var stateManager = Provider.of<StateManager>(context, listen: false);
       stateManager.setSpeed(MyAppState().getSpeed());
-      print('[receive]fast');
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     updateTimer?.cancel();
   }
@@ -37,10 +36,12 @@ class _SpeedDisplayState extends State<SpeedDisplay> {
     var stateWatch = Provider.of<MyAppState>(context);
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Text(
-          '${stateManager.speed} km/h',
+        '${stateManager.speed} km/h',
         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-          color: currentBrightness == Brightness.dark ? stateManager.darkTextColor : stateManager.textColor,
-        ),
+              color: currentBrightness == Brightness.dark
+                  ? stateManager.darkTextColor
+                  : stateManager.textColor,
+            ),
       );
     });
   }

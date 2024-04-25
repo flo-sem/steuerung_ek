@@ -10,33 +10,15 @@ import 'dart:io';
 
 class CustomHaptics {
   void objectDetected() {
-    for (int i = 1; i <= 3; i++) {
-      Future.delayed(Duration(milliseconds: 300 * i), () {
-        // Code to be executed after the delay
-        //HapticFeedback.lightImpact();
-        print("objectDetected");
-      });
-    }
+    Vibration.vibrate(duration: 20, amplitude: 50);
   }
 
   void objectClose() {
-    for (int i = 1; i <= 5; i++) {
-      Future.delayed(Duration(milliseconds: 150 * i), () {
-        // Code to be executed after the delay
-        //HapticFeedback.mediumImpact();
-        print("objectClose");
-      });
-    }
+    Vibration.vibrate(duration: 40, amplitude: 100);
   }
 
   void objectCloser() {
-    for (int i = 1; i <= 7; i++) {
-      Future.delayed(Duration(milliseconds: 100 * i), () {
-        // Code to be executed after the delay
-        //HapticFeedback.heavyImpact();
-        print("objectCloser");
-      });
-    }
+    Vibration.vibrate(duration: 60, amplitude: 200);
   }
 
   void buttonTapped() {
