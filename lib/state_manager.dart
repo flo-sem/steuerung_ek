@@ -368,9 +368,9 @@ class StateManager with ChangeNotifier {
   String _getDistanceFrontLeftImage() {
     String ret = 'assets/images/distanceShortFrontLeft.png';
 
-    if (_distanceFrontLeft > 3000) {
+    if (_distanceFrontLeft > 150) {
       ret = 'assets/images/distanceLongFrontLeft.png';
-    } else if (_distanceFrontLeft <= 3000 && _distanceFrontLeft > 1000) {
+    } else if (_distanceFrontLeft <= 150 && _distanceFrontLeft > 75) {
       ret = 'assets/images/distanceMediumFrontLeft.png';
     }
 
@@ -380,9 +380,9 @@ class StateManager with ChangeNotifier {
   String _getDistanceFrontMiddleImage() {
     String ret = 'assets/images/distanceShortFrontMiddle.png';
 
-    if (_distanceFrontMiddle > 3000) {
+    if (_distanceFrontMiddle > 150) {
       ret = 'assets/images/distanceLongFrontMiddle.png';
-    } else if (_distanceFrontMiddle <= 3000 && _distanceFrontMiddle > 1000) {
+    } else if (_distanceFrontMiddle <= 150 && _distanceFrontMiddle > 75) {
       ret = 'assets/images/distanceMediumFrontMiddle.png';
     }
 
@@ -392,9 +392,9 @@ class StateManager with ChangeNotifier {
   String _getDistanceFrontRightImage() {
     String ret = 'assets/images/distanceShortFrontRight.png';
 
-    if (_distanceFrontRight > 3000) {
+    if (_distanceFrontRight > 150) {
       ret = 'assets/images/distanceLongFrontRight.png';
-    } else if (_distanceFrontRight <= 3000 && _distanceFrontRight > 1000) {
+    } else if (_distanceFrontRight <= 150 && _distanceFrontRight > 75) {
       ret = 'assets/images/distanceMediumFrontRight.png';
     }
 
@@ -404,9 +404,9 @@ class StateManager with ChangeNotifier {
   String _getDistanceImage(int distance) {
     String ret = 'assets/images/distanceShort.png';
 
-    if (distance > 3000) {
+    if (distance > 150) {
       ret = 'assets/images/distanceLong.png';
-    } else if (distance <= 3000 && distance > 1000) {
+    } else if (distance <= 150 && distance > 75) {
       ret = 'assets/images/distanceMedium.png';
     }
 
