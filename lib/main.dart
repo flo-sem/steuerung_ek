@@ -130,7 +130,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   int getPitch() {
-    if (SlopeBuffer.isEmpty) {
+    if (SlopeBuffer.isEmpty || SlopeBuffer.length < 2) {
       return 0;
     } else {
       return SlopeBuffer[0];
@@ -138,7 +138,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   int getRoll() {
-    if (SlopeBuffer.isEmpty) {
+    if (SlopeBuffer.isEmpty || SlopeBuffer.length < 2) {
       return 0;
     }
     else {
