@@ -17,15 +17,16 @@ class _BlinkerRightState extends State<BlinkerRight> {
   void initState() {
     super.initState();
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
+    sendTimer = Timer.periodic(
+        Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wTurnRightCharacteristic, [stateManager.blinkerRightState]);
+      await ble_info().BLE_WriteCharateristics(
+          'turnRightCharacteristic', [stateManager.blinkerRightState]);
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     sendTimer?.cancel();
   }
@@ -33,20 +34,19 @@ class _BlinkerRightState extends State<BlinkerRight> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-        builder: (context, stateManager, child) {
-          return GestureDetector(
-            onTapDown: (_) => stateManager.toggleBlinkerRightState(),
-            child: Transform.scale(
-                scale: 1 - (0.2*stateManager.blinkTact*stateManager.blinkerRightState),
-                //child: Image.asset('assets/images/blinkerRight.png', width:50)
-              child: Icon(EK_Icons.arrowshape_right_fill,
-                  size: 50,
-                  color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-              ),
-            )
-          );
-        }
-    );
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return GestureDetector(
+          onTapDown: (_) => stateManager.toggleBlinkerRightState(),
+          child: Transform.scale(
+            scale: 1 -
+                (0.2 * stateManager.blinkTact * stateManager.blinkerRightState),
+            //child: Image.asset('assets/images/blinkerRight.png', width:50)
+            child: Icon(EK_Icons.arrowshape_right_fill,
+                size: 50,
+                color: currentBrightness == Brightness.dark
+                    ? stateManager.darkIconColor
+                    : stateManager.iconColor),
+          ));
+    });
   }
 }

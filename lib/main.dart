@@ -22,11 +22,9 @@ import 'orientation_widget.dart';
 import 'dart:async';
 import 'package:convert/convert.dart';
 import 'state_manager.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:n_gamepad/n_gamepad.dart';
 import 'package:n_gamepad/src/models/control.dart';
 import 'package:flutter/services.dart';
-import 'second.dart';
 import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
 
@@ -225,7 +223,6 @@ class _StartPage extends State<StartPage> {
   @override
   void initState() {
     super.initState();
-    FlutterBluePlus.setLogLevel(LogLevel.none, color: false);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -666,11 +663,11 @@ class ControlPageState extends State<ControlPage> {
         (timer) async {
       List<Future> futures = [];
       for (var func in [
-        ble_info().BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rTempCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic)
+        ble_info().BLE_ReadCharacteristics('akkuCharacteristic'),
+        ble_info().BLE_ReadCharacteristics('speedCharacteristic'),
+        ble_info().BLE_ReadCharacteristics('tempCharacteristic'),
+        ble_info().BLE_ReadCharacteristics('distanceCharacteristic'),
+        ble_info().BLE_ReadCharacteristics('slopeCharacteristic')
       ]) {
         futures.add(func);
       }
@@ -742,7 +739,8 @@ class ControlPageState extends State<ControlPage> {
     //var appState = context.watch<MyAppState>();
     timer?.cancel();
     super.dispose();
-    await ble_info().bluetoothDevice.device.disconnect();
+    //OLD Disconnect
+    //await ble_info().bluetoothDevice.device.disconnect();
     //appState.ChangeText();
   }
 

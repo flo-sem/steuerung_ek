@@ -17,36 +17,35 @@ class _HornState extends State<Horn> {
   void initState() {
     super.initState();
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
+    sendTimer = Timer.periodic(
+        Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wHornCharacteristic, [stateManager.hornState]);
+      await ble_info().BLE_WriteCharateristics(
+          'hornCharacteristic', [stateManager.hornState]);
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     sendTimer?.cancel();
   }
+
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-        builder: (context, stateManager, child) {
-          return GestureDetector(
-              onTapDown: (_) => stateManager.setHornState(1),
-              onTapUp: (_) => stateManager.setHornState(0),
-              child: Transform.scale(
-                scale: 1 - (0.2*stateManager.hornState),
-                //child: Image.asset('assets/images/horn.png', width: 60)
-                child: Icon(EK_Icons.horn,
-                    size: 60,
-                    color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-                )
-              )
-          );
-        }
-    );
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return GestureDetector(
+          onTapDown: (_) => stateManager.setHornState(1),
+          onTapUp: (_) => stateManager.setHornState(0),
+          child: Transform.scale(
+              scale: 1 - (0.2 * stateManager.hornState),
+              //child: Image.asset('assets/images/horn.png', width: 60)
+              child: Icon(EK_Icons.horn,
+                  size: 60,
+                  color: currentBrightness == Brightness.dark
+                      ? stateManager.darkIconColor
+                      : stateManager.iconColor)));
+    });
   }
 }

@@ -5,7 +5,6 @@ import 'package:steuerung_ek/ek_icons.dart';
 import 'dart:async';
 import 'package:steuerung_ek/ble_info.dart';
 
-
 class BlinkerLeft extends StatefulWidget {
   const BlinkerLeft({Key? key}) : super(key: key);
   @override
@@ -18,15 +17,16 @@ class _BlinkerLeftState extends State<BlinkerLeft> {
   void initState() {
     super.initState();
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
+    sendTimer = Timer.periodic(
+        Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wTurnLeftCharacteristic, [stateManager.blinkerLeftState]);
+      await ble_info().BLE_WriteCharateristics(
+          'turnLeftCharacteristic', [stateManager.blinkerLeftState]);
     });
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     super.dispose();
     sendTimer?.cancel();
   }
@@ -34,20 +34,19 @@ class _BlinkerLeftState extends State<BlinkerLeft> {
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
-    return Consumer<StateManager>(
-        builder: (context, stateManager, child) {
-          return GestureDetector(
-            onTapDown: (_) => stateManager.toggleBlinkerLeftState(),
-            child: Transform.scale(
-              scale: 1 - (0.2*stateManager.blinkTact*stateManager.blinkerLeftState),
-              //child: Image.asset('assets/images/blinkerLeft.png', width: 50)
-              child: Icon(EK_Icons.arrowshape_left_fill,
-                  size: 50,
-                  color: currentBrightness == Brightness.dark ? stateManager.darkIconColor : stateManager.iconColor
-              ),
-            )
-          );
-        }
-    );
+    return Consumer<StateManager>(builder: (context, stateManager, child) {
+      return GestureDetector(
+          onTapDown: (_) => stateManager.toggleBlinkerLeftState(),
+          child: Transform.scale(
+            scale: 1 -
+                (0.2 * stateManager.blinkTact * stateManager.blinkerLeftState),
+            //child: Image.asset('assets/images/blinkerLeft.png', width: 50)
+            child: Icon(EK_Icons.arrowshape_left_fill,
+                size: 50,
+                color: currentBrightness == Brightness.dark
+                    ? stateManager.darkIconColor
+                    : stateManager.iconColor),
+          ));
+    });
   }
 }
