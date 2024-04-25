@@ -122,7 +122,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   List<int> getDistance() {
-    if (DistanceBuffer.isEmpty) {
+    if (DistanceBuffer.isEmpty && DistanceBuffer.length < 6) {
       return [0, 0, 0, 0, 0, 0];
     } else {
       return DistanceBuffer;
