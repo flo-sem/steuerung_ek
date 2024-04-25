@@ -21,7 +21,6 @@ class _BatteryDisplayState extends State<BatteryDisplay> {
             (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen: false);
       stateManager.setBatteryChargingState(MyAppState().getBatteryState());
-      print('[receive]slow');
     });
   }
 

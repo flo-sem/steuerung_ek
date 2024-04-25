@@ -122,7 +122,7 @@ class MyAppState extends ChangeNotifier {
   }
 
   List<int> getDistance() {
-    if (DistanceBuffer.isEmpty && DistanceBuffer.length < 6) {
+    if (DistanceBuffer.isEmpty || DistanceBuffer.length < 6) {
       return [0, 0, 0, 0, 0, 0];
     } else {
       return DistanceBuffer;
@@ -140,8 +140,7 @@ class MyAppState extends ChangeNotifier {
   int getRoll() {
     if (SlopeBuffer.isEmpty || SlopeBuffer.length < 2) {
       return 0;
-    }
-    else {
+    } else {
       return SlopeBuffer[1];
     }
   }
@@ -502,16 +501,14 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            '${stateManager.sendInterval} ms',
-                            style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: currentBrightness == Brightness.dark
-                                ? stateManager.darkTextColor
-                                : stateManager.textColor,
-                          )
-                          ),
+                          Text('${stateManager.sendInterval} ms',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: currentBrightness == Brightness.dark
+                                    ? stateManager.darkTextColor
+                                    : stateManager.textColor,
+                              )),
                         ],
                       ),
                       Slider(
@@ -554,9 +551,7 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-
-                          Text(
-                              '${stateManager.receiveIntervalSlow} ms',
+                          Text('${stateManager.receiveIntervalSlow} ms',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -606,16 +601,14 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                              '${stateManager.receiveIntervalFast} ms',
+                          Text('${stateManager.receiveIntervalFast} ms',
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
                                 color: currentBrightness == Brightness.dark
                                     ? stateManager.darkTextColor
                                     : stateManager.textColor,
-                              )
-                          ),
+                              )),
                         ],
                       ),
                       Slider(
