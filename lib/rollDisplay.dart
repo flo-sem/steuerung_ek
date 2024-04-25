@@ -20,7 +20,7 @@ class _RollDisplayState extends State<RollDisplay> {
         Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow),
             (updateTimer) {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-      //stateManager.setRoll(MyAppState().getRoll());
+      stateManager.setRoll(MyAppState().getRoll());
     });
   }
 
