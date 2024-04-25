@@ -83,6 +83,8 @@ class ble_info {
         priority: ConnectionPriority.highPerformance);
   }
 
+  void _handleUiChanges() {}
+
   void _assignCharacteristics() {
     akkuCharacteristic = QualifiedCharacteristic(
         characteristicId: Uuid.parse(rAkkuCharacteristicUuid!),
@@ -131,18 +133,26 @@ class ble_info {
     print("[BLELOG] Device disconnected!");
   }
 
+  void _connectImage() {
+    MyAppState().setImage(ConnectionStateImage.connected);
+  }
+
   // Functions for Bluetooth Low Energy
   void BLE_Search() async {
-    flutterReactiveBle
-        .scanForDevices(
-            withServices: serviceUUIDs, scanMode: ScanMode.lowLatency)
-        .listen((device) {
+    print("[BLELOG] Started Search!");
+    flutterReactiveBle.scanForDevices(
+        withServices: [] /*serviceUUIDs*/,
+        scanMode: ScanMode.lowLatency).listen((device) {
       //code for handling results
-      _discoveredDevice = device;
-      BLE_Connect();
+      print("[BLELOG] Found device: ${device.name}");
+      if (device.name == "Blank") {
+        _discoveredDevice = device;
+        BLE_Connect();
+      }
     }, onError: (dynamic error) {
       print("[BLELOG] Device Search failed!");
       print("[BLELOG] $error");
+      MyAppState().statusImageURL = "assets/images/label_noBT.png";
     });
   }
 
@@ -159,6 +169,7 @@ class ble_info {
       if (connectionState.connectionState == DeviceConnectionState.connected) {
         _handleConnected();
         _assignCharacteristics();
+        _connectImage();
       }
       if (connectionState.connectionState == DeviceConnectionState.disconnected)
         _handleDisconnected();

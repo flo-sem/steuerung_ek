@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_reactive_ble: ^5.3.1
   cupertino_icons: ^1.0.2
   sleek_circular_slider: ^2.0.1
   font_awesome_flutter: ^10.5.0
@@ -20,6 +19,8 @@ dependencies:
   convert: ^3.1.1
   n_gamepad: ^0.0.3
   vibration: ^1.8.4
+  flutter_reactive_ble: ^5.3.1
+
 
 dev_dependencies:
   flutter_test:
