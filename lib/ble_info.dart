@@ -244,7 +244,7 @@ class ble_info {
   List<int> lastControls = [99];
   List<int> lastGas = [99];
 
-  void printOnChangeWrite(String charUUID, List<int> writeData) {
+  bool printOnChangeWrite(String charUUID, List<int> writeData) {
     bool change = false;
     switch (charUUID) {
       case w_HORN_CHARACTERISTIC_UUID:
@@ -288,16 +288,22 @@ class ble_info {
       print("[LOG][DATA] WRITING ${lastControls} to TURN CONTROLS");
       print("[LOG][DATA] WRITING ${lastGas} to TURN GAS");
     }
+    return change;
   }
 
   Future<void> BLE_WriteCharateristics(
       BluetoothCharacteristic? writeCharacteristic, List<int> writeData) async {
     if (writeCharacteristic != null) {
-      printOnChangeWrite(writeCharacteristic.uuid.toString(), writeData);
-      try {
-        await writeCharacteristic.write(writeData);
-      } catch (e) {
-        print("[ERROR] on Write to Characteristic: $e");
+      bool hasChanged =
+          printOnChangeWrite(writeCharacteristic.uuid.toString(), writeData);
+      if (hasChanged) {
+        print("[LOG][BLE] WRITING DATA");
+        try {
+          print("DEBUG WRITE $writeData");
+          await writeCharacteristic.write(writeData);
+        } catch (e) {
+          print("[ERROR] on Write to Characteristic: $e");
+        }
       }
     }
   }
