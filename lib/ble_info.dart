@@ -20,16 +20,9 @@ class ble_info {
   var _serviceDiscoverer;
 
   StreamSubscription? _scanSubscription;
-  //final _bleLogger = BleLogger(ble: _ble);
-  //final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
-  //final _monitor = BleStatusMonitor(_ble);
-  //final _connector = BleDeviceConnector(
-  //  ble: _ble,
-  //  logMessage: _bleLogger.addToLog,
-  //);
 
   // Constants
-  static const String DEVICE_NAME = "TEST_ESP32"; //"ESP32 BLE";
+  static const String DEVICE_NAME = "TEST_ESP32"; //"ESP32-BLE";
 
   List<Uuid> serviceUUIDs = [
     Uuid.parse('00002300-0000-1000-8000-00805f9b34fb'),
@@ -226,7 +219,7 @@ class ble_info {
             _handleConnected();
             _assignCharacteristics();
             _connectImage();
-            _discoverAll();
+            _discoverServices();
           }
         });
       }
@@ -307,11 +300,11 @@ class ble_info {
 
   Future<void> BLE_WriteCharateristics(
       String characteristicId, List<int> writeData) async {
-    _ble.writeCharacteristicWithoutResponse(
-        writeCharacteristics[characteristicId]!,
-        value: writeData);
     if (!ListEquality<int>()
         .equals(writeData, lastWriteValues[characteristicId])) {
+      _ble.writeCharacteristicWithoutResponse(
+          writeCharacteristics[characteristicId]!,
+          value: writeData);
       lastWriteValues[characteristicId] = writeData;
       print("[BLELOG] Writing $writeData to $characteristicId");
     }

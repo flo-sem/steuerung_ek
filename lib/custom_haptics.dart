@@ -18,7 +18,7 @@ class CustomHaptics {
   }
 
   void objectCloser() {
-    Vibration.vibrate(duration: 60, amplitude: 200);
+    //Vibration.vibrate(duration: 60, amplitude: 200);
   }
 
   void buttonTapped() {
