@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/ControllerButton.dart';
 import 'package:steuerung_ek/batteryDisplay.dart';
@@ -704,7 +703,7 @@ class ControlPageState extends State<ControlPage> {
     //var appState = context.watch<MyAppState>();
     timer?.cancel();
     super.dispose();
-    await ble_info().bluetoothDevice.device.disconnect();
+    await ble_info().bluetoothDevice?.disconnect();
     //appState.ChangeText();
   }
 
