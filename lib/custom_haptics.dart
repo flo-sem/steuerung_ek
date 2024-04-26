@@ -10,11 +10,11 @@ import 'dart:io';
 
 class CustomHaptics {
   void objectDetected() {
-    Vibration.vibrate(duration: 20, amplitude: 50);
+    //Vibration.vibrate(duration: 20, amplitude: 50);
   }
 
   void objectClose() {
-    Vibration.vibrate(duration: 40, amplitude: 100);
+    //Vibration.vibrate(duration: 40, amplitude: 100);
   }
 
   void objectCloser() {

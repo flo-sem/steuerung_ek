@@ -180,18 +180,14 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void ChangeText() {
+  void ChangeTextToSearch() {
     MainButtonText = "Suche läuft";
     notifyListeners();
+  }
 
-    Future.delayed(Duration(seconds: 5), () {
-      if (statusImageURL == 'assets/images/label_BT.png') {
-        MainButtonText = "Verbinden";
-      } else {
-        MainButtonText = "Suche starten";
-      }
-      notifyListeners();
-    });
+  void ChangeTextToConnect() {
+    MainButtonText = "Verbinden";
+    notifyListeners();
   }
 
   var statusImageURL = 'assets/images/label_noBT.png';
@@ -311,7 +307,7 @@ class _StartPage extends State<StartPage> {
                       onPressed: () {
                         if (appState.statusImageURL ==
                             "assets/images/label_noBT.png") {
-                          appState.ChangeText();
+                          appState.ChangeTextToSearch();
                           print("[LOG] Button pressed");
                           ble_info().BLE_Search();
                         } else if (appState.statusImageURL ==

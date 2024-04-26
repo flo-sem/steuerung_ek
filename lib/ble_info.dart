@@ -11,27 +11,54 @@ class ble_info {
   factory ble_info() => _instance;
   ble_info._internal();
 
+  //BLE stuff idfk
+  final _ble = FlutterReactiveBle();
+  var _bleLogger;
+  var _scanner;
+  var _monitor;
+  var _connector;
+  var _serviceDiscoverer;
+
+  StreamSubscription? _scanSubscription;
+  //final _bleLogger = BleLogger(ble: _ble);
+  //final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
+  //final _monitor = BleStatusMonitor(_ble);
+  //final _connector = BleDeviceConnector(
+  //  ble: _ble,
+  //  logMessage: _bleLogger.addToLog,
+  //);
+
   // Constants
-  static const String DEVICE_NAME = "ESP32-BLE"; //"ESP32 BLE";
+  static const String DEVICE_NAME = "TEST_ESP32"; //"ESP32 BLE";
 
   List<Uuid> serviceUUIDs = [
-    Uuid.parse('2300'),
-    Uuid.parse('2400'),
-    Uuid.parse('2500'),
-    Uuid.parse('2600')
+    Uuid.parse('00002300-0000-1000-8000-00805f9b34fb'),
+    Uuid.parse('00002400-0000-1000-8000-00805f9b34fb'),
+    Uuid.parse('00002500-0000-1000-8000-00805f9b34fb'),
+    Uuid.parse('00002600-0000-1000-8000-00805f9b34fb')
   ];
 
-  static const String rAkkuCharacteristicUuid = "2301";
-  static const String rSpeedCharacteristicUuid = "2401";
-  static const String rTemperatureCharacteristicUuid = "2501";
-  static const String rDistanceCharacteristicUuid = "2502";
-  static const String rSlopeCharacteristicUuid = "2503";
+  static const String rAkkuCharacteristicUuid =
+      '00002301-0000-1000-8000-00805f9b34fb'; //"2301";
+  static const String rSpeedCharacteristicUuid =
+      '00002401-0000-1000-8000-00805f9b34fb'; //"2401";
+  static const String rTemperatureCharacteristicUuid =
+      '00002501-0000-1000-8000-00805f9b34fb'; //"2501";
+  static const String rDistanceCharacteristicUuid =
+      '00002502-0000-1000-8000-00805f9b34fb'; //"2502";
+  static const String rSlopeCharacteristicUuid =
+      '00002503-0000-1000-8000-00805f9b34fb'; //"2503";
 
-  static const String wHornCharacteristicUuid = "2601";
-  static const String wTurnLeftCharacteristicUuid = "2602";
-  static const String wTurnRightCharacteristicUuid = "2603";
-  static const String wControlsCharacteristicUuid = "2402";
-  static const String wGasCharacteristicUuid = "2403";
+  static const String wHornCharacteristicUuid =
+      '00002601-0000-1000-8000-00805f9b34fb'; //"2601";
+  static const String wTurnLeftCharacteristicUuid =
+      '00002602-0000-1000-8000-00805f9b34fb'; //"2602";
+  static const String wTurnRightCharacteristicUuid =
+      '00002603-0000-1000-8000-00805f9b34fb'; //"2603";
+  static const String wControlsCharacteristicUuid =
+      '00002402-0000-1000-8000-00805f9b34fb'; //"2402";
+  static const String wGasCharacteristicUuid =
+      '00002403-0000-1000-8000-00805f9b34fb'; //"2403";
 
   static Map<String, QualifiedCharacteristic> readCharacteristics = {
     'akkuCharacteristic': akkuCharacteristic!,
@@ -39,6 +66,33 @@ class ble_info {
     'tempCharacteristic': tempCharacteristic!,
     'distanceCharacteristic': distanceCharacteristic!,
     'slopeCharacteristic': slopeCharacteristic!
+  };
+  static List<int> lastAkku = [99];
+  static List<int> lastSpeed = [99];
+  static List<int> lastTemp = [99];
+  static List<int> lastDist = [99];
+  static List<int> lastSlope = [99];
+
+  static Map<String, List<int>> lastReadValues = {
+    'akkuCharacteristic': lastAkku,
+    'speedCharacteristic': lastSpeed,
+    'tempCharacteristic': lastTemp,
+    'distanceCharacteristic': lastDist,
+    'slopeCharacteristic': lastSlope
+  };
+
+  static List<int> lastHorn = [99];
+  static List<int> lastLeft = [99];
+  static List<int> lastRight = [99];
+  static List<int> lastCtrl = [99];
+  static List<int> lastGas = [99];
+
+  static Map<String, List<int>> lastWriteValues = {
+    'hornCharacteristic': lastHorn,
+    'turnLeftCharacteristic': lastLeft,
+    'turnRightCharacteristic': lastRight,
+    'controlsCharacteristic': lastCtrl,
+    'gasCharacteristic': lastGas
   };
 
   static Map<String, dynamic Function(List<int>)> readCharacteristicsInput = {
@@ -58,7 +112,6 @@ class ble_info {
   };
 
   // Initializing the FLutterReactiveBle libary
-  final flutterReactiveBle = FlutterReactiveBle();
 
   //Variables used for BLE
   DiscoveredDevice? _discoveredDevice;
@@ -78,7 +131,7 @@ class ble_info {
   // handler functions
   void _handleConnected() async {
     print("[BLELOG] Device connected!");
-    await flutterReactiveBle.requestConnectionPriority(
+    await _ble.requestConnectionPriority(
         deviceId: _discoveredDevice!.id,
         priority: ConnectionPriority.highPerformance);
   }
@@ -87,7 +140,7 @@ class ble_info {
 
   void _assignCharacteristics() {
     akkuCharacteristic = QualifiedCharacteristic(
-        characteristicId: Uuid.parse(rAkkuCharacteristicUuid!),
+        characteristicId: Uuid.parse(rAkkuCharacteristicUuid),
         serviceId: serviceUUIDs[0],
         deviceId: _discoveredDevice!.id);
     speedCharacteristic = QualifiedCharacteristic(
@@ -135,29 +188,101 @@ class ble_info {
 
   void _connectImage() {
     MyAppState().setImage(ConnectionStateImage.connected);
+    MyAppState().ChangeTextToConnect();
   }
 
   // Functions for Bluetooth Low Energy
   void BLE_Search() async {
+    /*_bleLogger = BleLogger(ble: _ble);
+    _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
+    _monitor = BleStatusMonitor(_ble);
+    _connector = BleDeviceConnector(
+      ble: _ble,
+      logMessage: _bleLogger.addToLog,
+    );
+    _serviceDiscoverer = BleDeviceInteractor(
+      bleDiscoverServices: (deviceId) async {
+        await _ble.discoverAllServices(deviceId);
+        return _ble.getDiscoveredServices(deviceId);
+      },
+      logMessage: _bleLogger.addToLog,
+      readRssi: _ble.readRssi,
+    );*/
+    _scanSubscription?.cancel();
     print("[BLELOG] Started Search!");
-    flutterReactiveBle.scanForDevices(
-        withServices: [] /*serviceUUIDs*/,
-        scanMode: ScanMode.lowLatency).listen((device) {
-      //code for handling results
-      print("[BLELOG] Found device: ${device.name}");
-      if (device.name == "Blank") {
+    _scanSubscription = _ble.scanForDevices(
+      withServices: [], // Optional: UUIDs von Diensten, nach denen gescannt werden soll
+      scanMode: ScanMode.lowLatency,
+    ).listen((device) {
+      if (device.name == DEVICE_NAME) {
+        print("[BLELOG] Found ${device.name}");
         _discoveredDevice = device;
-        BLE_Connect();
+        _ble.connectToDevice(id: device.id).listen((connectionState) {
+          if (connectionState.connectionState ==
+              DeviceConnectionState.connected) {
+            _scanSubscription?.cancel();
+            print('[BLELOG]Verbunden mit ESP32');
+            print('[BLELOG]${device.id}');
+            _handleConnected();
+            _assignCharacteristics();
+            _connectImage();
+            _discoverAll();
+          }
+        });
       }
-    }, onError: (dynamic error) {
-      print("[BLELOG] Device Search failed!");
-      print("[BLELOG] $error");
-      MyAppState().statusImageURL = "assets/images/label_noBT.png";
+    });
+    // Stop the scan after 5 seconds
+    Timer(Duration(seconds: 5), () {
+      stopScan();
+      print('Scan stopped after 5 seconds');
+      if (MyAppState().MainButtonText != "Verbinden")
+        MyAppState().ChangeTextBack();
+    });
+  }
+
+  void stopScan() {
+    _scanSubscription?.cancel();
+    _scanSubscription = null;
+  }
+
+  void _discoverServices() {
+    _ble.getDiscoveredServices(_discoveredDevice!.id).then((services) {
+      //print('[BLELOG] $services');
+      int foundCharacteristics = 0;
+      for (var service in services) {
+        print('[BLELOG] Service: ${service.id}');
+        if (serviceUUIDs.contains(service.id)) {
+          print('[BLELOG] Found required service ${service.id}');
+          for (var characteristic in service.characteristics) {
+            print(
+                '[BLELOG] Found required characteristic: ${characteristic.id}');
+            ++foundCharacteristics;
+          }
+        }
+      }
+      print("[BLELOG] Found $foundCharacteristics/10 characteristics");
+    }).catchError((e) {
+      print('Error discovering services: $e');
+    });
+  }
+
+  void _discoverAll() {
+    _ble.getDiscoveredServices(_discoveredDevice!.id).then((services) {
+      //print('[BLELOG] $services');
+      int foundCharacteristics = 0;
+      for (var service in services) {
+        print('[BLELOG] Service: ${service.id}');
+        for (var characteristic in service.characteristics) {
+          print('[BLELOG] Found characteristic: ${characteristic.id}');
+        }
+      }
+    }).catchError((e) {
+      print('Error discovering services: $e');
     });
   }
 
   void BLE_Connect() async {
-    flutterReactiveBle
+    _ble
         .connectToAdvertisingDevice(
       id: _discoveredDevice!.id,
       withServices: serviceUUIDs,
@@ -182,16 +307,28 @@ class ble_info {
 
   Future<void> BLE_WriteCharateristics(
       String characteristicId, List<int> writeData) async {
-    flutterReactiveBle.writeCharacteristicWithoutResponse(
+    _ble.writeCharacteristicWithoutResponse(
         writeCharacteristics[characteristicId]!,
         value: writeData);
-    //await flutterReactiveBle.writeCharacteristicWithoutResponse(writeCharacteristics[characteristicId]!, value: writeData);
+    if (!ListEquality<int>()
+        .equals(writeData, lastWriteValues[characteristicId])) {
+      lastWriteValues[characteristicId] = writeData;
+      print("[BLELOG] Writing $writeData to $characteristicId");
+    }
+
+    //await _ble.writeCharacteristicWithoutResponse(writeCharacteristics[characteristicId]!, value: writeData);
     return;
   }
 
   Future<void> BLE_ReadCharacteristics(String characteristicId) async {
-    List<int> readData = await flutterReactiveBle
-        .readCharacteristic(readCharacteristics[characteristicId]!);
+    List<int> readData =
+        await _ble.readCharacteristic(readCharacteristics[characteristicId]!);
     readCharacteristicsInput[characteristicId]!(readData);
+    if (!ListEquality<int>()
+        .equals(readData, lastReadValues[characteristicId])) {
+      lastReadValues[characteristicId] = readData;
+      //print( "[BLELOG] Reading char: $characteristicId is: ${readCharacteristics[characteristicId]}");
+      print("[BLELOG] Reading $readData from $characteristicId");
+    }
   }
 }
