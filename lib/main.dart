@@ -453,7 +453,7 @@ class _SettingsPage extends State<SettingsPage> {
                       Row(
                         children: [
                           Text(
-                            'Send Interval',
+                            'Read/Write Interval',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -463,7 +463,7 @@ class _SettingsPage extends State<SettingsPage> {
                             ),
                           ),
                           Spacer(),
-                          Text('${stateManager.sendInterval} ms',
+                          Text('${stateManager.readWriteInterval} ms',
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -480,109 +480,9 @@ class _SettingsPage extends State<SettingsPage> {
                         activeColor: currentBrightness == Brightness.dark
                             ? stateManager.darkAppbarColor
                             : stateManager.appbarColor,
-                        value: stateManager.sendInterval.toDouble(),
+                        value: stateManager.readWriteInterval.toDouble(),
                         onChanged: (double value) {
-                          stateManager.setSendInterval(value.toInt());
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Tooltip(
-                            margin: EdgeInsets.only(right: 20, left: 20),
-                            decoration: BoxDecoration(
-                              color: currentBrightness == Brightness.dark
-                                  ? stateManager.darkAppbarColor
-                                  : stateManager.appbarColor,
-                            ),
-                            textStyle: TextStyle(
-                              fontSize: 25,
-                              color: currentBrightness == Brightness.dark
-                                  ? stateManager.darkTextColor
-                                  : stateManager.textColor,
-                            ),
-                            message: 'Temperature, Pitch, Roll, ChargingState',
-                            child: Text(
-                              'Receive Interval Slow',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: currentBrightness == Brightness.dark
-                                    ? stateManager.darkTextColor
-                                    : stateManager.textColor,
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          Text('${stateManager.receiveIntervalSlow} ms',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: currentBrightness == Brightness.dark
-                                    ? stateManager.darkTextColor
-                                    : stateManager.textColor,
-                              )),
-                        ],
-                      ),
-                      Slider(
-                        min: 500,
-                        max: 5000,
-                        divisions: 9,
-                        activeColor: currentBrightness == Brightness.dark
-                            ? stateManager.darkAppbarColor
-                            : stateManager.appbarColor,
-                        value: stateManager.receiveIntervalSlow.toDouble(),
-                        onChanged: (double value) {
-                          stateManager.setReceiveIntervalSlow(value.toInt());
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Tooltip(
-                            margin: EdgeInsets.only(right: 20, left: 20),
-                            decoration: BoxDecoration(
-                              color: currentBrightness == Brightness.dark
-                                  ? stateManager.darkAppbarColor
-                                  : stateManager.appbarColor,
-                            ),
-                            textStyle: TextStyle(
-                              fontSize: 25,
-                              color: currentBrightness == Brightness.dark
-                                  ? stateManager.darkTextColor
-                                  : stateManager.textColor,
-                            ),
-                            message: 'Speed, Distance',
-                            child: Text(
-                              'Receive Interval Fast',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: currentBrightness == Brightness.dark
-                                    ? stateManager.darkTextColor
-                                    : stateManager.textColor,
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          Text('${stateManager.receiveIntervalFast} ms',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: currentBrightness == Brightness.dark
-                                    ? stateManager.darkTextColor
-                                    : stateManager.textColor,
-                              )),
-                        ],
-                      ),
-                      Slider(
-                        min: 50,
-                        max: 500,
-                        divisions: 9,
-                        activeColor: currentBrightness == Brightness.dark
-                            ? stateManager.darkAppbarColor
-                            : stateManager.appbarColor,
-                        value: stateManager.receiveIntervalFast.toDouble(),
-                        onChanged: (double value) {
-                          stateManager.setReceiveIntervalFast(value.toInt());
+                          stateManager.setReadWriteInterval(value.toInt());
                         },
                       ),
                     ]),
@@ -624,7 +524,7 @@ class ControlPageState extends State<ControlPage> {
     ]);
     var ControllerHandler = ControllerHandlers(handlerContext: context);
     var stateManager = Provider.of<StateManager>(context, listen: false);
-    timer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval),
+    timer = Timer.periodic(Duration(milliseconds: stateManager.readWriteInterval),
         (timer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
       //updating Values
