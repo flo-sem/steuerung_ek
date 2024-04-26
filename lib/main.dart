@@ -627,15 +627,24 @@ class ControlPageState extends State<ControlPage> {
     timer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval),
         (timer) async {
       var stateManager = Provider.of<StateManager>(context, listen: false);
-        int steeringAngle = stateManager.steeringAngle;
-        int pedalState = stateManager.pedalState;
-        int indicatorLeft = stateManager.blinkerLeftState;
-        int indicatorRight = stateManager.blinkerRightState;
-        int horn = stateManager.hornState;
-        List<int> writeData = [steeringAngle, pedalState, indicatorLeft, indicatorRight, horn];
-        
-        ble_info().BLE_ReadCharacteristics();
-        ble_info().BLE_WriteCharateristics(writeData);
+      //updating Values
+      stateManager.setBatteryChargingState(MyAppState().getBatteryState());
+      stateManager.setSpeed(MyAppState().getSpeed());
+      stateManager.setPitch(MyAppState().getPitch());
+      stateManager.setRoll(MyAppState().getRoll());
+      stateManager.setTemperature(MyAppState().getTemperature());
+      stateManager.setDistance(MyAppState().getDistance());
+
+      //prepering write List
+      int steeringAngle = stateManager.steeringAngle;
+      int pedalState = stateManager.pedalState;
+      int indicatorLeft = stateManager.blinkerLeftState;
+      int indicatorRight = stateManager.blinkerRightState;
+      int horn = stateManager.hornState;
+      List<int> writeData = [steeringAngle, pedalState, indicatorLeft, indicatorRight, horn];
+      
+      ble_info().BLE_ReadCharacteristics();
+      ble_info().BLE_WriteCharateristics(writeData);
 
     });
 

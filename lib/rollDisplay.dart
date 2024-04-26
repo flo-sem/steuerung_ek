@@ -11,25 +11,6 @@ class RollDisplay extends StatefulWidget {
 }
 
 class _RollDisplayState extends State<RollDisplay> {
-  Timer? updateTimer;
-  @override
-  void initState() {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    updateTimer =
-        Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow),
-            (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      stateManager.setRoll(MyAppState().getRoll());
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    updateTimer?.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;

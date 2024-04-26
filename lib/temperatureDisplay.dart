@@ -11,24 +11,6 @@ class TemperatureDisplay extends StatefulWidget {
 }
 
 class _TemperatureDisplayState extends State<TemperatureDisplay> {
-  Timer? updateTimer;
-  @override
-  void initState()
-  {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast), (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen:false);
-      stateManager.setTemperature(MyAppState().getTemperature());
-    });
-  }
-
-  @override
-  void dispose()
-  {
-    super.dispose();
-    updateTimer?.cancel();
-  }
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;

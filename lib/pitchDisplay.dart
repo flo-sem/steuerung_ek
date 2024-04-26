@@ -11,24 +11,6 @@ class PitchDisplay extends StatefulWidget {
 }
 
 class _PitchDisplayState extends State<PitchDisplay> {
-  Timer? updateTimer;
-  @override
-  void initState()
-  {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalSlow), (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen:false);
-      stateManager.setPitch(MyAppState().getPitch());
-    });
-  }
-
-  @override
-  void dispose()
-  {
-    super.dispose();
-    updateTimer?.cancel();
-  }
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;

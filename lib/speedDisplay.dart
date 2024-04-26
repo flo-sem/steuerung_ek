@@ -11,25 +11,6 @@ class SpeedDisplay extends StatefulWidget {
 }
 
 class _SpeedDisplayState extends State<SpeedDisplay> {
-  Timer? updateTimer;
-  @override
-  void initState() {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    updateTimer =
-        Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast),
-            (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      stateManager.setSpeed(MyAppState().getSpeed());
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    updateTimer?.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;

@@ -13,24 +13,6 @@ class DistanceDisplay extends StatefulWidget {
 }
 
 class _DistanceDisplayState extends State<DistanceDisplay> {
-  Timer? updateTimer;
-  @override
-  void initState() {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen:false);
-    updateTimer = Timer.periodic(Duration(milliseconds: stateManager.receiveIntervalFast), (updateTimer) {
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      stateManager.setDistance(MyAppState().getDistance());
-    });
-  }
-
-  @override
-  void dispose()
-  {
-    super.dispose();
-    updateTimer?.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
