@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:steuerung_ek/ControllerButton.dart';
 import 'package:steuerung_ek/batteryDisplay.dart';
@@ -10,7 +11,6 @@ import 'package:steuerung_ek/pitchDisplay.dart';
 import 'package:steuerung_ek/rollDisplay.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:steuerung_ek/temperatureDisplay.dart';
-import 'package:steuerung_ek/custom_haptics.dart';
 import 'package:steuerung_ek/controllerHandlers.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 import 'steering_wheel.dart';
@@ -20,15 +20,10 @@ import 'ble_info.dart';
 import 'package:provider/provider.dart';
 import 'orientation_widget.dart';
 import 'dart:async';
-import 'package:convert/convert.dart';
-import 'state_manager.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:n_gamepad/n_gamepad.dart';
 import 'package:n_gamepad/src/models/control.dart';
 import 'package:flutter/services.dart';
-import 'second.dart';
-import 'package:flutter/services.dart';
-import 'package:vibration/vibration.dart';
 
 enum ConnectionStateImage {
   disconnected,
@@ -76,14 +71,7 @@ class MyAppState extends ChangeNotifier {
 
   List<int> ControllerBuffer = [];
 
-  // ble input buffer
-  List<int> testBuffer = [];
-
-  List<int> SpeedBuffer = [];
-  List<int> AkkuBuffer = [];
-  List<int> TempBuffer = [];
-  List<int> DistanceBuffer = [];
-  List<int> SlopeBuffer = [];
+  List<int> readBuffer = [];
 
   void ControllerOutputBuffer(List<int> input) {
     ControllerBuffer = input;
@@ -91,81 +79,56 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void UpdateInputBuffer(List<int> input) {
-    testBuffer = input;
-    notifyListeners();
-  }
-
-  void SpeedInputBuffer(List<int> input) {
-    SpeedBuffer = input;
-    notifyListeners();
-  }
-
-  void AkkuInputBuffer(List<int> input) {
-    AkkuBuffer = input;
-    notifyListeners();
-  }
-
-  void TempInputBuffer(List<int> input) {
-    TempBuffer = input;
-    notifyListeners();
-  }
-
-  void DistanceInputBuffer(List<int> input) {
-    DistanceBuffer = input;
-    notifyListeners();
-  }
-
-  void SlopeInputBuffer(List<int> input) {
-    SlopeBuffer = input;
+  void UpdateReadBuffer(List<int> input) {
+    readBuffer = input;
     notifyListeners();
   }
 
   List<int> getDistance() {
-    if (DistanceBuffer.isEmpty || DistanceBuffer.length < 6) {
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
       return [0, 0, 0, 0, 0, 0];
     } else {
-      return DistanceBuffer;
+      return [readBuffer[5], readBuffer[6], readBuffer[7], readBuffer[8], readBuffer[9], readBuffer[10]];
     }
   }
 
   int getPitch() {
-    if (SlopeBuffer.isEmpty || SlopeBuffer.length < 2) {
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
       return 0;
     } else {
-      return SlopeBuffer[0];
+      return readBuffer[3];
     }
   }
 
   int getRoll() {
-    if (SlopeBuffer.isEmpty || SlopeBuffer.length < 2) {
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
       return 0;
     } else {
-      return SlopeBuffer[1];
+      return readBuffer[4];
     }
   }
 
   int getBatteryState() {
-    if (AkkuBuffer.isEmpty) {
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
       return 0;
     } else {
-      return AkkuBuffer[0];
+      return readBuffer[0];
     }
   }
 
   int getTemperature() {
-    if (TempBuffer.isEmpty) {
-      return 20;
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
+      return 0;
     } else {
-      return TempBuffer[0];
+      return readBuffer[1];
     }
   }
 
   int getSpeed() {
-    if (SpeedBuffer.isEmpty) {
+    if (readBuffer.isEmpty || readBuffer.length < 11) {
       return 0;
     } else {
-      return SpeedBuffer[0];
+      return readBuffer[1];
     }
   }
 
@@ -664,18 +627,17 @@ class ControlPageState extends State<ControlPage> {
     var stateManager = Provider.of<StateManager>(context, listen: false);
     timer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval),
         (timer) async {
-      List<Future> futures = [];
-      for (var func in [
-        ble_info().BLE_ReadCharacteristics(ble_info().rSpeedCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rAkkuCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rTempCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rDistanceCharacteristic),
-        ble_info().BLE_ReadCharacteristics(ble_info().rSlopeCharacteristic)
-      ]) {
-        futures.add(func);
-      }
+      var stateManager = Provider.of<StateManager>(context, listen: false);
+        int steeringAngle = stateManager.steeringAngle;
+        int pedalState = stateManager.pedalState;
+        int indicatorLeft = stateManager.blinkerLeftState;
+        int indicatorRight = stateManager.blinkerRightState;
+        int horn = stateManager.hornState;
+        List<int> writeData = [steeringAngle, pedalState, indicatorLeft, indicatorRight, horn];
+        
+        ble_info().BLE_ReadCharacteristics();
+        ble_info().BLE_WriteCharateristics(writeData);
 
-      await Future.wait(futures);
     });
 
     leftJoystick.assignMotionEvent(ControllerHandler

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:steuerung_ek/state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:steuerung_ek/ek_icons.dart';
-import 'dart:async';
-import 'package:steuerung_ek/ble_info.dart';
 
 class Horn extends StatefulWidget {
   const Horn({Key? key}) : super(key: key);
@@ -12,23 +10,6 @@ class Horn extends StatefulWidget {
 }
 
 class _HornState extends State<Horn> {
-  Timer? sendTimer;
-  @override
-  void initState() {
-    super.initState();
-    var stateManager = Provider.of<StateManager>(context, listen: false);
-    sendTimer = Timer.periodic(Duration(milliseconds: stateManager.sendInterval), (sendTimer) async {
-      var stateManager = Provider.of<StateManager>(context, listen: false);
-      await ble_info().BLE_WriteCharateristics(ble_info().wHornCharacteristic, [stateManager.hornState]);
-    });
-  }
-
-  @override
-  void dispose()
-  {
-    super.dispose();
-    sendTimer?.cancel();
-  }
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
