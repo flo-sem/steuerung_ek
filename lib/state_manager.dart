@@ -67,14 +67,9 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
-  int _sendInterval = 100;
-  int get sendInterval => _sendInterval;
+  int _readWriteInterval = 100;
+  int get readWriteInterval => _readWriteInterval;
 
-  int _receiveIntervalFast = 100;
-  int get receiveIntervalFast => _receiveIntervalFast;
-
-  int _receiveIntervalSlow = 1000;
-  int get receiveIntervalSlow => _receiveIntervalSlow;
 
   int _usingController = 0;
   int get usingController => _usingController;
@@ -181,18 +176,8 @@ class StateManager with ChangeNotifier {
     _blinkerRightState = 0;
   }
 
-  void setSendInterval(int value) {
-    _sendInterval = value;
-    notifyListeners();
-  }
-
-  void setReceiveIntervalFast(int value) {
-    _receiveIntervalFast = value;
-    notifyListeners();
-  }
-
-  void setReceiveIntervalSlow(int value) {
-    _receiveIntervalSlow = value;
+  void setReadWriteInterval(int value) {
+    _readWriteInterval = value;
     notifyListeners();
   }
 
