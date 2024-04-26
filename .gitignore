@@ -42,3 +42,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+/BLEServer/.pio
+/BLEServer/.vscode/.browse.c_cpp.db*
+/BLEServer/.vscode/c_cpp_properties.json
+/BLEServer/.vscode/ipch
+/BLEServer/.vscode/launch.json
