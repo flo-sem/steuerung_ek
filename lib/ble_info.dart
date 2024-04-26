@@ -69,6 +69,8 @@ class ble_info {
           bluetoothDevice = r.device; // Assign device
           try {
             await bluetoothDevice?.connect(); // Connect to the device
+            await bluetoothDevice?.requestConnectionPriority(
+                connectionPriorityRequest: ConnectionPriority.high);
             Vibration.vibrate(duration: 50, amplitude: 100);
             MyAppState().setImage(ConnectionStateImage.connected);
             MyAppState().fastUpdate();
@@ -111,7 +113,6 @@ class ble_info {
       }
     }
   }
-
 
   // Read / Write to characteristic
   Future<void> BLE_WriteCharateristics(List<int> writeData) async {
