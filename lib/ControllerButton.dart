@@ -4,23 +4,29 @@ import 'package:provider/provider.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 import 'package:steuerung_ek/ControllerDisplay.dart';
 
+// Ein StatefulWidget, das den Controller-Button darstellt
 class ControllerButton extends StatefulWidget {
   const ControllerButton({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ControllerButtonState();
 }
 
+// Der Zustand des ControllerButton-Widgets
 class _ControllerButtonState extends State<ControllerButton> {
   @override
   Widget build(BuildContext context) {
+    // Ermittelt die aktuelle Bildschirmhelligkeit (hell oder dunkel)
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
+
     return Consumer<StateManager>(builder: (context, stateManager, child) {
+      // Erzeugt einen berührungsempfindlichen Bereich (für den Controller-Button)
       return GestureDetector(
-          onTapDown: (_) => onPressed(),
-          onTapUp: (_) => stateManager.resetControllerButtonState(),
+          onTapDown: (_) => onPressed(), // Reaktion auf Druck
+          onTapUp: (_) => stateManager.resetControllerButtonState(), // Reaktion auf Loslassen
           child: Transform.scale(
+            // Verändert die Skalierung des Icons basierend auf dem Zustand
             scale: 1 - (0.2 * stateManager.controllerButtonState),
-            // child: Image.asset('assets/images/controllerButton.png', width: 70)
             child: Icon(EK_Icons.gamecontroller,
                 size: 70,
                 color: currentBrightness == Brightness.dark
@@ -30,6 +36,7 @@ class _ControllerButtonState extends State<ControllerButton> {
     });
   }
 
+  // Methode, die beim Drücken des Buttons ausgeführt wird
   void onPressed() {
     var stateManager = Provider.of<StateManager>(context, listen: false);
     stateManager.toggleControllerConnectionState();
@@ -41,7 +48,6 @@ class _ControllerButtonState extends State<ControllerButton> {
     } else {
       stateManager.usingController = 0;
       print('[CONTROLLER] Controller Disabled');
-
       Navigator.of(context).pop();
     }
   }

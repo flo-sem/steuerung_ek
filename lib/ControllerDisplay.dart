@@ -16,20 +16,25 @@ import 'gas_pedal.dart';
 import 'speedDisplay.dart';
 import 'package:flutter/services.dart';
 
+// Ein StatefulWidget, das die Controller-Anzeige darstellt
 class ControllerDisplay extends StatefulWidget {
   const ControllerDisplay({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ControllerDisplay();
 }
 
+// Der Zustand des ControllerDisplay-Widgets
 class _ControllerDisplay extends State<ControllerDisplay> {
   @override
   Widget build(BuildContext context) {
+    // Setzt die bevorzugte Ausrichtung auf Querformat
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
+
     return Consumer<StateManager>(builder: (context, stateManager, child) {
       return Scaffold(
           backgroundColor: currentBrightness == Brightness.dark
@@ -74,9 +79,9 @@ class _ControllerDisplay extends State<ControllerDisplay> {
                   Spacer(),
                   Spacer(),
                   SizedBox(
-                    // Wrap DistanceDisplay with SizedBox to adjust its size
-                    width: 200, // Set the desired width
-                    height: 200, // Set the desired height
+                    // Umschließt DistanceDisplay mit SizedBox, um die Größe anzupassen
+                    width: 200, // Setzt die gewünschte Breite
+                    height: 200, // Setzt die gewünschte Höhe
                     child: AspectRatio(
                         aspectRatio: 1.0,
                         child: FittedBox(
@@ -94,7 +99,7 @@ class _ControllerDisplay extends State<ControllerDisplay> {
 
   @override
   void dispose() {
-    // Resetting the screen orientation preferences when leaving View B
+    // Setzt die Bildschirm-Ausrichtungspräferenzen zurück, wenn die Ansicht verlassen wird
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,

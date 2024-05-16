@@ -7,10 +7,12 @@ import 'ble_info.dart';
 import 'package:convert/convert.dart';
 import 'package:steuerung_ek/ek_icons.dart';
 
+// StateManager Klasse für die Verwaltung des Anwendungszustands
 class StateManager with ChangeNotifier {
   ble_info bluetoothProvider = ble_info();
   CustomHaptics haptics = CustomHaptics();
 
+  // Hintergrundfarbe
   Color _backgroundColor = Colors.white;
   Color get backgroundColor => _backgroundColor;
   void set backgroundColor(Color color) {
@@ -18,6 +20,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Hintergrundfarbe im Dunkelmodus
   Color _darkBackgroundColor = Colors.black;
   Color get darkBackgroundColor => _darkBackgroundColor;
   void set darkBackgroundColor(Color color) {
@@ -25,6 +28,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Appbar-Farbe
   Color _appbarColor = Colors.lightBlueAccent;
   Color get appbarColor => _appbarColor;
   void set appbarColor(Color color) {
@@ -32,6 +36,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Appbar-Farbe im Dunkelmodus
   Color _darkAppbarColor = Colors.deepPurpleAccent;
   Color get darkAppbarColor => _darkAppbarColor;
   void set darkAppbarColor(Color color) {
@@ -39,6 +44,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Icon-Farbe
   Color _iconColor = Colors.black;
   Color get iconColor => _iconColor;
   void set iconColor(Color color) {
@@ -46,6 +52,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Icon-Farbe im Dunkelmodus
   Color _darkIconColor = Colors.white;
   Color get darkIconColor => _darkIconColor;
   void set darkIconColor(Color color) {
@@ -53,6 +60,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Textfarbe
   Color _textColor = Colors.black;
   Color get textColor => _textColor;
   void set textColor(Color color) {
@@ -60,6 +68,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Textfarbe im Dunkelmodus
   Color _darkTextColor = Colors.white70;
   Color get darkTextColor => _darkTextColor;
   void set darkTextColor(Color color) {
@@ -70,7 +79,7 @@ class StateManager with ChangeNotifier {
   int _readWriteInterval = 100;
   int get readWriteInterval => _readWriteInterval;
 
-
+  // Zustand, ob ein Controller verwendet wird
   int _usingController = 0;
   int get usingController => _usingController;
   void set usingController(int controller) {
@@ -90,7 +99,7 @@ class StateManager with ChangeNotifier {
   int _roll = 0;
   int get roll => _roll;
 
-  //Used in Characteristic
+  // Lenkwinkel
   int _steeringAngle = 0;
   int get steeringAngle => _steeringAngle;
 
@@ -100,11 +109,11 @@ class StateManager with ChangeNotifier {
   int _blinkTact = 0;
   int get blinkTact => _blinkTact;
 
-  //Used in characteristic
+  // Zustand des rechten Blinkers
   int _blinkerRightState = 0;
   int get blinkerRightState => _blinkerRightState;
 
-  //Used in characteristic
+  // Zustand des linken Blinkers
   int _blinkerLeftState = 0;
   int get blinkerLeftState => _blinkerLeftState;
 
@@ -114,7 +123,7 @@ class StateManager with ChangeNotifier {
   int _hazardLightButton = 0;
   int get hazardLightButton => _hazardLightButton;
 
-  //Used in characteristic
+  // Zustand des Gaspedals
   int _pedalState = 0;
   int get pedalState => _pedalState;
 
@@ -170,47 +179,56 @@ class StateManager with ChangeNotifier {
   int _controllerButtonState = 0;
   int get controllerButtonState => _controllerButtonState;
 
+  // Setzt alle Zustände zurück
   void resetAll() {
     _steeringAngle = 0;
     _blinkerLeftState = 0;
     _blinkerRightState = 0;
   }
 
+  // Setzt das Lese-/Schreibintervall
   void setReadWriteInterval(int value) {
     _readWriteInterval = value;
     notifyListeners();
   }
 
+  // Setzt den Lenkwinkel
   void setSteeringAngle(double value) {
     _steeringAngle = value.toInt();
     notifyListeners();
   }
 
+  // Setzt die Geschwindigkeit
   void setSpeed(int value) {
     _speed = value;
     notifyListeners();
   }
 
+  // Setzt die Temperatur
   void setTemperature(int value) {
     _temperature = value;
     notifyListeners();
   }
 
+  // Setzt den Neigungswinkel
   void setPitch(int value) {
     _pitch = value;
     notifyListeners();
   }
 
+  // Setzt den Rollwinkel
   void setRoll(int value) {
     _roll = value;
     notifyListeners();
   }
 
+  // Setzt den Zustand der Hupe
   void setHornState(int value) {
     _hornState = value;
     notifyListeners();
   }
 
+  // Schaltet den Blink-Takt um
   void toggleBlinkTact() {
     if (_blinkTact == 0) {
       _blinkTact = 1;
@@ -220,6 +238,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Schaltet den Zustand des rechten Blinkers um
   void toggleBlinkerRightState() {
     if (_hazardLightState == 0 && _blinkerLeftState == 0) {
       if (_blinkerRightState == 0) {
@@ -231,6 +250,7 @@ class StateManager with ChangeNotifier {
     }
   }
 
+  // Schaltet den Zustand des linken Blinkers um
   void toggleBlinkerLeftState() {
     if (_hazardLightState == 0 && _blinkerRightState == 0) {
       if (_blinkerLeftState == 0) {
@@ -242,6 +262,7 @@ class StateManager with ChangeNotifier {
     }
   }
 
+  // Schaltet beide Blinker ein/aus (Warnblinker)
   void toggleBothBlinkerState() {
     if (_hazardLightState == 0) {
       _hazardLightState = 1;
@@ -256,16 +277,19 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Setzt den Zustand des Warnblinklicht-Knopfes zurück
   void resetHazardLightButton() {
     _hazardLightButton = 0;
     notifyListeners();
   }
 
+  // Setzt den Zustand des Gaspedals
   void setPedalState(int value) {
     _pedalState = value;
     notifyListeners();
   }
 
+  // Setzt den Ladezustand der Batterie
   void setBatteryChargingState(int value) {
     _batteryChargingState = value;
     if (value < 20) {
@@ -287,6 +311,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Setzt die Entfernungen zu Hindernissen
   void setDistance(List<int> distanceList) {
     setFrontLeftDistance(distanceList[0]);
     setFrontMiddleDistance(distanceList[1]);
@@ -298,6 +323,7 @@ class StateManager with ChangeNotifier {
     hapticOnObjectDetection(distanceList);
   }
 
+  // Haptisches Feedback bei Hinderniserkennung
   void hapticOnObjectDetection(List<int> distanceList) {
     int minimum = distanceList[0];
     for (int i = 1; i < distanceList.length; i++) {
@@ -314,42 +340,49 @@ class StateManager with ChangeNotifier {
     }
   }
 
+  // Setzt die vordere linke Entfernung
   void setFrontLeftDistance(int value) {
     _distanceFrontLeft = value;
     _distanceFrontLeftImage = _getDistanceFrontLeftImage();
     notifyListeners();
   }
 
+  // Setzt die mittlere vordere Entfernung
   void setFrontMiddleDistance(int value) {
     _distanceFrontMiddle = value;
     _distanceFrontMiddleImage = _getDistanceFrontMiddleImage();
     notifyListeners();
   }
 
+  // Setzt die vordere rechte Entfernung
   void setFrontRightDistance(int value) {
     _distanceFrontRight = value;
     _distanceFrontRightImage = _getDistanceFrontRightImage();
     notifyListeners();
   }
 
+  // Setzt die linke Entfernung
   void setLeftDistance(int value) {
     _distanceLeft = value;
     _distanceLeftImage = _getDistanceImage(_distanceLeft);
     notifyListeners();
   }
 
+  // Setzt die rechte Entfernung
   void setRightDistance(int value) {
     _distanceRight = value;
     _distanceRightImage = _getDistanceImage(_distanceRight);
     notifyListeners();
   }
 
+  // Setzt die hintere Entfernung
   void setBackDistance(int value) {
     _distanceBack = value;
     _distanceBackImage = _getDistanceImage(_distanceBack);
     notifyListeners();
   }
 
+  // Bestimmt das Bild basierend auf der vorderen linken Entfernung
   String _getDistanceFrontLeftImage() {
     String ret = 'assets/images/distanceShortFrontLeft.png';
 
@@ -362,6 +395,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
+  // Bestimmt das Bild basierend auf der mittleren vorderen Entfernung
   String _getDistanceFrontMiddleImage() {
     String ret = 'assets/images/distanceShortFrontMiddle.png';
 
@@ -374,6 +408,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
+  // Bestimmt das Bild basierend auf der vorderen rechten Entfernung
   String _getDistanceFrontRightImage() {
     String ret = 'assets/images/distanceShortFrontRight.png';
 
@@ -386,6 +421,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
+  // Bestimmt das Bild basierend auf der Entfernung
   String _getDistanceImage(int distance) {
     String ret = 'assets/images/distanceShort.png';
 
@@ -398,6 +434,7 @@ class StateManager with ChangeNotifier {
     return ret;
   }
 
+  // Schaltet den Zustand der Controller-Verbindung um
   void toggleControllerConnectionState() {
     if (_controllerConnectionState == 0) {
       _controllerConnectionState = 1;
@@ -408,6 +445,7 @@ class StateManager with ChangeNotifier {
     notifyListeners();
   }
 
+  // Setzt den Zustand des Controller-Knopfs zurück
   void resetControllerButtonState() {
     _controllerButtonState = 0;
     notifyListeners();
